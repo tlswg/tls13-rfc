@@ -5787,15 +5787,17 @@ populated psk_ke (0) and psk_dhe_ke (1).  Both SHALL be marked as
   </front>
   <seriesInfo name="Proceedings of ACM CCS 2015" value=""/>
 </reference>
-<reference anchor="Anon18" >
+<reference anchor="PS18" target="https://eprint.iacr.org/2018/634">
   <front>
-    <title>Secure Channels for Multiplexed Data Streams: Analyzing the TLS 1.3 Record Layer Without Elision</title>
-    <author initials="A." surname="Anonymous">
+    <title>Partially specified channels: The TLS 1.3 record layer without elision</title>
+    <author initials="C." surname="Patton">
+      <organization></organization>
+    </author>
+    <author initials="T." surname="Shrimpton">
       <organization></organization>
     </author>
     <date year="2018"/>
   </front>
-  <seriesInfo name="In submission to CRYPTO 2018. RFC EDITOR: PLEASE UPDATE THIS REFERENCE AFTER FINAL NOTIFICATION (2018-4-29)." value=""/>
 </reference>
 
 
@@ -7234,7 +7236,7 @@ guarantees need to do a fresh handshake and establish a new connection with an
 <section anchor="external-references-1" title="External References">
 
 <t>The reader should refer to the following references for analysis of the TLS record layer:
-<xref target="BMMT15"/> <xref target="BT16"/> <xref target="BDFKPPRSZZ16"/> <xref target="BBK17"/> <xref target="Anon18"/>.</t>
+<xref target="BMMT15"/> <xref target="BT16"/> <xref target="BDFKPPRSZZ16"/> <xref target="BBK17"/> <xref target="PS18"/>.</t>
 
 </section>
 </section>
@@ -7603,6 +7605,9 @@ kazuhooku@gmail.com</t>
   <t>Kenny Paterson <vspace />
 Royal Holloway, University of London <vspace />
 kenny.paterson@rhul.ac.uk</t>
+  <t>Christopher Patton <vspace />
+University of Florida <vspace />
+cjpatton@ufl.edu</t>
   <t>Alfredo Pironti (co-author of <xref target="RFC7627"></xref>) <vspace />
 INRIA <vspace />
 alfredo.pironti@inria.fr</t>
@@ -7634,6 +7639,9 @@ dschinazi@apple.com</t>
   <t>Sam Scott <vspace />
 Royal Holloway, University of London <vspace />
 me@samjs.co.uk</t>
+  <t>Thomas Shrimpton <vspace />
+University of Florida <vspace />
+teshrim@ufl.edu</t>
   <t>Dan Simon <vspace />
 Microsoft, Inc. <vspace />
 dansimon@microsoft.com</t>
