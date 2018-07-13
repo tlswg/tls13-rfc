@@ -26,10 +26,7 @@
       </address>
     </author>
 
-    <date year="2018" month="June"/>
-
-<!-- [rfced] Please insert any keywords (beyond those that appear in the
-title) for use on https://www.rfc-editor.org/search -->
+    <date year="2018" month="July"/>
 
     <abstract>
 
@@ -110,9 +107,20 @@ negotiate a common version if one is supported by both peers.</t>
 <t>This document supersedes and obsoletes previous versions of TLS,
 including version 1.2 <xref target="RFC5246"/>.  It also obsoletes the TLS
 ticket mechanism defined in <xref target="RFC5077"/> and replaces it with the
-mechanism defined in <xref target="resumption-and-psk"/>.
+mechanism defined in <xref target="resumption-and-psk"/>. <xref
+target="negotiated-groups"/> updates <xref target="RFC4492"/> by modifying the
+protocol attributes used to negotiate elliptic curves.  Because TLS 1.3
+changes the way keys are derived, it updates <xref target="RFC5705"/> as
+described in <xref target="exporters"/>. It also changes how Online
+Certificate Status Protocol (OCSP) messages are carried and therefore updates
+<xref target="RFC6066"/> and obsoletes <xref target="RFC6961"/> as described
+in <xref target="ocsp-and-sct"/>.</t>
 
-<!-- [rfced] Sections 1 and 4.6.1:  Please confirm that
+<!-- [rfced] 6/26/2018  A test:  We moved this AQ/comment so that it
+appears between paragraphs, rather than within a paragraph.
+Does this new placement improve readability on the GitHub side?
+
+Sections 1 and 4.6.1:  Please confirm that
 Erratum #4800 for RFC 5077 <https://www.rfc-editor.org/errata/eid4800>>
 is addressed by both sentences below.  (We ask this because we wonder
 if the sentence from Section 4.6.1 should be updated to state that
@@ -125,15 +133,6 @@ Original:
 ...
  Section 4 of [RFC5077] describes a recommended ticket construction
  mechanism. -->
-
- <xref
-target="negotiated-groups"/> updates <xref target="RFC4492"/> by modifying the
-protocol attributes used to negotiate elliptic curves.  Because TLS 1.3
-changes the way keys are derived, it updates <xref target="RFC5705"/> as
-described in <xref target="exporters"/>. It also changes how Online
-Certificate Status Protocol (OCSP) messages are carried and therefore updates
-<xref target="RFC6066"/> and obsoletes <xref target="RFC6961"/> as described
-in <xref target="ocsp-and-sct"/>.</t>
 
 <section anchor="conventions-and-terminology" title="Conventions and Terminology">
 
@@ -162,7 +161,7 @@ and only when, they appear in all capitals, as shown here.</t>
 
 <t hangText="sender:">An endpoint that is transmitting records.</t>
 
-<t hangText="server:">The endpoint which did not initiate the TLS connection.</t>
+<t hangText="server:">The endpoint that did not initiate the TLS connection.</t>
 </list></t>
 </section>
 
@@ -180,24 +179,14 @@ changed to separate the authentication and key exchange mechanisms from
 the record protection algorithm (including secret key length) and a hash
 to be used with the key derivation function and the Hashed Message
 Authentication Code (HMAC).</t>
-  <t>A 0-RTT mode was added, saving a round trip at connection setup for
+  <t>A zero round-trip time (0-RTT) mode was added, saving a round trip at connection setup for
 some application data, at the cost of certain security properties.</t>
   <t>Static RSA and Diffie-Hellman cipher suites have been removed;
-all key exchange mechanisms that are based on public keys now provide forward secrecy.</t>
+all public-key based key exchange mechanisms now provide forward secrecy.</t>
   <t>All handshake messages after the ServerHello are now encrypted. The
 newly introduced EncryptedExtensions message allows various extensions
-previously sent in clear in the ServerHello to also enjoy
-confidentiality protection from active attackers.
-
-<!-- [rfced] Section 1.3:  Should "sent in clear in" be "sent in
-the clear in," "sent in cleartext in," or something else?
-
-Original:
- The newly introduced EncryptedExtension message allows various
- extensions previously sent in clear in the ServerHello to also
- enjoy confidentiality protection from active attackers. -->
-
-</t>
+previously sent in the clear in the ServerHello to also enjoy
+confidentiality protection from active attackers.</t>
   <t>The key derivation functions have been redesigned. The new design allows
 easier analysis by cryptographers due to their improved key separation
 properties. The HMAC-based Extract-and-Expand Key Derivation Function (HKDF)
@@ -208,11 +197,10 @@ ChangeCipherSpec (except when needed for middlebox compatibility).</t>
   <t>Elliptic curve algorithms are now in the base spec, and new signature
 algorithms, such as ed25519 and ed448, are included. TLS 1.3 removed point format
 negotiation in favor of a single point format for each curve.</t>
-  <t>Other cryptographic improvements have been added, including the removal
-of compression and custom Ephemeral Diffie-Hellman (DHE) groups, changing the
-RSA padding to use the RSA Probabilistic Signature Scheme (RSASSA-PSS), and
-the removal of DSA.
-
+  <t>Other cryptographic improvements, including the removal
+of compression, the Digital Signature Algorithm (DSA), and custom Ephemeral
+Diffie-Hellman (DHE) groups, changing the RSA padding to use the RSA
+Probabilistic Signature Scheme (RSASSA-PSS), have been added.
 </t>
   <t>The TLS 1.2 version negotiation mechanism has been deprecated in favor
 of a version list in an extension. This increases compatibility with
@@ -325,10 +313,10 @@ in the diagram above):</t>
 (<xref target="client-hello"/>) message, which contains a random nonce
 (ClientHello.random); its offered protocol versions; a list of
 symmetric cipher/HKDF hash pairs; either a set of Diffie-Hellman key shares
-(in the "key_share" (<xref target="key-share"/>) extension) or
+(in the "key_share" (<xref target="key-share"/>) extension),
 a set of pre&nbhy;shared key labels (in the "pre_shared_key"
 (<xref target="pre-shared-key-extension"/>) extension), or both; and
-(potentially) additional extensions.  Additional fields and/or messages
+potentially additional extensions.  Additional fields and/or messages
 may also be present for middlebox compatibility.</t>
 
 <t>The server processes the ClientHello and determines the appropriate
@@ -351,13 +339,13 @@ case both extensions will be supplied.</t>
   <t hangText='EncryptedExtensions:'>
   responses to ClientHello extensions that are not required to
 determine the cryptographic parameters, other than those
-that are specific to individual certificates
-(<xref target="encrypted-extensions"/>).</t>
+that are specific to individual certificates.
+[<xref target="encrypted-extensions"/>]</t>
   <t hangText='CertificateRequest:'>
   if certificate-based client authentication is desired, the
 desired parameters for that certificate. This message is
-omitted if client authentication is not desired
-(<xref target="certificate-request"/>).</t>
+omitted if client authentication is not desired.
+[<xref target="certificate-request"/>]</t>
 </list></t>
 
 <t>Finally, the client and server exchange Authentication messages. TLS
@@ -370,23 +358,23 @@ Specifically:</t>
   <t hangText='Certificate:'>
   the certificate of the endpoint and any per-certificate extensions.
 This message is omitted by the server if not authenticating with a
-certificate and by the client if the server did not send a
+certificate and by the client if the server did not send 
 CertificateRequest (thus indicating that the client should not
 authenticate with a certificate). Note that if raw
 public keys <xref target="RFC7250"/> or the cached information extension
 <xref target="RFC7924"/> are in use, then this message will not
 contain a certificate but rather some other value corresponding to
-the server's long-term key (<xref target="certificate"/>).</t>
+the server's long-term key. [<xref target="certificate"/>]</t>
   <t hangText='CertificateVerify:'>
   a signature over the entire handshake using the private key
 corresponding to the public key in the Certificate message. This
 message is omitted if the endpoint is not authenticating via a
-certificate (<xref target="certificate-verify"/>).</t>
+certificate. [<xref target="certificate-verify"/>]</t>
   <t hangText='Finished:'>
   a MAC (Message Authentication Code) over the entire handshake.
 This message provides key confirmation, binds the endpoint's identity
 to the exchanged keys, and in PSK mode
-also authenticates the handshake (<xref target="finished"/>).</t>
+also authenticates the handshake. [<xref target="finished"/>]</t>
 </list></t>
 
 <t>Upon receiving the server's messages, the client responds with its
@@ -464,7 +452,7 @@ secrecy in combination with shared keys, or can be used alone, at the
 cost of losing forward secrecy for the application data.</t>
 
 <t><xref target="tls-resumption-psk"/> shows a pair of handshakes in which the
-first establishes a PSK and the second uses it:</t>
+first handshake establishes a PSK and the second handshake uses it:</t>
 
 <figure title="Message Flow for Resumption and PSK" anchor="tls-resumption-psk"><artwork><![CDATA[
        Client                                               Server
@@ -529,7 +517,7 @@ a brute-force attack on the password/pre-shared key.</t>
 </section>
 <section anchor="zero-rtt-data" title="0-RTT Data">
 
-<t>When clients and servers share a PSK (obtained either externally or
+<t>When clients and servers share a PSK (either obtained externally or
 via a previous handshake), TLS 1.3 allows clients to send data on the
 first flight ("early data"). The client uses the PSK to authenticate
 the server and to encrypt the early data.</t>
@@ -538,7 +526,7 @@ the server and to encrypt the early data.</t>
 1-RTT handshake in the first flight. The rest of the handshake uses the same
 messages as for a 1-RTT handshake with PSK resumption.</t>
 
-<figure title="Message Flow for a Zero Round Trip Handshake" anchor="tls-0-rtt"><artwork><![CDATA[
+<figure title="Message Flow for a 0-RTT Handshake" anchor="tls-0-rtt"><artwork><![CDATA[
          Client                                               Server
 
          ClientHello
@@ -573,12 +561,6 @@ messages as for a 1-RTT handshake with PSK resumption.</t>
                [] Indicates messages protected using keys
                   derived from [sender]_application_traffic_secret_N.
 ]]></artwork></figure>
-
-<!-- [rfced] Figure 4:  Should "zero round trip" be "0-RTT" in this
-title (to match usage elsewhere in this document)?
-
-Original:
- Figure 4: Message flow for a zero round trip handshake -->
 
 <t>IMPORTANT NOTE: The security properties for 0-RTT data are weaker than
 those for other kinds of TLS data.  Specifically:</t>
@@ -648,24 +630,8 @@ type&nbsp;opaque.</t>
 <section anchor="numbers" title="Numbers">
 
 <t>The basic numeric data type is an unsigned byte (uint8). All larger numeric
-data types are formed from a fixed-length series of bytes concatenated as
-described in <xref target="basic-block-size"/> and are also unsigned.
-
-<!-- [rfced] Section 3.3:  We changed "formed from fixed-length series
-of" to "formed from a fixed-length series of"; please let us know if
-this is incorrect.
-
-Original:
- The basic numeric data type is an unsigned byte (uint8).  All larger
- numeric data types are formed from fixed-length series of bytes
- concatenated as described in Section 3.1 and are also unsigned.
-
-Currently:
- All larger
- numeric data types are formed from a fixed-length series of bytes
- concatenated as described in Section 3.1 and are also unsigned. -->
-
- The
+data types are formed from fixed-length serieses of bytes concatenated as
+described in <xref target="basic-block-size"/> and are also unsigned. The
 following numeric types are predefined.</t>
 
 <figure><artwork><![CDATA[
@@ -704,47 +670,20 @@ consuming a total of nine bytes.</t>
    Datum Data[9];        /* three consecutive 3-byte vectors */
 ]]></artwork></figure>
 
-<!-- [rfced] Section 3.4:  Should "Datum Data[9]" be "Datum Data[3]"
-here per Erratum #4382 for RFC 5246
-<https://www.rfc-editor.org/errata/eid4382>?
-
-Original:
- opaque Datum[3];      /* three uninterpreted bytes */
- Datum Data[9];        /* 3 consecutive 3-byte vectors */ -->
-
 <t>Variable-length vectors are defined by specifying a subrange of legal
 lengths, inclusively, using the notation &lt;floor..ceiling&gt;. When these
 are encoded, the actual length precedes the vector's contents in the byte
 stream. The length will be in the form of a number consuming as many bytes as
 required to hold the vector's specified maximum (ceiling) length. A
 variable-length vector with an actual length field of zero is referred to as
-an empty vector.
-
-<!-- [rfced] Section 3.4:  Is "actual length" a field name, or
-does it mean "the actual length of the field"?
-
-Original:
- When
- these are encoded, the actual length precedes the vector's contents
- in the byte stream.  The length will be in the form of a number
- consuming as many bytes as required to hold the vector's specified
- maximum (ceiling) length.  A variable-length vector with an actual
- length field of zero is referred to as an empty vector.
-...
- The actual length field consumes two bytes, a uint16, which is
- sufficient to represent the value 400 (see Section 3.3).
-...
- Its encoding will include a two-byte actual
- length field prepended to the vector. -->
-
-</t>
+an empty vector.</t>
 
 <figure><artwork><![CDATA[
    T T'<floor..ceiling>;
 ]]></artwork></figure>
 
 <t>In the following example, "mandatory" is a vector that must contain between
-300 and 400 bytes of type opaque. It cannot be empty. The actual length
+300 and 400 bytes of type opaque. It can never be empty. The actual length
 field consumes two bytes, a uint16, which is sufficient to represent the value
 400 (see <xref target="numbers"/>). Similarly, "longer" can represent up to
 800 bytes of data, or 400 uint16 elements, and it may be empty. Its encoding
@@ -857,7 +796,7 @@ the second field of the previous declaration.</t>
 <t>Defined structures may have variants based on some knowledge that is
 available within the environment. The selector must be an enumerated
 type that defines the possible variants the structure defines. Each
-arm of the "select" (below) specifies the type of that variant's field
+arm of the select (below) specifies the type of that variant's field
 and an optional field label. The mechanism by which the variant is selected
 at runtime is not prescribed by the presentation language.</t>
 
@@ -959,7 +898,7 @@ the traffic keys used to protect the rest of the handshake and the data.</t>
 
 <section anchor="cryptographic-negotiation" title="Cryptographic Negotiation">
 
-<t>In TLS, the cryptographic negotiation proceeds when the client offers the
+<t>In TLS, the cryptographic negotiation proceeds by the client offering the
 following four sets of options in its ClientHello:</t>
 
 <t><list style="symbols">
@@ -1092,7 +1031,7 @@ target="supported-versions"/>) and the legacy_version field MUST be set to
 target="backward-compatibility"/> for details about backward
 compatibility.)</t>
   <t hangText='random'>
-  This field is 32 bytes generated by a secure random number generator.
+  32 bytes generated by a secure random number generator.
 See <xref target="implementation-notes"/> for additional information.</t>
   <t hangText='legacy_session_id'>
   Versions of TLS before TLS 1.3 supported a "session resumption"
@@ -1141,7 +1080,7 @@ Servers MUST ignore unrecognized extensions.</t>
 
 <t>All versions of TLS allow an extensions field to optionally follow the
 compression_methods field. TLS 1.3 ClientHello
-messages always contain extensions (minimally "supported_versions"; otherwise,
+messages always contain extensions (minimally "supported_versions", otherwise,
 they will be interpreted as TLS 1.2 ClientHello messages).
 However, TLS&nbsp;1.3 servers might receive ClientHello messages without an
 extensions field from prior versions of TLS.
@@ -1155,7 +1094,7 @@ attempt to negotiate TLS 1.3 if the "supported_versions" extension
 is present.
 If negotiating a version of TLS prior to 1.3, a server MUST check that
 the message either contains no data after legacy_compression_methods
-or contains a valid extensions block with no data following.
+or that it contains a valid extensions block with no data following.
 If not, then it MUST abort the handshake with a "decode_error" alert.</t>
 
 <t>In the event that a client requests additional functionality using
@@ -1199,7 +1138,7 @@ be set to 0x0303, which is the version number for TLS 1.2.
 (See <xref target="backward-compatibility"/> for details about backward
 compatibility.)</t>
   <t hangText='random'>
-  This field is 32 bytes generated by a secure random number generator.
+  32 bytes generated by a secure random number generator.
 See <xref target="implementation-notes"/> for additional information.
 The last eight bytes MUST be overwritten as described
 below if negotiating TLS 1.2 or TLS&nbsp;1.1, but the
@@ -1207,7 +1146,7 @@ remaining bytes MUST be random.
 This structure is generated by the server and MUST be
 generated independently of the ClientHello.random.</t>
   <t hangText='legacy_session_id_echo'>
-  This field is the contents of the client's legacy_session_id field. Note that
+  The contents of the client's legacy_session_id field. Note that
 this field is echoed even if the client's value corresponded to
 a cached pre-TLS 1.3 session which the server has chosen not
 to resume. A client which receives a legacy_session_id_echo field
@@ -1215,14 +1154,14 @@ that does not match what it sent in the ClientHello
 MUST abort the handshake with an "illegal_parameter"
 alert.</t>
   <t hangText='cipher_suite'>
-  This field is the single cipher suite selected by the server from the list in
+  The single cipher suite selected by the server from the list in
 ClientHello.cipher_suites. A client which receives a cipher suite
 that was not offered MUST abort the handshake with an "illegal_parameter"
 alert.</t>
   <t hangText='legacy_compression_method'>
-  This field is a single byte which MUST have the value 0.</t>
+  A single byte which MUST have the value 0.</t>
   <t hangText='extensions'>
-  This field is a list of extensions.  The ServerHello MUST only include
+  A list of extensions.  The ServerHello MUST only include
 extensions which are required to establish the cryptographic context and
 negotiate the protocol version. All TLS&nbsp;1.3 ServerHello messages MUST
 contain the "supported_versions" extension.  Current ServerHello messages
@@ -1298,36 +1237,15 @@ the handshake. As discussed in <xref target="server-hello"/>, the
 HelloRetryRequest has the same format as a ServerHello message, and the
 legacy_version, legacy_session_id_echo, cipher_suite, and
 legacy_compression_method fields have the same meaning.
-
-<!-- [rfced] Section 4.1.4: FYI, we changed "legacy_compression methods"
-to "legacy_compression_method" in this sentence (1) because 
-Section 4.1.3 only uses the singular "legacy_compression_method"
-and (2) per the "... legacy_version, legacy_session_id_echo,
-cipher_suite, and legacy_compression_method as specified in
-Section 4.1.3" text two paragraphs later.  Please let us know if this
-is incorrect.
-
-Original:
- As discussed in Section 4.1.3, the HelloRetryRequest
- has the same format as a ServerHello message, and the legacy_version,
- legacy_session_id_echo, cipher_suite, and legacy_compression methods
- fields have the same meaning.
-
-Currently:
- As discussed in Section 4.1.3, the HelloRetryRequest
- has the same format as a ServerHello message, and the legacy_version,
- legacy_session_id_echo, cipher_suite, and legacy_compression_method
- fields have the same meaning. -->
-
 However, for convenience we discuss "HelloRetryRequest" throughout this
 document as if it were a distinct message.</t>
 
-<t>The server's extensions MUST contain "supported_versions";
+<t>The server's extensions MUST contain "supported_versions",
 otherwise, the server SHOULD send only the extensions necessary for the
 client to generate a correct ClientHello pair. As with the ServerHello, a
 HelloRetryRequest MUST NOT contain any extensions that were not first
 offered by the client in its ClientHello, with the exception of
-(optionally) the "cookie" (see <xref target="cookie"/>) extension.</t>
+optionally the "cookie" (see <xref target="cookie"/>) extension.</t>
 
 <t>Upon receipt of a HelloRetryRequest, the client MUST check
 the legacy_version, legacy_session_id_echo, cipher_suite,
@@ -1407,31 +1325,6 @@ handshake with an "illegal_parameter" alert if the value changes.</t>
    } ExtensionType;
 ]]></artwork></figure>
 
-<!-- [rfced] Section 4.2 and Appendix B.3.1:  We could not find
-"supported_groups(10)," "supported_groups," or "supported group(s)"
-in RFC 4492 (only "elliptic_curves(10)" and "sect283r1 (10)").
-Should "4492" be removed from this entry?
-
-Original:
- supported_groups(10),                       /* RFC 4492, 7919 */
-...
- The list of extension types is maintained by IANA as described in
- Section 11.
-
-Possibly:
- supported_groups(10),                       /* RFC 7919 */
-...
- The list of extension types is maintained by IANA as described in
- Section 11.  Note that IANA previously renamed the "elliptic_curves"
- extension [RFC4492] as "supported_groups"; see Section 4.2.7.
-
-Alternatively, if it's appropriate to list an I-D here,
-per <https://www.iana.org/assignments/tls-extensiontype-values/>,
-it could cite draft-ietf-tls-rfc4492bis.  For example, maybe
-
- supported_groups(10),                       /* RFC 7919, [TLS-ECC] */
--->
-
 <t>Here:</t>
 
 <t><list style="symbols">
@@ -1455,7 +1348,7 @@ directly to these.</t>
 
 <t>Implementations MUST NOT send extension responses
 if the remote endpoint did not send the corresponding extension requests,
-with the exception of the "cookie" extension in a HelloRetryRequest.
+with the exception of the "cookie" extension in the HelloRetryRequest.
 Upon receiving such an extension, an endpoint MUST abort the handshake with an
 "unsupported_extension" alert.</t>
 
@@ -1478,7 +1371,7 @@ appears, it MUST abort the handshake with an "illegal_parameter" alert.</t>
       <c>CH, CR, CT</c>
       <c>supported_groups <xref target="RFC7919"></xref></c>
       <c>CH, EE</c>
-      <c>signature_algorithms <xref target="RFC5246"></xref></c>
+      <c>signature_algorithms (RFC 8446)</c>
       <c>CH, CR</c>
       <c>use_srtp <xref target="RFC5764"></xref></c>
       <c>CH, EE</c>
@@ -1494,40 +1387,27 @@ appears, it MUST abort the handshake with an "illegal_parameter" alert.</t>
       <c>CH, EE</c>
       <c>padding <xref target="RFC7685"></xref></c>
       <c>CH</c>
-      <c>key_share (this document)</c>
+      <c>key_share (RFC 8446)</c>
       <c>CH, SH, HRR</c>
-      <c>pre_shared_key (this document)</c>
+      <c>pre_shared_key (RFC 8446)</c>
       <c>CH, SH</c>
-      <c>psk_key_exchange_modes (this document)</c>
+      <c>psk_key_exchange_modes (RFC 8446)</c>
       <c>CH</c>
-      <c>early_data (this document)</c>
+      <c>early_data (RFC 8446)</c>
       <c>CH, EE, NST</c>
-      <c>cookie (this document)</c>
+      <c>cookie (RFC 8446)</c>
       <c>CH, HRR</c>
-      <c>supported_versions (this document)</c>
+      <c>supported_versions (RFC 8446)</c>
       <c>CH, SH, HRR</c>
-      <c>certificate_authorities (this document)</c>
+      <c>certificate_authorities (RFC 8446)</c>
       <c>CH, CR</c>
-      <c>oid_filters (this document)</c>
+      <c>oid_filters (RFC 8446)</c>
       <c>CR</c>
-      <c>post_handshake_auth (this document)</c>
+      <c>post_handshake_auth (RFC 8446)</c>
       <c>CH</c>
-      <c>signature_algorithms_cert (this document)</c>
+      <c>signature_algorithms_cert (RFC 8446)</c>
       <c>CH, CR</c>
 </texttable>
-
-<!-- [rfced] Section 4.2:  Should this document be listed instead of
-[RFC5246] for the "signature_algorithms" extension, in order to match
-the same entry in the "enum" list earlier in this section (i.e.,
- signature_algorithms(13),                   /* [[this document]] */
-?
-
-Original:
- | signature_algorithms [RFC5246]                   |      CH, CR |
-
-Perhaps:
- | signature_algorithms (this document)             |      CH, CR |
--->
 
 <t>When multiple extensions of different types are present, the
 extensions MAY appear in any order, with the exception of
@@ -1726,31 +1606,6 @@ SignatureSchemeList value:</t>
    } SignatureSchemeList;
 ]]></artwork></figure>
 
-<!-- [rfced] Section 4.2.3 and Appendix B.3.1.3:  Please confirm that
-what appears to be a "double" use of "0xFFFF" is correct in these two
-instances:
-
-Original:
-...
- private_use(0xFE00..0xFFFF),
- (0xFFFF)
-...
- private_use(0xFE00..0xFFFF),
- (0xFFFF)
-
-We ask this because we do not see the dual usage of a particular value
-in similar-looking items at the end of "enum" lists.  For example,
-
-...
- ecdhe_private_use(0xFE00..0xFEFF),
- (0xFFFF)
-...
- message_hash(254),
- (255)
-...
- obsolete_RESERVED(0xFF01..0xFF02),
- (0xFFFF) -->
-
 <t>Note: This enum is named "SignatureScheme" because there is already
 a "SignatureAlgorithm" type in TLS 1.2, which this replaces.
 We use the term "signature algorithm" throughout the text.</t>
@@ -1796,16 +1651,7 @@ digest used in the mask generation function and the digest being signed are
 both the corresponding hash algorithm as defined in <xref target="SHS"/>.
 The length of the salt MUST be equal to the length of the digest
 algorithm. If the public key is carried in an X.509 certificate,
-it MUST use the RSASSA-PSS OID  <xref target="RFC5756"/>.
-
-<!-- [rfced] Section 4.2.3:  Should "RSASSA-PSS" be "id-RSASSA-PSS"
-per RFC 5756?
-
-Original:
- If the public key is carried in an X.509 certificate,
- it MUST use the RSASSA-PSS OID [RFC5756]. -->
-
- When used in certificate signatures,
+it MUST use the RSASSA-PSS OID  <xref target="RFC5756"/>. When used in certificate signatures,
 the algorithm parameters MUST be DER encoded. If the corresponding
 public key's parameters are present, then the parameters in the signature
 MUST be identical to those in the public key.</t>
@@ -1829,7 +1675,7 @@ without it (see <xref target="server-certificate-selection"/>).</t>
 
 <t>The signatures on certificates that are self-signed or certificates that are
 trust anchors are not validated, since they begin a certification path (see
-Section&nbsp;3.2 of <xref target="RFC5280"/>).  A certificate that begins a
+<xref target="RFC5280"/>, Section 3.2).  A certificate that begins a
 certification path MAY use a signature algorithm that is not advertised as
 being supported in the "signature_algorithms" extension.</t>
 
@@ -1860,7 +1706,7 @@ suites.</t>
 <section anchor="certificate-authorities" title="Certificate Authorities">
 
 <t>The "certificate_authorities" extension is used to indicate the
-Certificate Authorities (CAs) which an endpoint supports and which SHOULD
+certificate authorities (CAs) which an endpoint supports and which SHOULD
 be used by the receiving endpoint to guide certificate selection.</t>
 
 <t>The body of the "certificate_authorities" extension consists of a
@@ -2026,7 +1872,7 @@ completed handshake to change what groups they use in their
 "key_share" extension in subsequent connections.
 If the server has a group it prefers to the
 ones in the "key_share" extension but is still willing to accept the
-ClientHello, it SHOULD send the "supported_groups" extension to update the
+ClientHello, it SHOULD send "supported_groups" to update the
 client's view of its preferences; this extension SHOULD contain all groups
 the server supports, regardless of whether they are currently
 supported by the client.</t>
@@ -2038,18 +1884,7 @@ supported by the client.</t>
 
 <t>Clients MAY send an empty client_shares vector in order to request
 group selection from the server, at the cost of an additional round trip
-(see <xref target="hello-retry-request"/>).
-
-<!-- [rfced] Section 4.2.8:  We could not find any relationship
-between Section 4.1.4 and this text.  Please confirm that the
-citation is correct.
-
-Original:
- Clients MAY send an empty client_shares vector in order to request
- group selection from the server at the cost of an additional round
- trip.  (see Section 4.1.4) -->
-
-</t>
+(see <xref target="hello-retry-request"/>).</t>
 
 <figure><artwork><![CDATA[
    struct {
@@ -2088,8 +1923,8 @@ contains a "KeyShareClientHello" value:</t>
 Each KeyShareEntry value MUST correspond to a group offered in the
 "supported_groups" extension and MUST appear in the same order.  However, the
 values MAY be a non-contiguous subset of the "supported_groups" extension and
-MAY omit the groups that are most preferred. Such a situation could arise if
-these most preferred groups are new and unlikely to be supported in enough
+MAY omit the most preferred groups. Such a situation could arise if
+the most preferred groups are new and unlikely to be supported in enough
 places to make pregenerating key shares for them efficient.</t>
 
 <t>Clients can offer as many KeyShareEntry values as the number of supported
@@ -2204,17 +2039,7 @@ peers MUST validate each other's public value Q by ensuring
 that the point is a valid point on the elliptic curve.
 The appropriate validation procedures are defined in Section&nbsp;4.3.7 of
 <xref target="X962"/> and alternatively in Section&nbsp;5.6.2.3 of <xref
-target="KEYAGREEMENT"/>.
-
-<!-- [rfced] Section 4.2.8.2:  Does "alternatively" here mean
-"also," "an alternative definition," or something else?
-
-Original:
- The appropriate validation
- procedures are defined in Section 4.3.7 of [X962] and alternatively
- in Section 5.6.2.3 of [KEYAGREEMENT]. -->
-
- This process consists of three
+target="KEYAGREEMENT"/>. This process consists of three
 steps: (1) verify that Q is not the point at infinity (O), (2) verify
 that for Q = (x, y) both integers x and y are in the correct interval, and
 (3) ensure that (x, y) is a correct solution to the elliptic curve
@@ -2237,25 +2062,7 @@ for each curve.</t>
 extension. The semantics of this extension are that the client only
 supports the use of PSKs with these modes, which restricts both the
 use of PSKs offered in this ClientHello and those which the server
-might supply via NewSessionTicket.
-
-<!-- [rfced] Section 4.2.9:  To what does "restricts" refer in this
-sentence?
-
-Original:
- The semantics of this extension
- are that the client only supports the use of PSKs with these modes,
- which restricts both the use of PSKs offered in this ClientHello and
- those which the server might supply via NewSessionTicket. 
-
-Perhaps:
- The semantics of this extension
- are that the client only supports the use of PSKs with these modes,
- thereby restricting both the use of PSKs offered in this ClientHello 
- and those which the server might supply via NewSessionTicket. 
--->
-
-</t>
+might supply via NewSessionTicket.</t>
 
 <t>A client MUST provide a "psk_key_exchange_modes" extension if it offers
 a "pre_shared_key" extension. If clients offer "pre_shared_key" without
@@ -2318,7 +2125,7 @@ extension.</t>
 max_early_data_size field.</t>
 
 <t>The parameters for the 0-RTT data (version, symmetric cipher suite,
-Application-Layer Protocol Negotiation (ALPN) protocol, etc.) are those associated with the PSK in use.
+Application-Layer Protocol Negotiation (ALPN) <xref target="RFC7301"/> protocol, etc.) are those associated with the PSK in use.
 For externally provisioned PSKs, the associated values are those
 provisioned along with the key.  For PSKs established via a NewSessionTicket
 message, the associated values are those which were negotiated in the connection
@@ -2406,29 +2213,7 @@ target="record-payload-protection"/>.</t>
 application MAY opt to retransmit the application data previously
 sent in early data once the handshake has
 been completed.  Note that automatic retransmission of early data
-could result in assumptions about the status of the connection being
-incorrect.
-
-<!-- [rfced] Section 4.2.10:  Does "incorrect" refer to the
-assumptions or to the status?  If neither suggestion below is
-correct, please clarify.
-
-Original:
- Note that
- automatic re-transmission of early data could result in assumptions
- about the status of the connection being incorrect.
-
-Suggestion #1:
- Note that
- automatic retransmission of early data could result in incorrect
- assumptions regarding the status of the connection.
-
-Suggestion #2:
- Note that
- automatic retransmission of early data could result in assumptions
- that the status of the connection is incorrect. -->
-
- For instance, when the negotiated connection selects a
+could result in incorrect assumptions regarding the status of the connection. For instance, when the negotiated connection selects a
 different ALPN protocol from what was used for the early data, an
 application might need to construct different messages.  Similarly, if
 early data assumes anything about the connection state, it might be
@@ -2500,19 +2285,8 @@ the identities in the client's list.</t>
 via the ticket mechanism (<xref target="NSTMessage"/>), this is the
 KDF Hash algorithm on the connection where the ticket was established.
 For externally established PSKs, the Hash algorithm MUST be set when the
-PSK is established, or default to SHA-256 if no such algorithm
-is defined.
-
-<!-- [rfced] Section 4.2.11:  Does the "MUST" also apply to "default"
-in this sentence (in which case the comma after "established" should
-be removed)?
-
-Original:
- For externally established PSKs, the Hash algorithm MUST be set when
- the PSK is established, or default to SHA-256 if no such algorithm is
- defined. -->
-
- The server MUST ensure that it selects a compatible
+PSK is established or default to SHA-256 if no such algorithm
+is defined. The server MUST ensure that it selects a compatible
 PSK (if any) and cipher suite.</t>
 
 <t>In TLS versions prior to TLS 1.3, the Server Name Identification (SNI) value was
@@ -2718,7 +2492,7 @@ Clients MUST ignore unrecognized extensions.</t>
 <t>In prior versions of TLS, the CertificateRequest message
 carried a list of signature algorithms and certificate authorities
 which the server would accept. In TLS 1.3, the former is expressed
-by sending the "signature_algorithms" and (optionally)
+by sending the "signature_algorithms" and optionally
 "signature_algorithms_cert" extensions. The latter is
 expressed by sending the "certificate_authorities" extension
 (see <xref target="certificate-authorities"/>).</t>
@@ -2736,19 +2510,8 @@ extension (see <xref target="post_handshake_auth"/>).</t>
 <t>As discussed in <xref target="protocol-overview"/>, TLS generally uses a common
 set of messages for authentication, key confirmation, and handshake
 integrity: Certificate, CertificateVerify, and Finished.
-(The PreSharedKey binders also perform key confirmation, in a
-similar fashion.)
-
-<!-- [rfced] Section 4.4:  This is the only instance of "PreSharedKey"
-that we see in this document.  Should it be "PreSharedKeyExtension"
-or perhaps "PSK" (per "PSK binder" used elsewhere in the document)?
-
-Original:
- (The
- PreSharedKey binders also perform key confirmation, in a similar
- fashion.) -->
-
- These three
+(The PSK binders also perform key confirmation, in a
+similar fashion.) These three
 messages are always sent as the last messages in their handshake
 flight. The Certificate and CertificateVerify messages are only
 sent under certain circumstances, as defined below. The Finished
@@ -2784,17 +2547,6 @@ CertificateVerify) using a MAC key derived from the base key.</t>
 <t>The following table defines the Handshake Context and MAC Base Key
 for each scenario:</t>
 
-<!-- [rfced] Section 4.4: In the table, are the line breaks in the "Base Key"
-column acceptable? If not, we can provide options for reformatting this table
-as a list. (This would mean not using the texttable element in XML).  For
-example:
-
-   Mode: Server
-   Handshake Context: ClientHello ... later of EncryptedExtensions/
-      CertificateRequest
-   Base Key: server_handshake_traffic_secret
--->
-
 <texttable>
       <ttcol align='left' width="20%">Mode</ttcol>
       <ttcol align='left' width="40%">Handshake Context</ttcol>
@@ -2816,7 +2568,7 @@ example:
 hash. This value is computed by hashing the concatenation of
 each included handshake message, including the handshake
 message header carrying the handshake message type and length fields,
-but not including record-layer headers. That is,</t>
+but not including record layer headers. I.e.,</t>
 
 <figure><artwork><![CDATA[
  Transcript-Hash(M1, M2, ... Mn) = Hash(M1 || M2 || ... || Mn)
@@ -2825,7 +2577,7 @@ but not including record-layer headers. That is,</t>
 <t>As an exception to this general rule, when the server responds to a
 ClientHello with a HelloRetryRequest, the value of ClientHello1 is
 replaced with a special synthetic handshake message of handshake
-type "message_hash" containing Hash(ClientHello1). That is,</t>
+type "message_hash" containing Hash(ClientHello1). I.e.,</t>
 
 <figure><artwork><![CDATA[
  Transcript-Hash(ClientHello1, HelloRetryRequest, ... Mn) =
@@ -2905,36 +2657,14 @@ be sent regardless of whether the Certificate message is empty.</t>
 value of certificate_request_context in that message. Otherwise
 (in the case of server authentication), this field SHALL be zero length.</t>
   <t hangText='certificate_list'>
-  A sequence (chain) of CertificateEntry structures, each
+  This is a sequence (chain) of CertificateEntry structures, each
 containing a single certificate and set of extensions.</t>
   <t hangText='extensions:'>
   A set of extension values for the CertificateEntry. The "Extension"
 format is defined in <xref target="extensions"/>. Valid extensions for server
 certificates at present include the OCSP Status extension <xref
 target="RFC6066"/> and SignedCertificateTimestamp <xref target="RFC6962"/>;
-future extensions may be defined for this message as well.
-
-<!-- [rfced] Section 4.4.2:
-a) Does "OCSP Status extension" mean "OCSPStatusRequest" or
-"status_request" (or should "extension" be "extensions")?
-
-b) FYI, we changed "SignedCertificateTimestamps" to
-"SignedCertificateTimestamp" per RFC 6962.  Please let us know any
-objections.
-
-Original:
- Valid extensions
- for server certificates at present include OCSP Status extension
- ([RFC6066]) and SignedCertificateTimestamps ([RFC6962]); future
- extensions may be defined for this message as well.
-
-Currently:
- Valid extensions
- for server certificates at present include the OCSP Status
- extension [RFC6066] and SignedCertificateTimestamp [RFC6962];
- future extensions may be defined for this message as well. -->
-
- Extensions in the
+future extensions may be defined for this message as well. Extensions in the
 Certificate message from the server MUST correspond to ones from the
 ClientHello message. Extensions in the Certificate message from the client
 MUST correspond with extensions in the CertificateRequest message from the
@@ -2944,7 +2674,7 @@ in the first CertificateEntry.</t>
 
 <t>If the corresponding certificate type extension
 ("server_certificate_type" or "client_certificate_type") was not negotiated
-in EncryptedExtensions or the X.509 certificate type was negotiated, then each
+in EncryptedExtensions, or the X.509 certificate type was negotiated, then each
 CertificateEntry contains a DER-encoded X.509 certificate. The sender's
 certificate MUST come in the first CertificateEntry in the list.  Each
 following certificate SHOULD directly certify the one immediately preceding it.
@@ -2965,19 +2695,7 @@ version, with the exception of the end-entity certificate which MUST be first.</
 <t>If the RawPublicKey certificate type was negotiated, then the
 certificate_list MUST contain no more than one CertificateEntry, which
 contains an ASN1_subjectPublicKeyInfo value as defined in
-Section&nbsp;3 of <xref target="RFC7250"/>.
-
-<!-- [rfced] Section 4.4.2:  We note that Section 3 of RFC 7250 uses 
-"ASN.1_subjectPublicKeyInfo" not "ASN1_subjectPublicKeyInfo".
-Should the period be added, or is the difference intentional? 
-
-Original:
- If the RawPublicKey certificate type was negotiated, then the
- certificate_list MUST contain no more than one CertificateEntry,
- which contains an ASN1_subjectPublicKeyInfo value as defined in
- [RFC7250], Section 3. -->
-
-</t>
+Section&nbsp;3 of <xref target="RFC7250"/>.</t>
 
 <t>The OpenPGP certificate type <xref target="RFC6091"/> MUST NOT be used with TLS 1.3.</t>
 
@@ -3144,17 +2862,7 @@ after the Certificate message and immediately prior to the Finished message.</t>
 ]]></artwork></figure>
 
 <t>The algorithm field specifies the signature algorithm used (see
-<xref target="signature-algorithms"/> for the definition of this field).
-
-<!-- [rfced] Section 4.4.3:  To which parameter in Section 4.2.3 does
-"this field" refer (maybe the "signature_algorithms_cert" extension and
-the"signature_algorithms" extension)?
-
-Original:
- The algorithm field specifies the signature algorithm used (see
- Section 4.2.3 for the definition of this field). -->
-
- The
+<xref target="signature-algorithms"/> for the definition of this type). The
 signature is a digital signature using that algorithm. The
 content that is covered under the signature is the hash output as described in
 <xref target="the-transcript-hash"/>, namely:</t>
@@ -3178,11 +2886,12 @@ attackers could obtain a signature of a message with a chosen 32-byte
 prefix (ClientHello.random). The initial 64-byte pad clears that prefix
 along with the server-controlled ServerHello.random.</t>
 
-<t>The context string for a server signature is "TLS 1.3,
-server CertificateVerify".  The context string for a client signature is
-"TLS&nbsp;1.3, client CertificateVerify".  It is used to provide
-separation between signatures made in different contexts, helping
-against potential cross-protocol attacks.</t>
+<t>The context string for a server signature is
+"TLS 1.3, server CertificateVerify".
+The context string for a client signature is
+"TLS&nbsp;1.3, client CertificateVerify".
+It is used to provide separation between signatures made in different
+contexts, helping against potential cross-protocol attacks.</t>
 
 <t>For example, if the transcript hash was 32 bytes of
 01 (this length would make sense for SHA-256), the content covered by
@@ -3377,22 +3086,10 @@ implementation declines all PSK identities with different SNI values, these two
 values are always the same.</t>
 
 <t>Note: Although the resumption master secret depends on the client's second
-flight, servers which do not request client authentication MAY compute
+flight, a server which does not request client authentication MAY compute
 the remainder of the transcript independently and then send a
 NewSessionTicket immediately upon sending its Finished rather than
-waiting for the client Finished.
-
-<!-- [rfced] Section 4.6.1:  Does "its" ("its Finished") refer to the
-servers (in which case it should be "their Finished") or something else?
-
-Original:
- Note: Although the resumption master secret depends on the client's
- second flight, servers which do not request client authentication MAY
- compute the remainder of the transcript independently and then send a
- NewSessionTicket immediately upon sending its Finished rather than
- waiting for the client Finished. -->
-
-  This might be appropriate in cases
+waiting for the client Finished.  This might be appropriate in cases
 where the client is expected to open multiple TLS connections in
 parallel and would benefit from the reduced overhead of a resumption
 handshake, for example.</t>
@@ -3500,17 +3197,7 @@ received (the certificate_request_context value allows the server to
 disambiguate the responses).</t>
 
 </section>
-<section anchor="key-update" title="Key and IV Update">
-
-<!-- [rfced] Section 4.6.3:  As this is the only instance of
-"IV" in this document (here and in the Table of Contents), may
-we spell it out instead?
-
-Original:
-4.6.3.  Key and IV Update
-
-Suggested:
-4.6.3.  Key and Initialization Vector Update -->
+<section anchor="key-update" title="Key and Initialization Vector Update">
 
 <figure><artwork><![CDATA[
    enum {
@@ -3582,7 +3269,7 @@ The change_cipher_spec record is used only for compatibility purposes
 <t>An implementation may receive an unencrypted record of type
 change_cipher_spec consisting of the single byte value 0x01 at any
 time after the first ClientHello message has been sent or received and before
-the peer's Finished message has been received; it MUST simply drop it
+the peer's Finished message has been received and MUST simply drop it
 without further processing.  Note that this record may appear at a point at the
 handshake where the implementation is expecting protected records,
 and so it is necessary to detect this
@@ -3598,7 +3285,7 @@ servers may not be able to distinguish these cases from allowed cases).</t>
 document unless negotiated by some extension.  If a TLS implementation
 receives an unexpected record type, it MUST terminate the connection
 with an "unexpected_message" alert.  New record content type values
-are assigned by IANA in the "TLS ContentType Registry" as described in
+are assigned by IANA in the TLS ContentType Registry as described in
 <xref target="iana-considerations"/>.</t>
 
 <section anchor="record-layer" title="Record Layer">
@@ -3682,30 +3369,11 @@ specified by the type field.</t>
 <t>This document describes TLS 1.3, which uses the version 0x0304.
 This version value is historical, deriving from the use of 0x0301
 for TLS&nbsp;1.0 and 0x0300 for SSL 3.0. In order to maximize backward
-compatibility, records containing an initial ClientHello SHOULD have version
-0x0301 and a record containing a second ClientHello or a ServerHello MUST
-have version 0x0303, reflecting TLS 1.0 and TLS 1.2, respectively.
-
-<!-- [rfced] Section 5.1:  We had trouble parsing this sentence.
-If the suggested text is not correct, please clarify.
-
-Original:
- In order to maximize backwards
- compatibility, records containing an initial ClientHello SHOULD have
- version 0x0301 and a record containing a second ClientHello or a
- ServerHello MUST have version 0x0303, reflecting TLS 1.0 and TLS 1.2
- respectively.
-
-Suggested:
- In order to maximize backward
- compatibility, a record containing an initial ClientHello SHOULD have
- version 0x0301 (reflecting TLS 1.0) and a record containing a second
- ClientHello or a ServerHello MUST have version 0x0303 (reflecting
- TLS 1.2). -->
-
-When negotiating prior versions of TLS, endpoints
-follow the procedure and requirements provided
-in <xref target="backward-compatibility"/>.</t>
+compatibility, a record containing an initial ClientHello SHOULD have version
+0x0301 (reflecting TLS 1.0) and a record containing a second ClientHello or
+a ServerHello MUST have version 0x0303 (reflecting TLS&nbsp;1.2). When
+negotiating prior versions of TLS, endpoints follow the procedure and
+requirements provided in <xref target="backward-compatibility"/>.</t>
 
 <t>When record protection has not yet been engaged, TLSPlaintext
 structures are written directly onto the wire. Once record protection
@@ -3785,7 +3453,7 @@ Section&nbsp;2.1 of <xref target="RFC5116"/>. The key is either the
 client_write_key or the server_write_key, the nonce is derived from the
 sequence number and the client_write_iv or server_write_iv (see <xref
 target="nonce"/>), and the additional data input is the record header.
-That is,</t>
+I.e.,</t>
 
 <figure><artwork><![CDATA[
    additional_data = TLSCiphertext.opaque_type ||
@@ -3803,21 +3471,7 @@ any padding supplied by the sender. The length of the
 AEAD output will generally be larger than the plaintext, but by an
 amount that varies with the AEAD algorithm. Since the ciphers might
 incorporate padding, the amount of overhead could vary with different
-lengths of plaintext.
-
-<!-- [rfced] Section 5.2:  Please confirm that Erratum #2390 for
-RFC 5246 <https://www.rfc-editor.org/errata/eid2390> has been
-addressed.  (We ask because the "... might incorporate padding ..."
-sentence remains, and the erratum suggests that it be removed.)
-
-Original:
- The
- length of the AEAD output will generally be larger than the
- plaintext, but by an amount that varies with the AEAD algorithm.
- Since the ciphers might incorporate padding, the amount of overhead
- could vary with different lengths of plaintext.  Symbolically, -->
-
- Symbolically,</t>
+lengths of plaintext. Symbolically,</t>
 
 <figure><artwork><![CDATA[
    AEADEncrypted =
@@ -3865,7 +3519,7 @@ terminate the connection.</t>
 per-record nonce, from N_MIN bytes to N_MAX bytes of input
 <xref target="RFC5116"/>. The length of the TLS per-record nonce (iv_length)
 is set to the larger of 8 bytes and N_MIN for the AEAD algorithm
-(see Section&nbsp;4 of <xref target="RFC5116"/>).
+(see <xref target="RFC5116"/>, Section&nbsp;4).
 An AEAD algorithm where N_MAX is less than 8 bytes MUST&nbsp;NOT be used
 with TLS. The per-record nonce for the AEAD construction is formed as
 follows:</t>
@@ -3912,7 +3566,7 @@ content type of the message.
 This padding scheme was selected because it allows padding of any encrypted
 TLS record by an arbitrary size (from zero up to TLS record size
 limits) without introducing new content types.  The design also
-enforces all-zero padding octets; this allows for quick detection of
+enforces all-zero padding octets, which allows for quick detection of
 padding errors.</t>
 
 <t>Implementations MUST limit their scanning to the cleartext returned
@@ -3923,7 +3577,7 @@ connection with an "unexpected_message" alert.</t>
 <t>The presence of padding does not change the overall record size
 limitations: the full encoded TLSInnerPlaintext MUST NOT exceed 2^14 + 1
 octets. If the maximum fragment length is reduced -- as, for example, by the
-max_fragment_length extension from <xref target="RFC6066"></xref> --
+max_fragment_length extension from <xref target="TLS-Record-Limit"></xref> --
 then the reduced limit applies to the full plaintext, including the
 content type and padding.</t>
 
@@ -3945,7 +3599,7 @@ an analysis of these limits under the assumption that the underlying
 primitive (AES or ChaCha20) has no weaknesses. Implementations SHOULD
 do a key update as described in <xref target="key-update"/> prior to reaching these limits.</t>
 
-<t>For AES Galois/Counter Mode (AES-GCM), up to 2^24.5 full-size records (about 24 million)
+<t>For AES-GCM, up to 2^24.5 full-size records (about 24 million)
 may be encrypted on a given connection while keeping a safety
 margin of approximately 2^-57 for Authenticated Encryption (AE) security.
 For ChaCha20/Poly1305, the record sequence number would wrap before the
@@ -4035,24 +3689,7 @@ enum) MUST terminate the connection with an "illegal_parameter" alert.</t>
 <section anchor="closure-alerts" title="Closure Alerts">
 
 <t>The client and the server must share knowledge that the connection is
-ending in order to avoid a truncation attack.
-
-<!-- [rfced] Section 6.1:  To what does "in order to" refer in this
-sentence?  If neither suggestion is correct, please clarify.
-
-Original:
- The client and the server must share knowledge that the connection is
- ending in order to avoid a truncation attack.
-
-Suggestion #1:
- In order to avoid a truncation attack, the client and the server
- must share knowledge that the connection is ending.
-
-Suggestion #2:
- The client and the server must share knowledge that the connection
- is being ended so that a truncation attack can be avoided. -->
-
-</t>
+ending in order to avoid a truncation attack.</t>
 
 <t><list style="hanging">
   <t hangText='close_notify'>
@@ -4097,7 +3734,7 @@ delivers pending data before destroying the transport.</t>
 </section>
 <section anchor="error-alerts" title="Error Alerts">
 
-<t>Error handling in the TLS handshake protocol is very simple. When an
+<t>Error handling in TLS is very simple. When an
 error is detected, the detecting party sends a message to its
 peer. Upon transmission or receipt of a fatal alert message, both
 parties MUST immediately close the connection.</t>
@@ -4173,50 +3810,50 @@ This alert should never be observed in communication between
 proper implementations, except when messages were corrupted
 in the network.</t>
   <t hangText='decrypt_error'>
-  A handshake (not record-layer) cryptographic operation failed, including being unable
+  A handshake (not record layer) cryptographic operation failed, including being unable
 to correctly verify a signature or validate a Finished message
 or a PSK binder.</t>
   <t hangText='protocol_version'>
   The protocol version the peer has attempted to negotiate is
 recognized but not supported (see <xref target="backward-compatibility"/>).</t>
   <t hangText='insufficient_security'>
-  This alert is returned instead of "handshake_failure" when a negotiation has
-failed, specifically because the server requires parameters more
+  Returned instead of "handshake_failure" when a negotiation has
+failed specifically because the server requires parameters more
 secure than those supported by the client.</t>
   <t hangText='internal_error'>
   An internal error unrelated to the peer or the correctness of the
 protocol (such as a memory allocation failure) makes it impossible
 to continue.</t>
   <t hangText='inappropriate_fallback'>
-  This alert is sent by a server in response to an invalid connection retry
+  Sent by a server in response to an invalid connection retry
 attempt from a client (see <xref target="RFC7507"/>).</t>
   <t hangText='missing_extension'>
-  This alert is sent by endpoints that receive a handshake message not
+  Sent by endpoints that receive a handshake message not
 containing an extension that is mandatory to send for the offered TLS version
 or other negotiated parameters.</t>
   <t hangText='unsupported_extension'>
-  This alert is sent by endpoints receiving any handshake message containing
+  Sent by endpoints receiving any handshake message containing
 an extension known to be prohibited for inclusion in the given handshake
 message, or including any extensions in a ServerHello or Certificate not first
 offered in the corresponding ClientHello.</t>
   <t hangText='unrecognized_name'>
-  This alert is sent by servers when no server exists identified by the name
+  Sent by servers when no server exists identified by the name
 provided by the client via the "server_name" extension
 (see <xref target="RFC6066"/>).</t>
   <t hangText='bad_certificate_status_response'>
-  This alert is sent by clients when an invalid or unacceptable OCSP response
+  Sent by clients when an invalid or unacceptable OCSP response
 is provided by the server via the "status_request" extension
 (see <xref target="RFC6066"/>).</t>
   <t hangText='unknown_psk_identity'>
-  This alert is sent by servers when PSK key establishment is desired but no
+  Sent by servers when PSK key establishment is desired but no
 acceptable PSK identity is provided by the client. Sending this alert
 is OPTIONAL; servers MAY instead choose to send a "decrypt_error"
 alert to merely indicate an invalid PSK identity.</t>
   <t hangText='certificate_required'>
-  This alert is sent by servers when a client certificate is desired but none
+  Sent by servers when a client certificate is desired but none
 was provided by the client.</t>
   <t hangText='no_application_protocol'>
-  This alert is sent by servers when a client
+  Sent by servers when a client
 "application_layer_protocol_negotiation" extension advertises only protocols
 that the server does not support (see <xref target="RFC7301"/>).</t>
 </list></t>
@@ -4259,10 +3896,10 @@ well as the functions defined below:</t>
                            Transcript-Hash(Messages), Hash.length)
 ]]></artwork></figure>
 
-<t>The hash function used by Transcript-Hash and HKDF is the cipher suite hash
-algorithm. Hash.length is its output length in bytes. "Messages" is the
+<t>The Hash function used by Transcript-Hash and HKDF is the cipher suite hash
+algorithm. Hash.length is its output length in bytes. Messages is the
 concatenation of the indicated handshake messages, including the handshake
-message type and length fields, but not including record-layer headers. Note
+message type and length fields, but not including record layer headers. Note
 that in some cases a zero-length Context (indicated by "") is passed to
 HKDF-Expand-Label.  The Labels specified in this document are all
 ASCII strings and do not include a trailing NUL byte.</t>
@@ -4295,113 +3932,63 @@ the name of the output on the right.</t>
   <t>Derive-Secret's Secret argument is indicated by the incoming
 arrow. For instance, the Early Secret is the Secret for
 generating the client_early_traffic_secret.</t>
-  <t>"0" indicates a string of Hash-lengths bytes set to 0.</t>
+  <t>"0" indicates a string of Hash.length bytes set to 0.</t>
 </list></t>
 
 <figure><artwork><![CDATA[
-                 0
-                 |
-                 v
+             0
+             |
+             v
    PSK ->  HKDF-Extract = Early Secret
-                 |
-                 +-----> Derive-Secret(.,
-                 |                     "ext binder" |
-                 |                     "res binder",
-                 |                     "")
-                 |                     = binder_key
-                 |
-                 +-----> Derive-Secret(., "c e traffic",
-                 |                     ClientHello)
-                 |                     = client_early_traffic_secret
-                 |
-                 +-----> Derive-Secret(., "e exp master",
-                 |                     ClientHello)
-                 |                     = early_exporter_master_secret
-                 v
-           Derive-Secret(., "derived", "")
-                 |
-                 v
+             |
+             +-----> Derive-Secret(.,
+             |                     "ext binder" |
+             |                     "res binder",
+             |                     "")
+             |                     = binder_key
+             |
+             +-----> Derive-Secret(., "c e traffic",
+             |                     ClientHello)
+             |                     = client_early_traffic_secret
+             |
+             +-----> Derive-Secret(., "e exp master",
+             |                     ClientHello)
+             |                     = early_exporter_master_secret
+             v
+       Derive-Secret(., "derived", "")
+             |
+             v
 (EC)DHE -> HKDF-Extract = Handshake Secret
-                 |
-                 +-----> Derive-Secret(., "c hs traffic",
-                 |                     ClientHello...ServerHello)
-                 |                     = client_handshake_traffic_secret
-                 |
-                 +-----> Derive-Secret(., "s hs traffic",
-                 |                     ClientHello...ServerHello)
-                 |                     = server_handshake_traffic_secret
-                 v
-           Derive-Secret(., "derived", "")
-                 |
-                 v
-      0 -> HKDF-Extract = Master Secret
-                 |
-                 +-----> Derive-Secret(., "c ap traffic",
-                 |                 ClientHello...server Finished)
-                 |                 = client_application_traffic_secret_0
-                 |
-                 +-----> Derive-Secret(., "s ap traffic",
-                 |                 ClientHello...server Finished)
-                 |                 = server_application_traffic_secret_0
-                 |
-                 +-----> Derive-Secret(., "exp master",
-                 |                 ClientHello...server Finished)
-                 |                 = exporter_master_secret
-                 |
-                 +-----> Derive-Secret(., "res master",
+             |
+             +-----> Derive-Secret(., "c hs traffic",
+             |                     ClientHello...ServerHello)
+             |                     = client_handshake_traffic_secret
+             |
+             +-----> Derive-Secret(., "s hs traffic",
+             |                     ClientHello...ServerHello)
+             |                     = server_handshake_traffic_secret
+             v
+       Derive-Secret(., "derived", "")
+             |
+             v
+  0 -> HKDF-Extract = Master Secret
+             |
+             +-----> Derive-Secret(., "c ap traffic",
+             |                     ClientHello...server Finished)
+             |                     = client_application_traffic_secret_0
+             |
+             +-----> Derive-Secret(., "s ap traffic",
+             |                     ClientHello...server Finished)
+             |                     = server_application_traffic_secret_0
+             |
+             +-----> Derive-Secret(., "exp master",
+             |                     ClientHello...server Finished)
+             |                     = exporter_master_secret
+             |
+             +-----> Derive-Secret(., "res master",
                                    ClientHello...client Finished)
                                    = resumption_master_secret
 ]]></artwork></figure>
-
-<!-- [rfced] Section 7.1: FYI, we have slightly modified the indentation of
-the "0 -> HKDF-Extract = Master Secret" portion of the figure. This is
-because the lines with "client_application_traffic_secret_0" and
-"server_application_traffic_secret_0" exceeded the 72-character line
-limit by 4 characters.  Please let us know if this solution is
-acceptable or if you prefer shortening the lines in another manner.
-Also, let us know if you want the indentation to match in the preceding
-portions of the figure. (Note: Some hyphens have been replaced by
-asterisks in this question only for the purpose of including it in the
-XML file.)
-
-Original:
-      0 -> HKDF-Extract = Master Secret
-                 |
-                 +*****> Derive-Secret(., "c ap traffic",
-                 |                     ClientHello...server Finished)
-                 |                     = client_application_traffic_secret_0
-                 |
-                 +*****> Derive-Secret(., "s ap traffic",
-                 |                     ClientHello...server Finished)
-                 |                     = server_application_traffic_secret_0
-                 |
-                 +*****> Derive-Secret(., "exp master",
-                 |                     ClientHello...server Finished)
-                 |                     = exporter_master_secret
-                 |
-                 +*****> Derive-Secret(., "res master",
-                                       ClientHello...client Finished)
-                                       = resumption_master_secret
-
-Current:
-      0 -> HKDF-Extract = Master Secret
-                 |
-                 +*****> Derive-Secret(., "c ap traffic",
-                 |                 ClientHello...server Finished)
-                 |                 = client_application_traffic_secret_0
-                 |
-                 +*****> Derive-Secret(., "s ap traffic",
-                 |                 ClientHello...server Finished)
-                 |                 = server_application_traffic_secret_0
-                 |
-                 +*****> Derive-Secret(., "exp master",
-                 |                 ClientHello...server Finished)
-                 |                 = exporter_master_secret
-                 |
-                 +*****> Derive-Secret(., "res master",
-                                   ClientHello...client Finished)
-                                   = resumption_master_secret
--->
 
 <t>The general pattern here is that the secrets shown down the left side
 of the diagram are just raw entropy without context, whereas the
@@ -4411,26 +3998,11 @@ Note that the different
 calls to Derive-Secret may take different Messages arguments,
 even with the same secret. In a 0-RTT exchange, Derive&nbhy;Secret is
 called with four distinct transcripts; in a 1&nbhy;RTT&nbhy;only exchange,
-it is called with three distinct transcripts.
-
-<!-- [rfced] Section 7.1:  This sentence did not parse.  We rephrased
-it.  Please let us know if this update is incorrect.
-
-Original:
- In a 0-RTT exchange, Derive-
- Secret is called with four distinct transcripts; in a 1-RTT-only
- exchange with three distinct transcripts.
-
-Currently:
- In a 0-RTT exchange,
- Derive-Secret is called with four distinct transcripts; in a
- 1-RTT-only exchange, it is called with three distinct transcripts. -->
-
-</t>
+it is called with three distinct transcripts.</t>
 
 <t>If a given secret is not available, then the 0-value consisting of
 a string of Hash.length bytes set to zeros is used.  Note that this does not
-mean skipping rounds, so if PSK is not in use, the Early Secret will still be
+mean skipping rounds, so if PSK is not in use, Early Secret will still be
 HKDF-Extract(0, 0). For the computation of the binder_secret, the label is
 "ext binder" for external PSKs (those provisioned outside of TLS)
 and "res binder" for resumption PSKs (those provisioned as the resumption
@@ -4483,16 +4055,8 @@ client_/server_application_traffic_secret_N and its associated traffic keys.</t>
 
 <figure><artwork><![CDATA[
    [sender]_write_key = HKDF-Expand-Label(Secret, "key", "", key_length)
-   [sender]_write_iv  = HKDF-Expand-Label(Secret, "iv" , "", iv_length)
+   [sender]_write_iv  = HKDF-Expand-Label(Secret, "iv", "", iv_length)
 ]]></artwork></figure>
-
-<!-- [rfced] Section 7.3:  Should the space between "iv" and the
-comma be removed?
-
-Original:
- [sender]_write_key = HKDF-Expand-Label(Secret, "key", "", key_length)
- [sender]_write_iv  = HKDF-Expand-Label(Secret, "iv" , "", iv_length)
--->
 
 <t>[sender] denotes the sending side. The value of Secret for each record type
 is shown in the table below.</t>
@@ -4592,17 +4156,7 @@ one is desired or vice versa.</t>
 <t>If no context is provided, the context_value is zero length. Consequently,
 providing no context computes the same value as providing an empty context.
 This is a change from previous versions of TLS where an empty context produced
-a different output to an absent context.
-
-<!-- [rfced] Section 7.5:  Should "produced a different output to" be
-"produced a different output than" in this sentence?
-
-Original:
- This is a change from previous versions
- of TLS where an empty context produced a different output to an
- absent context. -->
-
- As of this document's publication, no
+a different output than an absent context. As of this document's publication, no
 allocated exporter label is used both with and without a context. Future
 specifications MUST NOT define a use of exporters that permit both an empty
 context and no context with the same label. New uses of exporters SHOULD provide
@@ -4722,7 +4276,7 @@ of the ClientHello. If the ClientHello contains multiple
 PSK identities, then an attacker can create multiple ClientHellos
 with different binder values for the less-preferred identity on the
 assumption that the server will not verify it as recommended
-by <xref target="pre-shared-key-extension"/>. That is, if the
+by <xref target="pre-shared-key-extension"/>. I.e., if the
 client sends PSKs A and B but the server prefers A, then the
 attacker can change the binder for B without affecting the binder
 for A. If the binder for B is part of the storage key,
@@ -4730,27 +4284,7 @@ then this ClientHello will not appear as a duplicate,
 which will cause the ClientHello to be accepted, and may
 cause side effects such as replay cache pollution, although any
 0-RTT data will not be decryptable because it will use different
-keys.
-
-<!-- [rfced] Section 8.2:  We had trouble following this sentence.
-If the suggested text is not correct, please clarify.
-
-Original:
- If the binder for B is part of
- the storage key, then this ClientHello will not appear as a
- duplicate, which will cause the ClientHello to be accepted, and may
- cause side effects such as replay cache pollution, although any 0-RTT
- data will not be decryptable because it will use different keys.
-
-Suggested:
- If the binder for B is part of
- the storage key, then this ClientHello will not appear as a
- duplicate, causing the ClientHello to be accepted and possibly
- also causing side effects such as replay cache pollution, although
- any 0-RTT data will not be decryptable because it will use different
- keys. -->
-
- If the validated binder or the ClientHello.random is used as
+keys. If the validated binder or the ClientHello.random is used as
 the storage key, then this attack is not possible.</t>
 
 <t>Because this mechanism does not require storing all outstanding
@@ -4778,24 +4312,7 @@ replays which were originally sent during that period.</t>
 <t>Note: If the client's clock is running much faster than the server's,
 then a ClientHello may be received that is outside the window in the
 future, in which case it might be accepted for 1-RTT, causing a client retry,
-and then acceptable later for 0-RTT.
-
-<!-- [rfced] Section 8.2:  We had trouble parsing this sentence.
-Please clarify.
-
-Original:
- Note: If the client's clock is running much faster than the server's
- then a ClientHello may be received that is outside the window in the
- future, in which case it might be accepted for 1-RTT, causing a
- client retry, and then acceptable later for 0-RTT.
-
-Possibly:
- Note: If the client's clock is running much faster than the server's,
- then a ClientHello may be received that is outside the window in the
- future, in which case it might be accepted for 1-RTT - causing a
- client retry - and then might be acceptable later for 0-RTT. -->
-
- This is another variant of
+and then acceptable later for 0-RTT. This is another variant of
 the second form of attack described above.</t>
 
 </section>
@@ -4809,36 +4326,11 @@ This is necessary for the ClientHello storage mechanism
 described in <xref target="client-hello-recording"/> because otherwise the
 server needs to store an unlimited number of ClientHellos and is a useful
 optimization for self-contained single-use tickets because it allows efficient
-rejection of ClientHellos which cannot be used for 0-RTT.
-
-<!-- [rfced] Section 8.3:  To what does "is a useful optimization"
-refer in this sentence?  If the suggested text is not correct,
-please clarify.
-
-Original (the previous sentence is included for context):
- Because the ClientHello indicates the time at which the client sent
- it, it is possible to efficiently determine whether a ClientHello was
- likely sent reasonably recently and only accept 0-RTT for such a
- ClientHello, otherwise falling back to a 1-RTT handshake.  This is
- necessary for the ClientHello storage mechanism described in
- Section 8.2 because otherwise the server needs to store an unlimited
- number of ClientHellos and is a useful optimization for self-
- contained single-use tickets because it allows efficient rejection of
- ClientHellos which cannot be used for 0-RTT.
-
-Suggested:
- This is
- necessary for the ClientHello storage mechanism described in
- Section 8.2 - otherwise, the server needs to store an unlimited
- number of ClientHellos - and is a useful optimization for self-
- contained single-use tickets because it allows efficient rejection of
- ClientHellos which cannot be used for 0-RTT. -->
-
-</t>
+rejection of ClientHellos which cannot be used for 0-RTT.</t>
 
 <t>In order to implement this mechanism, a server needs to store the time
 that the server generated the session ticket, offset by an estimate of
-the round-trip time between client and server. That is,</t>
+the round-trip time between client and server. I.e.,</t>
 
 <figure><artwork><![CDATA[
     adjusted_creation_time = creation_time + estimated_RTT
@@ -4860,7 +4352,7 @@ compared against the current server wall clock time and if they differ
 by more than a certain amount, 0-RTT is rejected, though the 1-RTT
 handshake can be allowed to complete.</t>
 
-<t>There are several potential sources of errors that might cause
+<t>There are several potential sources of error that might cause
 mismatches between the expected arrival time and the measured
 time. Variations in client and server clock
 rates are likely to be minimal, though potentially the absolute
@@ -4873,32 +4365,13 @@ on the Internet, this implies windows
 on the order of ten seconds to account for errors in clocks and
 variations in measurements; other deployment scenarios
 may have different needs. Clock skew distributions are not
-symmetric, so the optimal trade-off may involve an asymmetric range
+symmetric, so the optimal tradeoff may involve an asymmetric range
 of permissible mismatch values.</t>
 
 <t>Note that freshness checking alone is not sufficient to prevent
 replays because it does not detect them during the error window,
-which, depending on bandwidth and system capacity could include
-billions of replays in real-world settings.
-
-<!-- [rfced] Section 8.3:  We had trouble parsing this sentence.
-If the suggested text (which assumes that the error-window timeframe
-could include billions of replays) is not correct, please clarify.
-
-Original:
- Note that freshness checking alone is not sufficient to prevent
- replays because it does not detect them during the error window,
- which, depending on bandwidth and system capacity could include
- billions of replays in real-world settings.
-
-Suggested:
- Note that freshness checking alone is not sufficient to prevent
- replays because it does not detect them during the error window,
- which - depending on bandwidth and system capacity - could include
- billions of replays in real-world settings. -->
-
-
-  In addition, this
+which -- depending on bandwidth and system capacity -- could include
+billions of replays in real-world settings. In addition, this
 freshness checking is only done at the time the ClientHello is
 received and not when subsequent early application data records are
 received. After early data is accepted, records may continue to be
@@ -4932,13 +4405,13 @@ target="RFC7748"/>.</t>
 TLS-compliant application MUST implement the following TLS extensions:</t>
 
 <t><list style="symbols">
-  <t>Supported Versions     ("supported_versions"; see <xref target="supported-versions"/>)</t>
-  <t>Cookie                 ("cookie"; see <xref target="cookie"/>)</t>
-  <t>Signature Algorithms   ("signature_algorithms"; see <xref target="signature-algorithms"/>)</t>
-  <t>Signature Algorithms Certificate  ("signature_algorithms_cert"; see <xref target="signature-algorithms"/>)</t>
-  <t>Negotiated Groups      ("supported_groups"; see <xref target="negotiated-groups"/>)</t>
-  <t>Key Share              ("key_share"; see <xref target="key-share"/>)</t>
-  <t>Server Name Indication ("server_name"; see Section&nbsp;3 of <xref target="RFC6066"/>)</t>
+  <t>Supported Versions     ("supported_versions"; <xref target="supported-versions"/>)</t>
+  <t>Cookie                 ("cookie"; <xref target="cookie"/>)</t>
+  <t>Signature Algorithms   ("signature_algorithms"; <xref target="signature-algorithms"/>)</t>
+  <t>Signature Algorithms Certificate  ("signature_algorithms_cert"; <xref target="signature-algorithms"/>)</t>
+  <t>Negotiated Groups      ("supported_groups"; <xref target="negotiated-groups"/>)</t>
+  <t>Key Share              ("key_share"; <xref target="key-share"/>)</t>
+  <t>Server Name Indication ("server_name"; Section&nbsp;3 of <xref target="RFC6066"/>)</t>
 </list></t>
 
 <t>All implementations MUST send and use these extensions when offering
@@ -4986,7 +4459,7 @@ follow. It also applies to earlier versions of TLS.</t>
 
 <t>TLS is designed to be securely and compatibly extensible. Newer clients or
 servers, when communicating with newer peers, should negotiate the
-common parameters that are most preferred. The TLS handshake provides downgrade
+most preferred common parameters. The TLS handshake provides downgrade
 protection: Middleboxes passing traffic between a newer client and
 newer server without terminating TLS should be unable to influence the
 handshake (see <xref target="security-handshake"/>). At the same time, deployments
@@ -4998,7 +4471,7 @@ older endpoints.</t>
 
 <t><list style="symbols">
   <t>A client sending a ClientHello MUST support all parameters advertised in
-it. Otherwise, the server may fail to interoperate if it selects one of those
+it. Otherwise, the server may fail to interoperate by selecting one of those
 parameters.</t>
   <t>A server receiving a ClientHello MUST correctly ignore all unrecognized
 cipher suites, extensions, and other parameters. Otherwise, it may fail to
@@ -5048,7 +4521,7 @@ Appendices&nbsp;<xref target="implementation-notes" format="counter"/>,
 The registries and their allocation policies are below:</t>
 
 <t><list style="symbols">
-  <t>"TLS Cipher Suite Registry": values with the first byte in the range
+  <t>TLS Cipher Suite Registry: values with the first byte in the range
 0-254 (decimal) are assigned via Specification Required <xref
 target="RFC8126"/>. Values with the first byte 255 (decimal) are reserved for
 Private Use <xref target="RFC8126"/>.  <vspace blankLines='1'/>
@@ -5058,22 +4531,13 @@ The "DTLS-OK" and "Recommended" columns are both marked as "Yes" for each new
 cipher suite.
 [[This assumes <xref target="TLS-IANA-REG-UPD"/> has been applied.]]</t>
 
-<!--[rfced] Regarding this note:
-[[This assumes [TLS-IANA-REG-UPD] has been applied.]]
-
-Should this document be tied with draft-ietf-tls-iana-registry-updates 
-(which is currently in EDIT state) for publication at the same time?
-It's an informative reference, but we can cluster the documents upon
-your request. If not, how should the text above be updated?
--->
-
-  <t>"TLS ContentType Registry": Future values are allocated via
+  <t>TLS ContentType Registry: Future values are allocated via
 Standards Action <xref target="RFC8126"/>.</t>
-  <t>"TLS Alert Registry": Future values are allocated via Standards
+  <t>TLS Alert Registry: Future values are allocated via Standards
 Action <xref target="RFC8126"/>. IANA has updated this registry
 to include values for "missing_extension" and "certificate_required".  The
 "DTLS-OK" column is marked as "Yes" for each new alert.</t>
-  <t>"TLS HandshakeType Registry": Future values are allocated via
+  <t>TLS HandshakeType Registry: Future values are allocated via
 Standards Action <xref target="RFC8126"/>. IANA has updated this registry
 to rename item 4 from "NewSessionTicket" to "new_session_ticket"
 and to add the "hello_retry_request_RESERVED", "encrypted_extensions",
@@ -5081,7 +4545,7 @@ and to add the "hello_retry_request_RESERVED", "encrypted_extensions",
 column is marked as "Yes" for each of these additions.</t>
 </list></t>
 
-<t>This document also uses the TLS "ExtensionType Values" registry originally created
+<t>This document also uses the TLS ExtensionType Values registry originally created
 in <xref target="RFC4366"/>. IANA has updated it to reference this document.
 Changes to the registry follow:</t>
 
@@ -5108,7 +4572,7 @@ indicate that it is not used by TLS 1.3.</t>
 <t>In addition, this document defines two new registries that are maintained
 by IANA:</t>
 <t><list style="symbols">
-  <t>"TLS SignatureScheme" registry: Values with the first byte in the range
+  <t>TLS SignatureScheme registry: Values with the first byte in the range
 0-253 (decimal) are assigned via Specification Required <xref
 target="RFC8126"/>. Values with the first byte 254 or 255 (decimal) are
 reserved for Private Use <xref target="RFC8126"/>. Values with the first byte
@@ -5121,7 +4585,7 @@ The registry has been initially populated with the values described in
 rsa_pss_rsae_sha256, rsa_pss_rsae_sha384, rsa_pss_rsae_sha512,
 rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, and ed25519.</t>
 
-  <t>"TLS PskKeyExchangeMode" registry: Values in the
+  <t>TLS PskKeyExchangeMode registry: Values in the
 range 0-253 (decimal) are assigned via Specification Required
 <xref target="RFC8126"></xref>.  Values with the first byte 254 or 255
 (decimal) are reserved for Private Use <xref target="RFC8126"></xref>.  This
@@ -6413,25 +5877,18 @@ Currently:
   <seriesInfo name="DOI" value="10.1145/2810103.2813657"/>
 </reference>
 
-<reference anchor="Anon18" >
+<reference anchor="PS18" target="https://eprint.iacr.org/2018/634">
   <front>
-    <title>Secure Channels for Multiplexed Data Streams: Analyzing the TLS 1.3 Record Layer Without Elision</title>
-    <author initials="A." surname="Anonymous">
+    <title>Partially specified channels: The TLS 1.3 record layer without elision</title>
+    <author initials="C." surname="Patton">
+      <organization></organization>
+    </author>
+    <author initials="T." surname="Shrimpton">
       <organization></organization>
     </author>
     <date year="2018"/>
   </front>
-  <seriesInfo name="In submission to CRYPTO 2018. RFC EDITOR: PLEASE UPDATE THIS REFERENCE AFTER FINAL NOTIFICATION" value="(2018-4-29)"/>
 </reference>
-
-<!-- [rfced] Informative References:  We will wait to hear from you
-regarding the status of this reference:
-
- [Anon18]   Anonymous, A., "Secure Channels for Multiplexed Data
-            Streams: Analyzing the TLS 1.3 Record Layer Without
-            Elision", In submission to CRYPTO 2018. RFC EDITOR: PLEASE
-            UPDATE THIS REFERENCE AFTER FINAL NOTIFICATION
-            (2018-4-29). , 2018. -->
 
 <reference  anchor='RFC3552' target='https://www.rfc-editor.org/info/rfc3552'>
 <front>
@@ -6534,6 +5991,18 @@ Currently:
 <date month='May' year='2018' />
 </front>
 <seriesInfo name='Work in Progress,' value='draft-ietf-tls-iana-registry-updates-05'/>
+</reference>
+
+<!-- draft-ietf-tls-record-limit (EDIT) -->
+<reference anchor='TLS-Record-Limit'>
+<front>
+<title>Record Size Limit Extension for Transport Layer Security (TLS)</title>
+<author initials='M' surname='Thomson' fullname='Martin Thomson'>
+    <organization />
+</author>
+<date month='May' day='17' year='2018' />
+</front>
+<seriesInfo name='Work in Progress,' value='draft-ietf-tls-record-limit-03' />
 </reference>
 
 <!-- draft-ietf-tls-tls13-vectors (I-D Exists) -->
@@ -7272,22 +6741,7 @@ unsatisfactory, <xref target="RFC4086"/> provides guidance on the generation of 
 
 <t>TLS uses random values (1) in public protocol fields such as the
 public Random values in the ClientHello and ServerHello and (2)&nbsp;to
-generate keying material.
-
-<!-- [rfced] Appendix C.1:  We had trouble parsing this sentence.
-We updated it as follows.  Please let us know if this is incorrect.
-
-Original:
- TLS uses random values both in public protocol fields such as the
- public Random values in the ClientHello and ServerHello and to
- generate keying material.
-
-Currently:
- TLS uses random values (1) in public protocol fields such as the
- public Random values in the ClientHello and ServerHello and (2) to
- generate keying material. -->
-
- With a properly functioning CSPRNG, this
+generate keying material. With a properly functioning CSPRNG, this
 does not present a security problem, as it is not feasible to determine
 the CSPRNG state from its output. However, with a broken CSPRNG, it
 may be possible for an attacker to use the public output to determine
@@ -7303,7 +6757,7 @@ private values.</t>
 <t>Implementations are responsible for verifying the integrity of certificates
 and should generally support certificate revocation messages. Absent a specific
 indication from an application profile, certificates should always be
-verified to ensure proper signing by a trusted Certificate Authority (CA).
+verified to ensure proper signing by a trusted certificate authority (CA).
 The selection and addition of trust anchors should be done very carefully.
 Users should be able to view information about the certificate and trust anchor.
 Applications SHOULD also enforce minimum and maximum key sizes. For example,
@@ -7324,14 +6778,14 @@ things that require special attention from implementors.</t>
 <t><list style="symbols">
   <t>Do you correctly handle handshake messages that are fragmented to
 multiple TLS records (see <xref target="record-layer"/>)?
-Does your process include corner cases like a ClientHello that is split
+Do you correctly handle corner cases like a ClientHello that is split
 into several small fragments? Do you fragment handshake messages that exceed
 the maximum fragment size? In particular, the Certificate and
 CertificateRequest handshake messages can be large enough to require
 fragmentation.</t>
-  <t>Do you ignore the TLS record-layer version number in all unencrypted TLS
+  <t>Do you ignore the TLS record layer version number in all unencrypted TLS
 records (see <xref target="backward-compatibility"/>)?</t>
-  <t>Have you ensured that all support for SSL, Rivest Cipher #4 (RC4),
+  <t>Have you ensured that all support for SSL, RC4,
 EXPORT ciphers, and MD5 (via the "signature_algorithms" extension) is
 completely removed from all possible configurations that support TLS 1.3 or
 later, and that attempts to use these obsolete capabilities fail correctly
@@ -7341,20 +6795,7 @@ unknown extensions?</t>
   <t>When the server has requested a client certificate but no
 suitable certificate is available, do you correctly send an empty
 Certificate message, instead of omitting the whole message (see
-<xref target="client-certificate-selection"/>)?
-
-<!-- [rfced] Appendix C.3:  We could not find a relationship between
-the text of Section 4.4.2.3 and this question (as compared to the
-last paragraph of Section 4.4.2).  Please confirm that citing
-Section 4.4.2.3 is correct here.
-
-Original:
- -  When the server has requested a client certificate, but no
-    suitable certificate is available, do you correctly send an empty
-    Certificate message, instead of omitting the whole message (see
-    Section 4.4.2.3)? -->
-
-</t>
+<xref target="certificate"/>)?</t>
   <t>When processing the plaintext fragment produced by AEAD-Decrypt and
 scanning from the end for the ContentType, do you avoid scanning
 past the start of the cleartext in the event that the peer has sent
@@ -7365,9 +6806,9 @@ a malformed plaintext of all zeros?</t>
 supported versions (<xref target="supported-versions"/>),
 and signature algorithms (<xref target="signature-algorithms"/>) in the
 ClientHello?</t>
-  <t>Does your server send a HelloRetryRequest to clients which
+  <t>As a server, do you send a HelloRetryRequest to clients which
 support a compatible (EC)DHE group but do not predict it in the
-"key_share" extension? Does your client correctly handle a HelloRetryRequest
+"key_share" extension? As a client, do you correctly handle a HelloRetryRequest
 from the server?</t>
 </list></t>
 
@@ -7375,7 +6816,7 @@ from the server?</t>
 
 <t><list style="symbols">
   <t>What countermeasures do you use to prevent timing attacks <xref target="TIMING"/>?</t>
-  <t>When using a Diffie-Hellman key exchange, do you correctly preserve
+  <t>When using Diffie-Hellman key exchange, do you correctly preserve
 leading zero bytes in the negotiated key (see <xref target="finite-field-diffie-hellman"/>)?</t>
   <t>Does your TLS client check that the Diffie-Hellman parameters sent
 by the server are acceptable (see <xref target="ffdhe-param"/>)?</t>
@@ -7387,25 +6828,11 @@ security-critical values? It is RECOMMENDED that implementations implement
   <t>Do you zero-pad Diffie-Hellman public key values to the group size (see
 <xref target="ffdhe-param"/>)?</t>
   <t>Do you verify signatures after making them, to protect against
-RSA&nbhy;CRT key leaks <xref target="FW15"/>?
-
-<!-- [rfced] Appendix C.3:  Will the abbreviation "CRT" in "RSA-CRT"
-be known to readers?
-
-Original:
- -  Do you verify signatures after making them to protect against RSA-
-    CRT key leaks?  [FW15]
-
-Possibly:
- -  To protect against RSA-CRT key leaks ("RSA-CRT" refers to RSA
-    decryption using the Chinese Remainder Theorem), do you verify
-    signatures after making them (see [FW15])? -->
-
-</t>
+RSA&nbhy;CRT key leaks <xref target="FW15"/>?</t>
 </list></t>
 
 </section>
-<section anchor="client-tracking" title="Prevention of Client Tracking">
+<section anchor="client-tracking" title="Client Tracking Prevention">
 
 <t>Clients SHOULD NOT reuse a ticket for multiple connections. Reuse
 of a ticket allows passive observers to correlate different connections.
@@ -7431,13 +6858,13 @@ validation of the certificate chain or any of its contents.</t>
 </list></t>
 
 <t>Either technique used alone is vulnerable to man-in-the-middle attacks
-and is therefore unsafe for general use. However, it is also possible to
+and therefore unsafe for general use. However, it is also possible to
 bind such connections to an external authentication mechanism via
 out-of-band validation of the server's public key, trust on first
 use, or a mechanism such as channel bindings (though the
 channel bindings described in <xref target="RFC5929"/> are not defined for
 TLS&nbsp;1.3). If no such mechanism is used, then the connection has
-no protection against active man-in-the-middle attacks; applications
+no protection against active man-in-the-middle attack; applications
 MUST&nbsp;NOT use TLS in such a way absent explicit configuration or a
 specific application profile.</t>
 
@@ -7453,7 +6880,7 @@ clients trying to use future versions of TLS as long as the ClientHello format
 remains compatible and there is at least one protocol version supported by
 both the client and the server.</t>
 
-<t>Prior versions of TLS used the record-layer version number
+<t>Prior versions of TLS used the record layer version number
 (TLSPlaintext.legacy_record_version and
 TLSCiphertext.legacy_record_version) for various purposes.
 As of TLS&nbsp;1.3, this field is deprecated. The value of
@@ -7466,7 +6893,7 @@ Version negotiation is performed using only the handshake versions
 ClientHello, HelloRetryRequest, and ServerHello "supported_versions"
 extensions). In order to maximize interoperability with older endpoints,
 implementations that negotiate the use of TLS 1.0-1.2 SHOULD set the
-record-layer version number to the negotiated version for the ServerHello and
+record layer version number to the negotiated version for the ServerHello and
 all records thereafter.</t>
 
 <t>For maximum compatibility with previously non-standard behavior and misconfigured
@@ -7523,7 +6950,7 @@ and the server only supports versions greater than ClientHello.legacy_version,
 the server MUST abort the handshake with a "protocol_version" alert.</t>
 
 <t>Note that earlier versions of TLS did not clearly specify the
-record&nbhy;layer version number value in all cases
+record layer version number value in all cases
 (TLSPlaintext.legacy_record_version). Servers
 will receive various TLS 1.x versions in this field, but its value
 MUST always be ignored.</t>
@@ -7559,27 +6986,16 @@ handshake:</t>
 
 <t><list style="symbols">
   <t>The client always provides a non-empty session ID in the ClientHello,
-as described in the "legacy_session_id" definition in <xref target="client-hello"/>.</t>
+as described in the legacy_session_id section of <xref target="client-hello"/>.</t>
   <t>If not offering early data, the client sends a dummy
 change_cipher_spec record (see the third paragraph of <xref
-target="record-layer"/>) immediately before its second flight.
-
-<!-- [rfced] Appendix D.4:  We could not determine how the third
-paragraph of Section 5.1 relates to this sentence.  Please confirm
-that the citation is correct.
-
-Original:
- -  If not offering early data, the client sends a dummy
-    change_cipher_spec record (see the third paragraph of Section 5.1)
-    immediately before its second flight. -->
-
- This
-may be before either its second ClientHello or its encrypted handshake flight.
+target="record-protocol"/>) immediately before its second flight. This
+may either be before its second ClientHello or before its encrypted handshake flight.
 If offering early data, the record is placed immediately after the first
 ClientHello.</t>
 
   <t>The server sends a dummy change_cipher_spec record immediately
-after its first handshake message. This may be after either a ServerHello or
+after its first handshake message. This may either be after a ServerHello or
 a HelloRetryRequest.</t>
 </list></t>
 
@@ -7590,26 +7006,7 @@ negotiated: the client can opt to provide a session ID or not,
 and the server has to echo it. Either side can send change_cipher_spec
 at any time during the handshake, as they must be ignored by the peer,
 but if the client sends a non-empty session ID, the server MUST send
-the change_cipher_spec as described in this appendix.
-
-<!-- [rfced] Appendix D.4:  To what does "they" refer in this
-sentence?
-
-Original:
- Either side can send
- change_cipher_spec at any time during the handshake, as they must be
- ignored by the peer, but if the client sends a non-empty session ID,
- the server MUST send the change_cipher_spec as described in this
- section.
-
-Possibly:
- Either side can send
- change_cipher_spec records at any time during the handshake, as
- these records must be ignored by the peer, but if the client sends
- a non-empty session ID, the server MUST send the change_cipher_spec
- records as described in this appendix. -->
-
-</t>
+the change_cipher_spec as described in this appendix.</t>
 
 </section>
 <section anchor="backward-compatibility-security-restrictions"
@@ -7622,7 +7019,7 @@ forward secret and AEAD cipher suites, when available.</t>
 cited in <xref target="RFC7465"/>. Implementations MUST NOT offer or negotiate
 RC4 cipher suites for any version of TLS for any reason.</t>
 
-<t>Old versions of TLS permitted the use of ciphers having very low strength.
+<t>Old versions of TLS permitted the use of very low strength ciphers.
 Ciphers with a strength less than 112 bits MUST NOT be offered or
 negotiated for any version of TLS for any reason.</t>
 
@@ -7641,19 +7038,7 @@ in order to negotiate older versions of TLS.</t>
 <t>Implementations MUST NOT send a ClientHello.legacy_version or
 ServerHello.legacy_version set to 0x0300 or less. Any endpoint receiving a
 Hello message with ClientHello.legacy_version or ServerHello.legacy_version
-set to 0x0300 MUST abort the handshake with a "protocol_version" alert.
-
-<!-- [rfced] Appendix D.5:  Should "set to 0x0300 MUST" in the "Any
-endpoint receiving ..." sentence be "set to 0x0300 or less MUST"?
-
-Original:
- Implementations MUST NOT send a ClientHello.legacy_version or
- ServerHello.legacy_version set to 0x0300 or less.  Any endpoint
- receiving a Hello message with ClientHello.legacy_version or
- ServerHello.legacy_version set to 0x0300 MUST abort the handshake
- with a "protocol_version" alert. -->
-
-</t>
+set to 0x0300 MUST abort the handshake with a "protocol_version" alert.</t>
 
 <t>Implementations MUST NOT send any records with a version less than 0x0300.
 Implementations SHOULD NOT accept any records with a version less than 0x0300
@@ -7670,18 +7055,7 @@ been shown to be insecure in some scenarios.</t>
 <t>A complete security analysis of TLS is outside the scope of this document.
 In this appendix, we provide an informal description of the desired properties
 as well as references to more detailed work in the research literature
-which provides more formal definitions.
-
-<!-- [rfced] Appendix E:  Do "more detailed work" and "more formal
-definitions" mean "additional detailed work" and "additional formal
-definitions," or "more-detailed work" and "more-formal definitions"?
-
-Original ("description the" has been changed to "description of the"):
- In this section, we provide an informal description the
- desired properties as well as references to more detailed work in the
- research literature which provides more formal definitions. -->
-
-</t>
+which provides more formal definitions.</t>
 
 <t>We cover properties of the handshake separately from those of the record layer.</t>
 
@@ -7753,25 +7127,7 @@ and active attackers.</t>
 establishment of a unique, secret, shared key established by an
 (EC)DHE key exchange and authenticated by the server's signature over
 the handshake transcript, as well as tied to the server's identity by
-a MAC.
-
-<!-- [rfced] Appendix E.1:  To what does "tied" refer in this
-sentence - the key, or something else?
-
-Original:
- Informally, the signature-based modes of TLS 1.3 provide for the
- establishment of a unique, secret, shared key established by an
- (EC)DHE key exchange and authenticated by the server's signature over
- the handshake transcript, as well as tied to the server's identity by
- a MAC.
-
-Possibly:
- Informally, the signature-based modes of TLS 1.3 provide for the
- establishment of a unique, secret, shared key established by an
- (EC)DHE key exchange, authenticated by the server's signature over
- the handshake transcript, and tied to the server's identity by a MAC. -->
-
- If the client is authenticated by a certificate, it also signs
+a MAC. If the client is authenticated by a certificate, it also signs
 over the handshake transcript and provides a MAC tied to both
 identities. <xref target="SIGMA"/> describes the design and analysis of this type of key
 exchange protocol. If fresh (EC)DHE keys are used for each connection,
@@ -7880,7 +7236,7 @@ collisions).</t>
 
 <t>A client that has sent authentication data to a server, either during
 the handshake or in post-handshake authentication, cannot be sure whether
-the server afterward considers the client to be authenticated or not.
+the server afterwards considers the client to be authenticated or not.
 If the client needs to determine if the server considers the
 connection to be unilaterally or mutually authenticated, this has to
 be provisioned by the application layer. See <xref target="CHHSV17"/> for
@@ -7914,30 +7270,8 @@ possible. If the total set of exporter labels is known, then
 implementations SHOULD pre-compute the inner Derive-Secret
 stage of the exporter computation for all those labels,
 then erase the [early_]exporter_master_secret, followed by
-each of the inner values as soon as it is known that they will not be
-needed again.
-
-<!-- [rfced] Appendix E.1.4.:  As there appeared to be some
-singular-versus-plural issues in this sentence, we updated it
-as follows.  Please let us know if this is incorrect.
-
-Original:
- If the
- total set of exporter labels is known, then implementations SHOULD
- pre-compute the inner Derive-Secret stage of the exporter computation
- for all those labels, then erase the [early_]exporter_master_secret,
- followed by each inner values as soon as it is known that it will not
- be needed again.
-
-Currently:
- If the
- total set of exporter labels is known, then implementations SHOULD
- pre-compute the inner Derive-Secret stage of the exporter computation
- for all those labels, then erase the [early_]exporter_master_secret,
- followed by each of the inner values as soon as it is known that they
- will not be needed again. -->
-
-</t>
+each inner value as soon as it is known that they will not be
+needed again.</t>
 
 </section>
 <section anchor="post-compromise-security" title="Post-Compromise Security">
@@ -7947,23 +7281,7 @@ peer's long-term secret (signature key or external PSK) is compromised. It
 therefore does not provide post-compromise security <xref target="CCG16"/>,
 sometimes also referred to as backward or future secrecy. This is in contrast
 to KCI resistance, which describes the security guarantees that a party has
-after its own long-term secret has been compromised.
-
-<!-- [rfced] Appendix E.1.5:  Should "describes" be "provides" in
-this sentence?  If not, please clarify how KCI resistance describes
-the security guarantees.
-
-Original:
- This is in contrast to KCI resistance, which describes the security
- guarantees that a party has after its own long-term secret has been
- compromised.
-
-Possibly:
- This is in contrast to KCI resistance (Appendix E.1), which provides
- the security guarantees that a party has after its own long-term
- secret has been compromised. -->
-
-</t>
+after its own long-term secret has been compromised.</t>
 
 </section>
 <section anchor="external-references" title="External References">
@@ -8025,7 +7343,7 @@ target="updating-traffic-keys"/>) follows the construction of the serial
 generator as discussed in <xref target="REKEY"></xref>, which shows that
 rekeying can allow keys to be used for a larger number of encryptions than
 without rekeying. This relies on the security of the HKDF&nbhy;Expand-Label
-function as a PRF.  In addition, as long as this function is truly one way, it
+function as a pseudorandom function (PRF).  In addition, as long as this function is truly one way, it
 is not possible to compute traffic keys from prior to a key change (forward
 secrecy).</t>
 
@@ -8034,7 +7352,7 @@ after a traffic secret of that connection is compromised. That is, TLS does not
 provide post-compromise security/future secrecy/backward secrecy with respect
 to the traffic secret. Indeed, an attacker who learns a traffic secret can
 compute all future traffic secrets on that connection.  Systems which want such
-security guarantees need to do a fresh handshake and establish a new
+guarantees need to do a fresh handshake and establish a new
 connection with an (EC)DHE exchange.</t>
 
 <section anchor="external-references-1" title="External References">
@@ -8042,7 +7360,7 @@ connection with an (EC)DHE exchange.</t>
 <t>The reader should refer to the following references for analysis of the
 TLS record layer: <xref target="BMMRT15"/>, <xref target="BT16"/>,
 <xref target="BDFKPPRSZZ16"/>, <xref target="BBK17"/>,
-and <xref target="Anon18"/>.</t>
+and <xref target="PS18"/>.</t>
 
 </section>
 </section>
@@ -8054,7 +7372,7 @@ observing the length and timing of encrypted packets
 This is particularly easy when there is a small
 set of possible messages to be distinguished, such as for a video
 server hosting a fixed corpus of content, but still provides usable
-information even in scenarios that are more complicated.</t>
+information even in more complicated scenarios.</t>
 
 <t>TLS does not provide any specific defenses against this form of attack
 but does include a padding mechanism for use by applications: The
@@ -8086,8 +7404,7 @@ due to delays in transmitting packets and increased traffic volume.</t>
 attacks (i.e., those which attack the communications via secondary
 channels such as timing), leaving those to the implementation of the relevant
 cryptographic primitives. However, certain features of TLS are
-designed to make it easier to write code that is resistant to
-side-channel attacks:</t>
+designed to make it easier to write side-channel resistant code:</t>
 
 <t><list style="symbols">
   <t>Unlike previous versions of TLS which used a composite
@@ -8095,7 +7412,7 @@ MAC-then-encrypt structure, TLS 1.3 only uses AEAD algorithms,
 allowing implementations to use self-contained constant-time
 implementations of those primitives.</t>
   <t>TLS uses a uniform "bad_record_mac" alert for all decryption
-errors; it is intended to prevent an attacker from gaining
+errors, which is intended to prevent an attacker from gaining
 piecewise insight into portions of the message.
 
   Additional resistance
@@ -8115,45 +7432,16 @@ information is not inadvertently leaked.</t>
 <section anchor="replay-0rtt" title="Replay Attacks on 0-RTT">
 
 <t>Replayable 0-RTT data presents a number of security threats to
-applications that use TLS, unless those applications are specifically
+TLS-using applications, unless those applications are specifically
 engineered to be safe under replay (minimally, this means idempotent,
 but in many cases may also require other stronger conditions, such as
-constant-time response).
-
-<!-- [rfced] Appendix E.5:  We had trouble parsing this sentence.
-If the suggested text is not correct, please clarify.
-
-Original:
- Replayable 0-RTT data presents a number of security threats to TLS-
- using applications, unless those applications are specifically
- engineered to be safe under replay (minimally, this means idempotent,
- but in many cases may also require other stronger conditions, such as
- constant-time response).
-
-Suggested:
- Replayable 0-RTT data presents a number of security threats to
- applications that use TLS, unless those applications are specifically
- engineered to be safe under replay (i.e., idempotent operations as a
- minimum requirement, but in many cases other stronger conditions,
- such as constant-time response, may also be required). -->
-
- Potential attacks include:</t>
+constant-time response). Potential attacks include:</t>
 
 <t><list style="symbols">
   <t>Duplication of actions which cause side effects (e.g., purchasing an
 item or transferring money) to be duplicated, thus harming the site or
-the user.
-
-<!-- [rfced] Appendix E.5:  We found "Duplication of actions ... to
-be duplicated" confusing.  Will this be clear to readers?
-
-Original:
- -  Duplication of actions which cause side effects (e.g., purchasing
-    an item or transferring money) to be duplicated, thus harming the
-    site or the user. -->
-
-</t>
-  <t>Storing and replaying 0-RTT messages in order to
+the user.</t>
+  <t>Attackers can store and replay 0-RTT messages in order to
 reorder them with respect to other messages (e.g., moving
 a delete to after a create).</t>
   <t>Exploiting cache timing behavior to discover the content of 0-RTT
@@ -8192,7 +7480,7 @@ Sections&nbsp;<xref target="single-use-tickets" format="counter"/> and
 <xref target="client-hello-recording" format="counter"/> prevent a
 replayed ClientHello and its associated 0-RTT data from being accepted
 multiple times by any cluster with consistent state; for servers
-which limit the use of 0-RTT to one cluster for a single ticket, a given
+which limit the use of 0-RTT to one cluster for a single ticket, then a given
 ClientHello and its associated 0-RTT data will only be accepted once.
 However, if state is not completely consistent,
 then an attacker might be able to have multiple copies of the data be
@@ -8275,7 +7563,7 @@ for TLS 1.3 connections <xref target="JSS15"/>. TLS
 1.3 implementations can prevent this attack by disabling support
 for static RSA across all versions of TLS. In principle, implementations
 might also be able to separate certificates with different keyUsage
-bits for static RSA decryption and RSA signatures, but this technique
+bits for static RSA decryption and RSA signature, but this technique
 relies on clients refusing to accept signatures using keys
 in certificates that do not have the digitalSignature bit set,
 and many clients do not enforce this restriction.</t>
@@ -8295,257 +7583,366 @@ Information on the group and on how to subscribe to the list is at
 </section>
 <section anchor="contributors" title="Contributors" numbered="no">
 
-<t><list style="symbols">
-  <t>Martin Abadi <vspace />
-University of California, Santa Cruz <vspace />
-abadi@cs.ucsc.edu</t>
-  <t>Christopher Allen (co-editor of TLS 1.0) <vspace />
-Alacrity Ventures <vspace />
-ChristopherA@AlacrityManagement.com</t>
-  <t>Richard Barnes <vspace />
-Cisco <vspace />
-rlb@ipv.sx</t>
-  <t>Steven M.&nbsp;Bellovin <vspace />
-Columbia University <vspace />
-smb@cs.columbia.edu</t>
-  <t>David Benjamin <vspace />
-Google <vspace />
-davidben@google.com</t>
-  <t>Benjamin Beurdouche <vspace />
-INRIA &amp; Microsoft Research <vspace />
-benjamin.beurdouche@ens.fr</t>
-  <t>Karthikeyan Bhargavan (co-author of <xref target="RFC7627"></xref>) <vspace />
-INRIA <vspace />
-karthikeyan.bhargavan@inria.fr</t>
-  <t>Simon Blake-Wilson (co-author of <xref target="RFC4492"></xref>) <vspace />
-BCI <vspace />
-sblakewilson@bcisse.com</t>
-  <t>Nelson Bolyard (co-author of <xref target="RFC4492"></xref>) <vspace />
-Sun Microsystems, Inc. <vspace />
-nelson@bolyard.com</t>
-  <t>Ran Canetti <vspace />
-IBM <vspace />
-canetti@watson.ibm.com</t>
-  <t>Matt Caswell <vspace />
-OpenSSL <vspace />
-matt@openssl.org</t>
-  <t>Stephen Checkoway <vspace />
-University of Illinois at Chicago <vspace />
-sfc@uic.edu</t>
-  <t>Pete Chown <vspace />
-Skygate Technology Ltd <vspace />
-pc@skygate.co.uk</t>
-  <t>Katriel Cohn-Gordon <vspace />
-University of Oxford <vspace />
-me@katriel.co.uk</t>
-  <t>Cas Cremers <vspace />
-University of Oxford <vspace />
-cas.cremers@cs.ox.ac.uk</t>
-  <t>Antoine Delignat-Lavaud (co-author of <xref target="RFC7627"></xref>) <vspace />
-INRIA <vspace />
-antdl@microsoft.com</t>
-  <t>Tim Dierks (co-editor of TLS 1.0, 1.1, and 1.2) <vspace />
-Independent <vspace />
-tim@dierks.org</t>
-  <t>Roelof DuToit <vspace />
-Symantec Corporation <vspace />
-roelof_dutoit@symantec.com</t>
-  <t>Taher Elgamal <vspace />
-Securify <vspace />
-taher@securify.com</t>
-  <t>Pasi Eronen <vspace />
-Nokia <vspace />
-pasi.eronen@nokia.com</t>
-  <t>Cedric Fournet <vspace />
-Microsoft <vspace />
-fournet@microsoft.com</t>
-  <t>Anil Gangolli <vspace />
-anil@busybuddha.org</t>
-  <t>David M.&nbsp;Garrett <vspace />
-dave@nulldereference.com</t>
-  <t>Illya Gerasymchuk <vspace />
-Independent <vspace />
-illya@iluxonchik.me</t>
-  <t>Alessandro Ghedini <vspace />
-Cloudflare Inc. <vspace />
-alessandro@cloudflare.com</t>
-  <t>Daniel Kahn Gillmor <vspace />
-ACLU <vspace />
-dkg@fifthhorseman.net</t>
-  <t>Matthew Green <vspace />
-Johns Hopkins University <vspace />
-mgreen@cs.jhu.edu</t>
-  <t>Jens Guballa <vspace />
-ETAS <vspace />
-jens.guballa@etas.com</t>
-  <t>Felix Guenther <vspace />
-TU Darmstadt <vspace />
-mail@felixguenther.info</t>
-  <t>Vipul Gupta (co-author of <xref target="RFC4492"></xref>) <vspace />
-Sun Microsystems Laboratories <vspace />
-vipul.gupta@sun.com</t>
-  <t>Chris Hawk (co-author of <xref target="RFC4492"></xref>) <vspace />
-Corriente Networks LLC <vspace />
-chris@corriente.net</t>
-  <t>Kipp Hickman</t>
-  <t>Alfred Hoenes</t>
-  <t>David Hopwood <vspace />
-Independent Consultant <vspace />
-david.hopwood@blueyonder.co.uk</t>
-  <t>Marko Horvat <vspace />
-MPI-SWS <vspace />
-mhorvat@mpi-sws.org</t>
-  <t>Jonathan Hoyland <vspace />
-Royal Holloway, University of London<vspace/>
-jonathan.hoyland@gmail.com</t>
-  <t>Subodh Iyengar <vspace />
-Facebook <vspace />
-subodh@fb.com</t>
-  <t>Benjamin Kaduk <vspace />
-Akamai <vspace />
-kaduk@mit.edu</t>
-  <t>Hubert Kario <vspace />
-Red Hat Inc. <vspace />
-hkario@redhat.com</t>
-  <t>Phil Karlton (co-author of SSL 3.0)</t>
-  <t>Leon Klingele <vspace />
-Independent <vspace />
-mail@leonklingele.de</t>
-  <t>Paul Kocher (co-author of SSL 3.0) <vspace />
-Cryptography Research <vspace />
-paul@cryptography.com</t>
-  <t>Hugo Krawczyk <vspace />
-IBM <vspace />
-hugokraw@us.ibm.com</t>
-  <t>Adam Langley (co-author of <xref target="RFC7627"></xref>) <vspace />
-Google <vspace />
-agl@google.com</t>
-  <t>Olivier Levillain <vspace />
-ANSSI <vspace />
-olivier.levillain@ssi.gouv.fr</t>
-  <t>Xiaoyin Liu <vspace />
-University of North Carolina at Chapel Hill <vspace />
-xiaoyin.l@outlook.com</t>
-  <t>Ilari Liusvaara <vspace />
-Independent <vspace />
-ilariliusvaara@welho.com</t>
-  <t>Atul Luykx <vspace />
-K.U.&nbsp;Leuven <vspace />
-atul.luykx@kuleuven.be</t>
-  <t>Colm MacCarthaigh <vspace />
-Amazon Web Services <vspace />
-colm@allcosts.net</t>
-  <t>Carl Mehner <vspace />
-USAA <vspace />
-carl.mehner@usaa.com</t>
-  <t>Jan Mikkelsen <vspace />
-Transactionware <vspace />
-janm@transactionware.com</t>
-  <t>Bodo Moeller (co-author of <xref target="RFC4492"></xref>) <vspace />
-Google <vspace />
-bodo@acm.org</t>
-  <t>Kyle Nekritz <vspace />
-Facebook <vspace />
-knekritz@fb.com</t>
-  <t>Erik Nygren <vspace />
-Akamai Technologies <vspace />
-erik+ietf@nygren.org</t>
-  <t>Magnus Nystrom <vspace />
-Microsoft <vspace />
-mnystrom@microsoft.com</t>
-  <t>Kazuho Oku <vspace />
-DeNA Co., Ltd. <vspace />
-kazuhooku@gmail.com</t>
-  <t>Kenny Paterson <vspace />
-Royal Holloway, University of London <vspace />
-kenny.paterson@rhul.ac.uk</t>
-  <t>Alfredo Pironti (co-author of <xref target="RFC7627"></xref>) <vspace />
-INRIA <vspace />
-alfredo.pironti@inria.fr</t>
-  <t>Andrei Popov <vspace />
-Microsoft <vspace />
-andrei.popov@microsoft.com</t>
-  <t>Marsh Ray (co-author of <xref target="RFC7627"></xref>) <vspace />
-Microsoft <vspace />
-maray@microsoft.com</t>
-  <t>Robert Relyea <vspace />
-Netscape Communications <vspace />
-relyea@netscape.com</t>
-  <t>Kyle Rose <vspace />
-Akamai Technologies <vspace />
-krose@krose.org</t>
-  <t>Jim Roskind <vspace />
-Amazon <vspace />
-jroskind@amazon.com</t>
-  <t>Michael Sabin</t>
-  <t>Joe Salowey <vspace />
-Tableau Software <vspace />
-joe@salowey.net</t>
-  <t>Rich Salz <vspace />
-Akamai <vspace />
-rsalz@akamai.com</t>
-  <t>David Schinazi <vspace />
-Apple Inc. <vspace />
-dschinazi@apple.com</t>
-  <t>Sam Scott <vspace />
-Royal Holloway, University of London <vspace />
-me@samjs.co.uk</t>
-  <t>Dan Simon <vspace />
-Microsoft, Inc. <vspace />
-dansimon@microsoft.com</t>
-  <t>Brian Smith <vspace />
-Independent <vspace />
-brian@briansmith.org</t>
-  <t>Brian Sniffen <vspace />
-Akamai Technologies <vspace />
-ietf@bts.evenmere.org</t>
-  <t>Nick Sullivan <vspace />
-Cloudflare Inc. <vspace />
-nick@cloudflare.com</t>
-  <t>Bjoern Tackmann <vspace />
-University of California, San Diego <vspace />
-btackmann@eng.ucsd.edu</t>
-  <t>Tim Taubert <vspace />
-Mozilla <vspace />
-ttaubert@mozilla.com</t>
-  <t>Martin Thomson <vspace />
-Mozilla <vspace />
-mt@mozilla.com</t>
-  <t>Sean Turner <vspace />
-sn3rd <vspace />
-sean@sn3rd.com</t>
-  <t>Steven Valdez <vspace />
-Google <vspace />
-svaldez@google.com</t>
-  <t>Filippo Valsorda <vspace />
-Cloudflare Inc. <vspace />
-filippo@cloudflare.com</t>
-  <t>Thyla van der Merwe <vspace />
-Royal Holloway, University of London <vspace />
-tjvdmerwe@gmail.com</t>
-  <t>Victor Vasiliev <vspace />
-Google <vspace />
-vasilvv@google.com</t>
-  <t>Hoeteck Wee <vspace />
-Ecole Normale Superieure, Paris <vspace />
-hoeteck@alum.mit.edu</t>
-  <t>Tom Weinstein</t>
-  <t>David Wong <vspace />
-NCC Group <vspace />
-david.wong@nccgroup.trust</t>
-  <t>Christopher A.&nbsp;Wood <vspace />
-Apple Inc. <vspace />
-cawood@apple.com</t>
-  <t>Tim Wright <vspace />
-Vodafone <vspace />
-timothy.wright@vodafone.com</t>
-  <t>Peter Wu <vspace />
-Independent <vspace />
-peter@lekensteyn.nl</t>
-  <t>Kazu Yamamoto <vspace />
-Internet Initiative Japan Inc. <vspace />
-kazu@iij.ad.jp</t>
-</list></t>
+<figure><artwork><![CDATA[
+Martin Abadi
+University of California, Santa Cruz
+abadi@cs.ucsc.edu
+
+Christopher Allen
+(co-editor of TLS 1.0)
+Alacrity Ventures
+ChristopherA@AlacrityManagement.com
+
+Richard Barnes
+Cisco
+rlb@ipv.sx
+
+Steven M. Bellovin
+Columbia University
+smb@cs.columbia.edu
+
+David Benjamin
+Google
+davidben@google.com
+
+Benjamin Beurdouche
+INRIA & Microsoft Research
+benjamin.beurdouche@ens.fr
+
+Karthikeyan Bhargavan
+(co-author of [RFC7627])
+INRIA
+karthikeyan.bhargavan@inria.fr
+
+Simon Blake-Wilson
+(co-author of [RFC4492])
+BCI
+sblakewilson@bcisse.com
+
+Nelson Bolyard
+(co-author of [RFC4492])
+Sun Microsystems, Inc.
+nelson@bolyard.com
+
+Ran Canetti
+IBM
+canetti@watson.ibm.com
+
+Matt Caswell
+OpenSSL
+matt@openssl.org
+
+Stephen Checkoway
+University of Illinois at Chicago
+sfc@uic.edu
+
+Pete Chown
+Skygate Technology Ltd
+pc@skygate.co.uk
+
+Katriel Cohn-Gordon
+University of Oxford
+me@katriel.co.uk
+
+Cas Cremers
+University of Oxford
+cas.cremers@cs.ox.ac.uk
+
+Antoine Delignat-Lavaud
+(co-author of [RFC7627])
+INRIA
+antdl@microsoft.com
+
+Tim Dierks
+(co-editor of TLS 1.0, 1.1, and 1.2)
+Independent
+tim@dierks.org
+
+Roelof DuToit
+Symantec Corporation
+roelof_dutoit@symantec.com
+
+Taher Elgamal
+Securify
+taher@securify.com
+
+Pasi Eronen
+Nokia
+pasi.eronen@nokia.com
+
+Cedric Fournet
+Microsoft
+fournet@microsoft.com
+
+Anil Gangolli
+anil@busybuddha.org
+
+David M. Garrett
+dave@nulldereference.com
+
+Illya Gerasymchuk
+Independent
+illya@iluxonchik.me
+
+Alessandro Ghedini
+Cloudflare Inc.
+alessandro@cloudflare.com
+
+Daniel Kahn Gillmor
+ACLU
+dkg@fifthhorseman.net
+
+Matthew Green
+Johns Hopkins University
+mgreen@cs.jhu.edu
+
+Jens Guballa
+ETAS
+jens.guballa@etas.com
+
+Felix Guenther
+TU Darmstadt
+mail@felixguenther.info
+
+Vipul Gupta
+(co-author of [RFC4492])
+Sun Microsystems Laboratories
+vipul.gupta@sun.com
+
+Chris Hawk
+(co-author of [RFC4492])
+Corriente Networks LLC
+chris@corriente.net
+
+Kipp Hickman
+
+Alfred Hoenes
+
+David Hopwood
+Independent Consultant
+david.hopwood@blueyonder.co.uk
+
+Marko Horvat
+MPI-SWS
+mhorvat@mpi-sws.org
+
+Jonathan Hoyland
+Royal Holloway, University of London
+jonathan.hoyland@gmail.com
+
+Subodh Iyengar
+Facebook
+subodh@fb.com
+
+Benjamin Kaduk
+Akamai
+kaduk@mit.edu
+
+Hubert Kario
+Red Hat Inc.
+hkario@redhat.com
+
+Phil Karlton
+(co-author of SSL 3.0)
+
+Leon Klingele
+Independent
+mail@leonklingele.de
+
+Paul Kocher
+(co-author of SSL 3.0)
+Cryptography Research
+paul@cryptography.com
+
+Hugo Krawczyk
+IBM
+hugokraw@us.ibm.com
+
+Adam Langley
+(co-author of [RFC7627])
+Google
+agl@google.com
+
+Olivier Levillain
+ANSSI
+olivier.levillain@ssi.gouv.fr
+
+Xiaoyin Liu
+University of North Carolina
+  at Chapel Hill
+xiaoyin.l@outlook.com
+
+Ilari Liusvaara
+Independent
+ilariliusvaara@welho.com
+
+Atul Luykx
+K.U. Leuven
+atul.luykx@kuleuven.be
+
+Colm MacCarthaigh
+Amazon Web Services
+colm@allcosts.net
+
+Carl Mehner
+USAA
+carl.mehner@usaa.com
+
+Jan Mikkelsen
+Transactionware
+janm@transactionware.com
+
+Bodo Moeller
+(co-author of [RFC4492])
+Google
+bodo@acm.org
+
+Kyle Nekritz
+Facebook
+knekritz@fb.com
+
+Erik Nygren
+Akamai Technologies
+erik+ietf@nygren.org
+
+Magnus Nystrom
+Microsoft
+mnystrom@microsoft.com
+
+Kazuho Oku
+DeNA Co., Ltd.
+kazuhooku@gmail.com
+
+Kenny Paterson
+Royal Holloway, University of London
+kenny.paterson@rhul.ac.uk
+
+Christopher Patton
+University of Florida
+cjpatton@ufl.edu
+
+Alfredo Pironti
+(co-author of [RFC7627])
+INRIA
+alfredo.pironti@inria.fr
+
+Andrei Popov
+Microsoft
+andrei.popov@microsoft.com
+
+Marsh Ray
+(co-author of [RFC7627])
+Microsoft
+maray@microsoft.com
+
+Robert Relyea
+Netscape Communications
+relyea@netscape.com
+
+Kyle Rose
+Akamai Technologies
+krose@krose.org
+
+Jim Roskind
+Amazon
+jroskind@amazon.com
+
+Michael Sabin
+
+Joe Salowey
+Tableau Software
+joe@salowey.net
+
+Rich Salz
+Akamai
+rsalz@akamai.com
+
+David Schinazi
+Apple Inc.
+dschinazi@apple.com
+
+Sam Scott
+Royal Holloway, University of London
+me@samjs.co.uk
+
+Thomas Shrimpton
+University of Florida
+teshrim@ufl.edu
+
+Dan Simon
+Microsoft, Inc.
+dansimon@microsoft.com
+
+Brian Smith
+Independent
+brian@briansmith.org
+
+Brian Sniffen
+Akamai Technologies
+ietf@bts.evenmere.org
+
+Nick Sullivan
+Cloudflare Inc.
+nick@cloudflare.com
+
+Bjoern Tackmann
+University of California, San Diego
+btackmann@eng.ucsd.edu
+
+Tim Taubert
+Mozilla
+ttaubert@mozilla.com
+
+Martin Thomson
+Mozilla
+mt@mozilla.com
+
+Sean Turner
+sn3rd
+sean@sn3rd.com
+
+Steven Valdez
+Google
+svaldez@google.com
+
+Filippo Valsorda
+Cloudflare Inc.
+filippo@cloudflare.com
+
+Thyla van der Merwe
+Royal Holloway, University of London
+tjvdmerwe@gmail.com
+
+Victor Vasiliev
+Google
+vasilvv@google.com
+
+Hoeteck Wee
+Ecole Normale Superieure, Paris
+hoeteck@alum.mit.edu
+
+Tom Weinstein
+
+David Wong
+NCC Group
+david.wong@nccgroup.trust
+
+Christopher A. Wood
+Apple Inc.
+cawood@apple.com
+
+Tim Wright
+Vodafone
+timothy.wright@vodafone.com
+
+Peter Wu
+Independent
+peter@lekensteyn.nl
+
+Kazu Yamamoto
+Internet Initiative Japan Inc.
+kazu@iij.ad.jp
+]]></artwork></figure>
 
 </section>
 
@@ -8611,8 +8008,6 @@ b) The following terms appear to be used inconsistently in this
 document.  Please let us know which form is preferred.
 
  random value / Random value
-
- Hash.length bytes set to zeros / Hash-lengths bytes set to 0
 
  8 bytes / eight bytes (in running text)
 
