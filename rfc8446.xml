@@ -4523,14 +4523,18 @@ The registry [shall be/ has been] initially populated with the values described 
 <xref target="signature-algorithms"/>. The following values SHALL be marked as
 “Recommended”: ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384,
 rsa_pss_rsae_sha256, rsa_pss_rsae_sha384, rsa_pss_rsae_sha512,
-rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, and ed25519.</t>
+rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, and ed25519. IETF
+standards-track RFCs that assign new values MUST specify the value to use for
+the Recommended column (other allocations get value 'N').</t>
   <t>TLS PskKeyExchangeMode Registry: Values in the
 range 0-253 (decimal) are assigned via Specification Required
 <xref target="RFC8126"></xref>.  Values with the first byte 254 or 255 (decimal) are
 reserved for Private Use <xref target="RFC8126"></xref>.  This registry SHALL have a
 “Recommended” column.  The registry [shall be/ has been] initially
 populated psk_ke (0) and psk_dhe_ke (1).  Both SHALL be marked as
-“Recommended”.</t>
+“Recommended”.  IETF standards-track RFCs that assign new values MUST
+specify the value to use for the Recommended column (other allocations
+get value 'N').</t>
 </list></t>
 
 </section>
