@@ -830,7 +830,7 @@ processed and transmitted as specified by the current active connection state.</
        certificate_request(13),
        certificate_verify(15),
        finished(20),
-       certificate_URL_RESEREVED(21),
+       certificate_url_RESEREVED(21),
        certificate_status_RESERVED(22),
        supplemental_data_RESERVED(23),
        key_update(24),
