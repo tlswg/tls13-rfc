@@ -6853,11 +6853,10 @@ example, a deployment could deploy TLS 1.3 gradually with some servers
 implementing TLS 1.3 and some implementing TLS 1.2, or a TLS 1.3 deployment
 could be downgraded to TLS 1.2.</t>
 
-<t>A client that attempts to send 0-RTT data MUST fail a connection if it receives
-a ServerHello with TLS 1.2 or older.  To repair this, it can then retry the
-connection with 0-RTT disabled.  To avoid a downgrade attack, it SHOULD NOT
-send a TLS 1.2 ClientHello, but instead send a TLS 1.3 ClientHello without
-0-RTT data.</t>
+<t>A client that attempts to send 0-RTT data MUST fail a connection if it
+receives a ServerHello with TLS 1.2 or older.  It can then retry the connection
+with 0-RTT disabled.  To avoid a downgrade attack, this SHOULD NOT disable TLS
+1.3, only 0-RTT.</t>
 
 <t>To avoid this error condition, multi-server deployments SHOULD ensure a uniform
 and stable deployment of TLS 1.3 without 0-RTT prior to enabling 0-RTT.</t>
