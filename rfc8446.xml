@@ -30,7 +30,7 @@
     <date year="2018" month="April" day="10"/>
 
     <area>General</area>
-    
+
     <keyword>Internet-Draft</keyword>
 
     <abstract>
@@ -6855,7 +6855,7 @@ could be downgraded to TLS 1.2.</t>
 
 <t>A client that attempts to send 0-RTT data MUST fail a connection if it
 receives a ServerHello with TLS 1.2 or older.  It can then retry the connection
-with 0-RTT disabled.  To avoid a downgrade attack, this SHOULD NOT disable TLS
+with 0-RTT disabled.  To avoid a downgrade attack, the client SHOULD NOT disable TLS
 1.3, only 0-RTT.</t>
 
 <t>To avoid this error condition, multi-server deployments SHOULD ensure a uniform
