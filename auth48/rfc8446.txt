@@ -128,10 +128,10 @@ RFC 8446                           TLS                         July 2018
        4.4.2.  Certificate . . . . . . . . . . . . . . . . . . . . .  57
        4.4.3.  Certificate Verify  . . . . . . . . . . . . . . . . .  62
        4.4.4.  Finished  . . . . . . . . . . . . . . . . . . . . . .  64
-     4.5.  End of Early Data . . . . . . . . . . . . . . . . . . . .  66
+     4.5.  End of Early Data . . . . . . . . . . . . . . . . . . . .  65
      4.6.  Post-Handshake Messages . . . . . . . . . . . . . . . . .  66
        4.6.1.  New Session Ticket Message  . . . . . . . . . . . . .  66
-       4.6.2.  Post-Handshake Authentication . . . . . . . . . . . .  69
+       4.6.2.  Post-Handshake Authentication . . . . . . . . . . . .  68
        4.6.3.  Key and Initialization Vector Update  . . . . . . . .  69
    5.  Record Protocol . . . . . . . . . . . . . . . . . . . . . . .  70
      5.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . .  71
@@ -153,12 +153,12 @@ RFC 8446                           TLS                         July 2018
    8.  0-RTT and Anti-Replay . . . . . . . . . . . . . . . . . . . .  89
      8.1.  Single-Use Tickets  . . . . . . . . . . . . . . . . . . .  91
      8.2.  Client Hello Recording  . . . . . . . . . . . . . . . . .  91
-     8.3.  Freshness Checks  . . . . . . . . . . . . . . . . . . . .  93
+     8.3.  Freshness Checks  . . . . . . . . . . . . . . . . . . . .  92
    9.  Compliance Requirements . . . . . . . . . . . . . . . . . . .  94
      9.1.  Mandatory-to-Implement Cipher Suites  . . . . . . . . . .  94
      9.2.  Mandatory-to-Implement Extensions . . . . . . . . . . . .  94
      9.3.  Protocol Invariants . . . . . . . . . . . . . . . . . . .  95
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  97
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  96
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  97
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  98
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  98
@@ -175,46 +175,46 @@ RFC 8446                           TLS                         July 2018
      A.1.  Client  . . . . . . . . . . . . . . . . . . . . . . . . . 109
      A.2.  Server  . . . . . . . . . . . . . . . . . . . . . . . . . 110
    Appendix B.  Protocol Data Structures and Constant Values . . . . 111
-     B.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 112
-     B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . . 112
-     B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 114
-       B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 114
-       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 119
-       B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 120
-       B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 121
-       B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 122
-     B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 122
-   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 123
-     C.1.  Random Number Generation and Seeding  . . . . . . . . . . 123
-     C.2.  Certificates and Authentication . . . . . . . . . . . . . 123
-     C.3.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 124
-     C.4.  Client Tracking Prevention  . . . . . . . . . . . . . . . 125
-     C.5.  Unauthenticated Operation . . . . . . . . . . . . . . . . 126
-   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 126
-     D.1.  Negotiating with an Older Server  . . . . . . . . . . . . 127
-     D.2.  Negotiating with an Older Client  . . . . . . . . . . . . 128
-     D.3.  0-RTT Backward Compatibility  . . . . . . . . . . . . . . 128
-     D.4.  Middlebox Compatibility Mode  . . . . . . . . . . . . . . 128
-     D.5.  Security Restrictions Related to Backward Compatibility . 129
-   Appendix E.  Overview of Security Properties  . . . . . . . . . . 130
-     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 130
-       E.1.1.  Key Derivation and HKDF . . . . . . . . . . . . . . . 133
-       E.1.2.  Client Authentication . . . . . . . . . . . . . . . . 134
-       E.1.3.  0-RTT . . . . . . . . . . . . . . . . . . . . . . . . 134
-       E.1.4.  Exporter Independence . . . . . . . . . . . . . . . . 134
-       E.1.5.  Post-Compromise Security  . . . . . . . . . . . . . . 135
-       E.1.6.  External References . . . . . . . . . . . . . . . . . 135
-     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 135
-       E.2.1.  External References . . . . . . . . . . . . . . . . . 136
-     E.3.  Traffic Analysis  . . . . . . . . . . . . . . . . . . . . 136
-     E.4.  Side-Channel Attacks  . . . . . . . . . . . . . . . . . . 137
-     E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 138
-       E.5.1.  Replay and Exporters  . . . . . . . . . . . . . . . . 139
-     E.6.  PSK Identity Exposure . . . . . . . . . . . . . . . . . . 140
-     E.7.  Attacks on Static RSA . . . . . . . . . . . . . . . . . . 140
-   Appendix F.  Working Group Information  . . . . . . . . . . . . . 140
-   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . . 140
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 148
+     B.1.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 111
+     B.2.  Alert Messages  . . . . . . . . . . . . . . . . . . . . . 111
+     B.3.  Handshake Protocol  . . . . . . . . . . . . . . . . . . . 113
+       B.3.1.  Key Exchange Messages . . . . . . . . . . . . . . . . 113
+       B.3.2.  Server Parameters Messages  . . . . . . . . . . . . . 118
+       B.3.3.  Authentication Messages . . . . . . . . . . . . . . . 119
+       B.3.4.  Ticket Establishment  . . . . . . . . . . . . . . . . 120
+       B.3.5.  Updating Keys . . . . . . . . . . . . . . . . . . . . 121
+     B.4.  Cipher Suites . . . . . . . . . . . . . . . . . . . . . . 121
+   Appendix C.  Implementation Notes . . . . . . . . . . . . . . . . 122
+     C.1.  Random Number Generation and Seeding  . . . . . . . . . . 122
+     C.2.  Certificates and Authentication . . . . . . . . . . . . . 122
+     C.3.  Implementation Pitfalls . . . . . . . . . . . . . . . . . 123
+     C.4.  Client Tracking Prevention  . . . . . . . . . . . . . . . 124
+     C.5.  Unauthenticated Operation . . . . . . . . . . . . . . . . 125
+   Appendix D.  Backward Compatibility . . . . . . . . . . . . . . . 125
+     D.1.  Negotiating with an Older Server  . . . . . . . . . . . . 126
+     D.2.  Negotiating with an Older Client  . . . . . . . . . . . . 127
+     D.3.  0-RTT Backward Compatibility  . . . . . . . . . . . . . . 127
+     D.4.  Middlebox Compatibility Mode  . . . . . . . . . . . . . . 127
+     D.5.  Security Restrictions Related to Backward Compatibility . 128
+   Appendix E.  Overview of Security Properties  . . . . . . . . . . 129
+     E.1.  Handshake . . . . . . . . . . . . . . . . . . . . . . . . 129
+       E.1.1.  Key Derivation and HKDF . . . . . . . . . . . . . . . 132
+       E.1.2.  Client Authentication . . . . . . . . . . . . . . . . 133
+       E.1.3.  0-RTT . . . . . . . . . . . . . . . . . . . . . . . . 133
+       E.1.4.  Exporter Independence . . . . . . . . . . . . . . . . 133
+       E.1.5.  Post-Compromise Security  . . . . . . . . . . . . . . 134
+       E.1.6.  External References . . . . . . . . . . . . . . . . . 134
+     E.2.  Record Layer  . . . . . . . . . . . . . . . . . . . . . . 134
+       E.2.1.  External References . . . . . . . . . . . . . . . . . 135
+     E.3.  Traffic Analysis  . . . . . . . . . . . . . . . . . . . . 135
+     E.4.  Side-Channel Attacks  . . . . . . . . . . . . . . . . . . 136
+     E.5.  Replay Attacks on 0-RTT . . . . . . . . . . . . . . . . . 137
+       E.5.1.  Replay and Exporters  . . . . . . . . . . . . . . . . 138
+     E.6.  PSK Identity Exposure . . . . . . . . . . . . . . . . . . 139
+     E.7.  Attacks on Static RSA . . . . . . . . . . . . . . . . . . 139
+   Appendix F.  Working Group Information  . . . . . . . . . . . . . 139
+   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . . 139
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . . 147
 
 
 
@@ -356,7 +356,7 @@ RFC 8446                           TLS                         July 2018
       Authentication Code (HMAC).
 
    -  A zero round-trip time (0-RTT) mode was added, saving a round trip
-      at connection setup for some application data, at the cost of
+      at connection setup for some Application Data, at the cost of
       certain security properties.
 
    -  Static RSA and Diffie-Hellman cipher suites have been removed; all
@@ -382,11 +382,11 @@ RFC 8446                           TLS                         July 2018
       TLS 1.3 removed point format negotiation in favor of a single
       point format for each curve.
 
-   -  Other cryptographic improvements, including the removal of
-      compression, the Digital Signature Algorithm (DSA), and custom
-      Ephemeral Diffie-Hellman (DHE) groups, changing the RSA padding to
-      use the RSA Probabilistic Signature Scheme (RSASSA-PSS), have been
-      added.
+   -  Other cryptographic improvements were made, including changing the
+      RSA padding to use the RSA Probabilistic Signature Scheme (RSASSA-
+      PSS), and the removal of compression, the Digital Signature
+      Algorithm (DSA), and custom Ephemeral Diffie-Hellman (DHE) groups.
+
 
 
 
@@ -596,9 +596,9 @@ RFC 8446                           TLS                         July 2018
    At this point, the handshake is complete, and the client and server
    derive the keying material required by the record layer to exchange
    application-layer data protected through authenticated encryption.
-   Application data MUST NOT be sent prior to sending the Finished
+   Application Data MUST NOT be sent prior to sending the Finished
    message, except as specified in Section 2.3.  Note that while the
-   server may send application data prior to receiving the client's
+   server may send Application Data prior to receiving the client's
    Authentication messages, any data sent at that point is, of course,
    being sent to an unauthenticated peer.
 
@@ -678,8 +678,8 @@ RFC 8446                           TLS                         July 2018
 
    PSKs can be used with (EC)DHE key exchange in order to provide
    forward secrecy in combination with shared keys, or can be used
-   alone, at the cost of losing forward secrecy for the application
-   data.
+   alone, at the cost of losing forward secrecy for the Application
+   Data.
 
    Figure 3 shows a pair of handshakes in which the first handshake
    establishes a PSK and the second handshake uses it:
@@ -1142,6 +1142,9 @@ RFC 8446                           TLS                         July 2018
           certificate_request(13),
           certificate_verify(15),
           finished(20),
+          certificate_url_RESERVED(21),
+          certificate_status_RESERVED(22),
+          supplemental_data_RESERVED(23),
           key_update(24),
           message_hash(254),
           (255)
@@ -1169,9 +1172,6 @@ RFC 8446                           TLS                         July 2018
    handshake message in an unexpected order MUST abort the handshake
    with an "unexpected_message" alert.
 
-   New handshake message types are assigned by IANA as described in
-   Section 11.
-
 
 
 
@@ -1179,6 +1179,9 @@ Rescorla                     Standards Track                   [Page 21]
 
 RFC 8446                           TLS                         July 2018
 
+
+   New handshake message types are assigned by IANA as described in
+   Section 11.
 
 4.1.  Key Exchange Messages
 
@@ -1224,9 +1227,6 @@ RFC 8446                           TLS                         July 2018
    non-overlap in the "supported_groups" parameters need not be fatal,
    as it is in the non-PSK case discussed in the previous paragraph.
 
-   If the server selects an (EC)DHE group and the client did not offer a
-   compatible "key_share" extension in the initial ClientHello, the
-   server MUST respond with a HelloRetryRequest (Section 4.1.4) message.
 
 
 
@@ -1235,6 +1235,10 @@ Rescorla                     Standards Track                   [Page 22]
 
 RFC 8446                           TLS                         July 2018
 
+
+   If the server selects an (EC)DHE group and the client did not offer a
+   compatible "key_share" extension in the initial ClientHello, the
+   server MUST respond with a HelloRetryRequest (Section 4.1.4) message.
 
    If the server successfully selects parameters and does not require a
    HelloRetryRequest, it indicates the selected parameters in the
@@ -1280,10 +1284,6 @@ RFC 8446                           TLS                         July 2018
 
    -  Updating the "pre_shared_key" extension if present by recomputing
       the "obfuscated_ticket_age" and binder values and (optionally)
-      removing any PSKs which are incompatible with the server's
-      indicated cipher suite.
-
-
 
 
 
@@ -1291,6 +1291,9 @@ Rescorla                     Standards Track                   [Page 23]
 
 RFC 8446                           TLS                         July 2018
 
+
+      removing any PSKs which are incompatible with the server's
+      indicated cipher suite.
 
    -  Optionally adding, removing, or changing the length of the
       "padding" extension [RFC7685].
@@ -1338,9 +1341,6 @@ RFC 8446                           TLS                         July 2018
    random  32 bytes generated by a secure random number generator.  See
       Appendix C for additional information.
 
-   legacy_session_id  Versions of TLS before TLS 1.3 supported a
-      "session resumption" feature which has been merged with pre-shared
-
 
 
 Rescorla                     Standards Track                   [Page 24]
@@ -1348,6 +1348,8 @@ Rescorla                     Standards Track                   [Page 24]
 RFC 8446                           TLS                         July 2018
 
 
+   legacy_session_id  Versions of TLS before TLS 1.3 supported a
+      "session resumption" feature which has been merged with pre-shared
       keys in this version (see Section 2.2).  A client which has a
       cached session ID set by a pre-TLS 1.3 server SHOULD set this
       field to that value.  In compatibility mode (see Appendix D.4),
@@ -1394,8 +1396,6 @@ RFC 8446                           TLS                         July 2018
    All versions of TLS allow an extensions field to optionally follow
    the compression_methods field.  TLS 1.3 ClientHello messages always
    contain extensions (minimally "supported_versions", otherwise, they
-   will be interpreted as TLS 1.2 ClientHello messages).  However,
-   TLS 1.3 servers might receive ClientHello messages without an
 
 
 
@@ -1404,6 +1404,8 @@ Rescorla                     Standards Track                   [Page 25]
 RFC 8446                           TLS                         July 2018
 
 
+   will be interpreted as TLS 1.2 ClientHello messages).  However,
+   TLS 1.3 servers might receive ClientHello messages without an
    extensions field from prior versions of TLS.  The presence of
    extensions can be detected by determining whether there are bytes
    following the compression_methods field at the end of the
@@ -1424,7 +1426,7 @@ RFC 8446                           TLS                         July 2018
 
    After sending the ClientHello message, the client waits for a
    ServerHello or HelloRetryRequest message.  If early data is in use,
-   the client may transmit early application data (Section 2.3) while
+   the client may transmit early Application Data (Section 2.3) while
    waiting for the next handshake message.
 
 4.1.3.  Server Hello
@@ -1450,8 +1452,6 @@ RFC 8446                           TLS                         July 2018
       presented with new values.  In TLS 1.3, the TLS server indicates
       its version using the "supported_versions" extension
       (Section 4.2.1), and the legacy_version field MUST be set to
-      0x0303, which is the version number for TLS 1.2.  (See Appendix D
-      for details about backward compatibility.)
 
 
 
@@ -1460,12 +1460,15 @@ Rescorla                     Standards Track                   [Page 26]
 RFC 8446                           TLS                         July 2018
 
 
+      0x0303, which is the version number for TLS 1.2.  (See Appendix D
+      for details about backward compatibility.)
+
    random  32 bytes generated by a secure random number generator.  See
-      Appendix C for additional information.  The last eight bytes MUST
-      be overwritten as described below if negotiating TLS 1.2 or
-      TLS 1.1, but the remaining bytes MUST be random.  This structure
-      is generated by the server and MUST be generated independently of
-      the ClientHello.random.
+      Appendix C for additional information.  The last 8 bytes MUST be
+      overwritten as described below if negotiating TLS 1.2 or TLS 1.1,
+      but the remaining bytes MUST be random.  This structure is
+      generated by the server and MUST be generated independently of the
+      ClientHello.random.
 
    legacy_session_id_echo  The contents of the client's
       legacy_session_id field.  Note that this field is echoed even if
@@ -1504,10 +1507,7 @@ RFC 8446                           TLS                         July 2018
    first examine the Random value and, if it matches this value, process
    it as described in Section 4.1.4).
 
-   TLS 1.3 has a downgrade protection mechanism embedded in the server's
-   random value.  TLS 1.3 servers which negotiate TLS 1.2 or below in
-   response to a ClientHello MUST set the last eight bytes of their
-   Random value specially.
+
 
 
 
@@ -1516,28 +1516,33 @@ Rescorla                     Standards Track                   [Page 27]
 RFC 8446                           TLS                         July 2018
 
 
-   If negotiating TLS 1.2, TLS 1.3 servers MUST set the last eight bytes
-   of their Random value to the bytes:
+   TLS 1.3 has a downgrade protection mechanism embedded in the server's
+   random value.  TLS 1.3 servers which negotiate TLS 1.2 or below in
+   response to a ClientHello MUST set the last 8 bytes of their Random
+   value specially.
+
+   If negotiating TLS 1.2, TLS 1.3 servers MUST set the last 8 bytes of
+   their Random value to the bytes:
 
      44 4F 57 4E 47 52 44 01
 
    If negotiating TLS 1.1 or below, TLS 1.3 servers MUST, and TLS 1.2
-   servers SHOULD, set the last eight bytes of their Random value to the
+   servers SHOULD, set the last 8 bytes of their Random value to the
    bytes:
 
      44 4F 57 4E 47 52 44 00
 
    TLS 1.3 clients receiving a ServerHello indicating TLS 1.2 or below
-   MUST check that the last eight bytes are not equal to either of these
-   values.  TLS 1.2 clients SHOULD also check that the last eight bytes
-   are not equal to the second value if the ServerHello indicates
-   TLS 1.1 or below.  If a match is found, the client MUST abort the
-   handshake with an "illegal_parameter" alert.  This mechanism provides
-   limited protection against downgrade attacks over and above what is
-   provided by the Finished exchange: because the ServerKeyExchange, a
-   message present in TLS 1.2 and below, includes a signature over both
-   random values, it is not possible for an active attacker to modify
-   the random values without detection as long as ephemeral ciphers are
+   MUST check that the last 8 bytes are not equal to either of these
+   values.  TLS 1.2 clients SHOULD also check that the last 8 bytes are
+   not equal to the second value if the ServerHello indicates TLS 1.1 or
+   below.  If a match is found, the client MUST abort the handshake with
+   an "illegal_parameter" alert.  This mechanism provides limited
+   protection against downgrade attacks over and above what is provided
+   by the Finished exchange: because the ServerKeyExchange, a message
+   present in TLS 1.2 and below, includes a signature over both random
+   values, it is not possible for an active attacker to modify the
+   random values without detection as long as ephemeral ciphers are
    used.  It does not provide downgrade protection when static RSA is
    used.
 
@@ -1558,12 +1563,7 @@ RFC 8446                           TLS                         July 2018
    has the same format as a ServerHello message, and the legacy_version,
    legacy_session_id_echo, cipher_suite, and legacy_compression_method
    fields have the same meaning.  However, for convenience we discuss
-   "HelloRetryRequest" throughout this document as if it were a distinct
-   message.
 
-   The server's extensions MUST contain "supported_versions", otherwise,
-   the server SHOULD send only the extensions necessary for the client
-   to generate a correct ClientHello pair.  As with the ServerHello, a
 
 
 
@@ -1572,6 +1572,12 @@ Rescorla                     Standards Track                   [Page 28]
 RFC 8446                           TLS                         July 2018
 
 
+   "HelloRetryRequest" throughout this document as if it were a distinct
+   message.
+
+   The server's extensions MUST contain "supported_versions", otherwise,
+   the server SHOULD send only the extensions necessary for the client
+   to generate a correct ClientHello pair.  As with the ServerHello, a
    HelloRetryRequest MUST NOT contain any extensions that were not first
    offered by the client in its ClientHello, with the exception of
    optionally the "cookie" (see Section 4.2.2) extension.
@@ -1613,12 +1619,6 @@ RFC 8446                           TLS                         July 2018
 
    The value of selected_version in the HelloRetryRequest
    "supported_versions" extension MUST be retained in the ServerHello,
-   and a client MUST abort the handshake with an "illegal_parameter"
-   alert if the value changes.
-
-
-
-
 
 
 
@@ -1627,6 +1627,9 @@ Rescorla                     Standards Track                   [Page 29]
 
 RFC 8446                           TLS                         July 2018
 
+
+   and a client MUST abort the handshake with an "illegal_parameter"
+   alert if the value changes.
 
 4.2.  Extensions
 
@@ -1674,9 +1677,6 @@ RFC 8446                           TLS                         July 2018
    The list of extension types is maintained by IANA as described in
    Section 11.
 
-   Extensions are generally structured in a request/response fashion,
-   though some extensions are just indications with no corresponding
-
 
 
 Rescorla                     Standards Track                   [Page 30]
@@ -1684,6 +1684,8 @@ Rescorla                     Standards Track                   [Page 30]
 RFC 8446                           TLS                         July 2018
 
 
+   Extensions are generally structured in a request/response fashion,
+   though some extensions are just indications with no corresponding
    response.  The client sends its extension requests in the ClientHello
    message, and the server sends its extension responses in the
    ServerHello, EncryptedExtensions, HelloRetryRequest, and Certificate
@@ -1707,8 +1709,6 @@ RFC 8446                           TLS                         July 2018
    which it recognizes and which is not specified for the message in
    which it appears, it MUST abort the handshake with an
    "illegal_parameter" alert.
-
-
 
 
 
@@ -2098,7 +2098,7 @@ RFC 8446                           TLS                         July 2018
       RSASSA-PSS [RFC8017] with mask generation function 1.  The digest
       used in the mask generation function and the digest being signed
       are both the corresponding hash algorithm as defined in [SHS].
-      The length of the salt MUST be equal to the length of the output
+      The length of the Salt MUST be equal to the length of the output
       of the digest algorithm.  If the public key is carried in an X.509
       certificate, it MUST use the rsaEncryption OID [RFC5280].
 
@@ -2111,7 +2111,7 @@ RFC 8446                           TLS                         July 2018
       RSASSA-PSS [RFC8017] with mask generation function 1.  The digest
       used in the mask generation function and the digest being signed
       are both the corresponding hash algorithm as defined in [SHS].
-      The length of the salt MUST be equal to the length of the digest
+      The length of the Salt MUST be equal to the length of the digest
       algorithm.  If the public key is carried in an X.509 certificate,
       it MUST use the RSASSA-PSS OID [RFC5756].  When used in
       certificate signatures, the algorithm parameters MUST be DER
@@ -2601,7 +2601,7 @@ RFC 8446                           TLS                         July 2018
 4.2.10.  Early Data Indication
 
    When a PSK is used and early data is allowed for that PSK, the client
-   can send application data in its first flight of messages.  If the
+   can send Application Data in its first flight of messages.  If the
    client opts to do so, it MUST supply both the "early_data" extension
    and the "pre_shared_key" extension.
 
@@ -2727,7 +2727,7 @@ RFC 8446                           TLS                         July 2018
    "bad_record_mac" alert as per Section 5.2.
 
    If the server rejects the "early_data" extension, the client
-   application MAY opt to retransmit the application data previously
+   application MAY opt to retransmit the Application Data previously
    sent in early data once the handshake has been completed.  Note that
    automatic retransmission of early data could result in incorrect
    assumptions regarding the status of the connection.  For instance,
@@ -3056,7 +3056,7 @@ RFC 8446                           TLS                         July 2018
    three messages are always sent as the last messages in their
    handshake flight.  The Certificate and CertificateVerify messages are
    only sent under certain circumstances, as defined below.  The
-   Finished message is always sent as part of the Authentication block.
+   Finished message is always sent as part of the Authentication Block.
    These messages are encrypted under keys derived from the
    [sender]_handshake_traffic_secret.
 
@@ -3068,7 +3068,7 @@ RFC 8446                           TLS                         July 2018
    -  A Handshake Context consisting of the set of messages to be
       included in the transcript hash.
 
-   -  A base key to be used to compute a MAC key.
+   -  A Base Key to be used to compute a MAC key.
 
    Based on these inputs, the messages then contain:
 
@@ -3089,7 +3089,7 @@ RFC 8446                           TLS                         July 2018
 
    Finished  A MAC over the value Transcript-Hash(Handshake Context,
       Certificate, CertificateVerify) using a MAC key derived from the
-      base key.
+      Base Key.
 
    The following table defines the Handshake Context and MAC Base Key
    for each scenario:
@@ -3225,9 +3225,8 @@ RFC 8446                           TLS                         July 2018
       that message.  Otherwise (in the case of server authentication),
       this field SHALL be zero length.
 
-   certificate_list  This is a sequence (chain) of CertificateEntry
-      structures, each containing a single certificate and set of
-      extensions.
+   certificate_list  A sequence (chain) of CertificateEntry structures,
+      each containing a single certificate and set of extensions.
 
    extensions:  A set of extension values for the CertificateEntry.  The
       "Extension" format is defined in Section 4.2.  Valid extensions
@@ -3244,6 +3243,7 @@ RFC 8446                           TLS                         July 2018
    If the corresponding certificate type extension
    ("server_certificate_type" or "client_certificate_type") was not
    negotiated in EncryptedExtensions, or the X.509 certificate type was
+   negotiated, then each CertificateEntry contains a DER-encoded X.509
 
 
 
@@ -3252,7 +3252,6 @@ Rescorla                     Standards Track                   [Page 58]
 RFC 8446                           TLS                         July 2018
 
 
-   negotiated, then each CertificateEntry contains a DER-encoded X.509
    certificate.  The sender's certificate MUST come in the first
    CertificateEntry in the list.  Each following certificate SHOULD
    directly certify the one immediately preceding it.  Because
@@ -3300,6 +3299,7 @@ RFC 8446                           TLS                         July 2018
    Note: The status_request_v2 extension [RFC6961] is deprecated.
    TLS 1.3 servers MUST NOT act upon its presence or information in it
    when processing ClientHello messages; in particular, they MUST NOT
+   send the status_request_v2 extension in the EncryptedExtensions,
 
 
 
@@ -3308,7 +3308,6 @@ Rescorla                     Standards Track                   [Page 59]
 RFC 8446                           TLS                         July 2018
 
 
-   send the status_request_v2 extension in the EncryptedExtensions,
    CertificateRequest, or Certificate messages.  TLS 1.3 servers MUST be
    able to process ClientHello messages that include it, as it MAY be
    sent by clients that wish to use it in earlier protocol versions.
@@ -3356,6 +3355,7 @@ RFC 8446                           TLS                         July 2018
    If the server cannot produce a certificate chain that is signed only
    via the indicated supported algorithms, then it SHOULD continue the
    handshake by sending the client a certificate chain of its choice
+   that may include algorithms that are not known to be supported by the
 
 
 
@@ -3364,7 +3364,6 @@ Rescorla                     Standards Track                   [Page 60]
 RFC 8446                           TLS                         July 2018
 
 
-   that may include algorithms that are not known to be supported by the
    client.  This fallback chain SHOULD NOT use the deprecated SHA-1 hash
    algorithm in general, but MAY do so if the client's advertisement
    permits it, and MUST NOT do so otherwise.
@@ -3411,7 +3410,8 @@ RFC 8446                           TLS                         July 2018
    scope for TLS (see [RFC5280]).  This section provides TLS-specific
    requirements.
 
-
+   If the server supplies an empty Certificate message, the client MUST
+   abort the handshake with a "decode_error" alert.
 
 
 
@@ -3419,9 +3419,6 @@ Rescorla                     Standards Track                   [Page 61]
 
 RFC 8446                           TLS                         July 2018
 
-
-   If the server supplies an empty Certificate message, the client MUST
-   abort the handshake with a "decode_error" alert.
 
    If the client does not send any certificates (i.e., it sends an empty
    Certificate message), the server MAY at its discretion either
@@ -3468,6 +3465,9 @@ RFC 8446                           TLS                         July 2018
           opaque signature<0..2^16-1>;
       } CertificateVerify;
 
+   The algorithm field specifies the signature algorithm used (see
+   Section 4.2.3 for the definition of this type).  The signature is a
+   digital signature using that algorithm.  The content that is covered
 
 
 
@@ -3476,9 +3476,6 @@ Rescorla                     Standards Track                   [Page 62]
 RFC 8446                           TLS                         July 2018
 
 
-   The algorithm field specifies the signature algorithm used (see
-   Section 4.2.3 for the definition of this type).  The signature is a
-   digital signature using that algorithm.  The content that is covered
    under the signature is the hash output as described in Section 4.4.1,
    namely:
 
@@ -3525,6 +3522,9 @@ RFC 8446                           TLS                         July 2018
    -  The private signing key corresponding to the certificate sent in
       the previous message
 
+   If the CertificateVerify message is sent by a server, the signature
+   algorithm MUST be one offered in the client's "signature_algorithms"
+
 
 
 Rescorla                     Standards Track                   [Page 63]
@@ -3532,8 +3532,6 @@ Rescorla                     Standards Track                   [Page 63]
 RFC 8446                           TLS                         July 2018
 
 
-   If the CertificateVerify message is sent by a server, the signature
-   algorithm MUST be one offered in the client's "signature_algorithms"
    extension unless no valid certificate chain can be produced without
    unsupported algorithms (see Section 4.2.3).
 
@@ -3567,8 +3565,8 @@ RFC 8446                           TLS                         July 2018
 
 4.4.4.  Finished
 
-   The Finished message is the final message in the authentication
-   block.  It is essential for providing authentication of the handshake
+   The Finished message is the final message in the Authentication
+   Block.  It is essential for providing authentication of the handshake
    and of the computed keys.
 
    Recipients of Finished messages MUST verify that the contents are
@@ -3577,9 +3575,11 @@ RFC 8446                           TLS                         July 2018
 
    Once a side has sent its Finished message and has received and
    validated the Finished message from its peer, it may begin to send
-   and receive application data over the connection.  There are two
+   and receive Application Data over the connection.  There are two
    settings in which it is permitted to send data prior to receiving the
    peer's Finished:
+
+   1.  Clients sending 0-RTT data as described in Section 4.2.10.
 
 
 
@@ -3588,15 +3588,13 @@ Rescorla                     Standards Track                   [Page 64]
 RFC 8446                           TLS                         July 2018
 
 
-   1.  Clients sending 0-RTT data as described in Section 4.2.10.
-
    2.  Servers MAY send data after sending their first flight, but
        because the handshake is not yet complete, they have no assurance
        of either the peer's identity or its liveness (i.e., the
        ClientHello might have been replayed).
 
    The key used to compute the Finished message is computed from the
-   Base key defined in Section 4.4 using HKDF (see Section 7.1).
+   Base Key defined in Section 4.4 using HKDF (see Section 7.1).
    Specifically:
 
    finished_key =
@@ -3633,7 +3631,9 @@ RFC 8446                           TLS                         July 2018
    particular, this includes any alerts sent by the server in response
    to client Certificate and CertificateVerify messages.
 
+4.5.  End of Early Data
 
+      struct {} EndOfEarlyData;
 
 
 
@@ -3643,10 +3643,6 @@ Rescorla                     Standards Track                   [Page 65]
 
 RFC 8446                           TLS                         July 2018
 
-
-4.5.  End of Early Data
-
-      struct {} EndOfEarlyData;
 
    If the server sent an "early_data" extension, the client MUST send an
    EndOfEarlyData message after receiving the server Finished.  If the
@@ -3692,6 +3688,10 @@ RFC 8446                           TLS                         July 2018
 
    Clients MUST only resume if the new SNI value is valid for the server
    certificate presented in the original session and SHOULD only resume
+   if the SNI value matches the one used in the original session.  The
+   latter is a performance optimization: normally, there is no reason to
+   expect that different servers covered by a single certificate would
+   be able to accept each other's tickets; hence, attempting resumption
 
 
 
@@ -3700,10 +3700,6 @@ Rescorla                     Standards Track                   [Page 66]
 RFC 8446                           TLS                         July 2018
 
 
-   if the SNI value matches the one used in the original session.  The
-   latter is a performance optimization: normally, there is no reason to
-   expect that different servers covered by a single certificate would
-   be able to accept each other's tickets; hence, attempting resumption
    in that case would waste a single-use ticket.  If such an indication
    is provided (externally or by any other means), clients MAY resume
    with a different SNI value.
@@ -3748,6 +3744,10 @@ RFC 8446                           TLS                         July 2018
       transmitted by the client.  The server MUST generate a fresh value
       for each ticket it sends.
 
+   ticket_nonce  A per-ticket value that is unique across all tickets
+      issued on this connection.
+
+
 
 
 
@@ -3755,9 +3755,6 @@ Rescorla                     Standards Track                   [Page 67]
 
 RFC 8446                           TLS                         July 2018
 
-
-   ticket_nonce  A per-ticket value that is unique across all tickets
-      issued on this connection.
 
    ticket  The value of the ticket to be used as the PSK identity.  The
       ticket itself is an opaque label.  It MAY be either a database
@@ -3801,9 +3798,12 @@ RFC 8446                           TLS                         July 2018
    peer's certificate, the likelihood of intervening revocation, and the
    time since the peer's online CertificateVerify signature.
 
+4.6.2.  Post-Handshake Authentication
 
-
-
+   When the client has sent the "post_handshake_auth" extension (see
+   Section 4.2.6), a server MAY request client authentication at any
+   time after the handshake has completed by sending a
+   CertificateRequest message.  The client MUST respond with the
 
 
 
@@ -3812,12 +3812,6 @@ Rescorla                     Standards Track                   [Page 68]
 RFC 8446                           TLS                         July 2018
 
 
-4.6.2.  Post-Handshake Authentication
-
-   When the client has sent the "post_handshake_auth" extension (see
-   Section 4.2.6), a server MAY request client authentication at any
-   time after the handshake has completed by sending a
-   CertificateRequest message.  The client MUST respond with the
    appropriate Authentication messages (see Section 4.4).  If the client
    chooses to authenticate, it MUST send Certificate, CertificateVerify,
    and Finished.  If it declines, it MUST send a Certificate message
@@ -3860,6 +3854,12 @@ RFC 8446                           TLS                         July 2018
    message MUST terminate the connection with an "unexpected_message"
    alert.  After sending a KeyUpdate message, the sender SHALL send all
    its traffic using the next generation of keys, computed as described
+   in Section 7.2.  Upon receiving a KeyUpdate, the receiver MUST update
+   its receiving keys.
+
+   If the request_update field is set to "update_requested", then the
+   receiver MUST send a KeyUpdate of its own with request_update set to
+   "update_not_requested" prior to sending its next Application Data
 
 
 
@@ -3868,12 +3868,6 @@ Rescorla                     Standards Track                   [Page 69]
 RFC 8446                           TLS                         July 2018
 
 
-   in Section 7.2.  Upon receiving a KeyUpdate, the receiver MUST update
-   its receiving keys.
-
-   If the request_update field is set to "update_requested", then the
-   receiver MUST send a KeyUpdate of its own with request_update set to
-   "update_not_requested" prior to sending its next application data
    record.  This mechanism allows either side to force an update to the
    entire connection, but causes an implementation which receives
    multiple KeyUpdates while it is silent to respond with a single
@@ -3905,7 +3899,7 @@ RFC 8446                           TLS                         July 2018
 
    TLS records are typed, which allows multiple higher-level protocols
    to be multiplexed over the same record layer.  This document
-   specifies four content types: handshake, application data, alert, and
+   specifies four content types: handshake, Application Data, alert, and
    change_cipher_spec.  The change_cipher_spec record is used only for
    compatibility purposes (see Appendix D.4).
 
@@ -3916,6 +3910,12 @@ RFC 8446                           TLS                         July 2018
    simply drop it without further processing.  Note that this record may
    appear at a point at the handshake where the implementation is
    expecting protected records, and so it is necessary to detect this
+   condition prior to attempting to deprotect the record.  An
+   implementation which receives any other change_cipher_spec value or
+   which receives a protected change_cipher_spec record MUST abort the
+   handshake with an "unexpected_message" alert.  A change_cipher_spec
+   record received before the first ClientHello message or after the
+   peer's Finished message MUST be treated as an unexpected record type
 
 
 
@@ -3924,12 +3924,6 @@ Rescorla                     Standards Track                   [Page 70]
 RFC 8446                           TLS                         July 2018
 
 
-   condition prior to attempting to deprotect the record.  An
-   implementation which receives any other change_cipher_spec value or
-   which receives a protected change_cipher_spec record MUST abort the
-   handshake with an "unexpected_message" alert.  A change_cipher_spec
-   record received before the first ClientHello message or after the
-   peer's Finished message MUST be treated as an unexpected record type
    (though stateless servers may not be able to distinguish these cases
    from allowed cases).
 
@@ -3968,17 +3962,9 @@ RFC 8446                           TLS                         July 2018
    types, even if those fragments contain padding.
 
    Alert messages (Section 6) MUST NOT be fragmented across records, and
-   multiple Alert messages MUST NOT be coalesced into a single
+   multiple alert messages MUST NOT be coalesced into a single
    TLSPlaintext record.  In other words, a record with an Alert type
    MUST contain exactly one message.
-
-
-
-
-Rescorla                     Standards Track                   [Page 71]
-
-RFC 8446                           TLS                         July 2018
-
 
    Application Data messages contain data that is opaque to TLS.
    Application Data messages are always protected.  Zero-length
@@ -3986,6 +3972,13 @@ RFC 8446                           TLS                         July 2018
    useful as a traffic analysis countermeasure.  Application Data
    fragments MAY be split across multiple records or coalesced into a
    single record.
+
+
+
+Rescorla                     Standards Track                   [Page 71]
+
+RFC 8446                           TLS                         July 2018
+
 
       enum {
           invalid(0),
@@ -4028,6 +4021,13 @@ RFC 8446                           TLS                         July 2018
    TLS 1.0 and 0x0300 for SSL 3.0.  In order to maximize backward
    compatibility, a record containing an initial ClientHello SHOULD have
    version 0x0301 (reflecting TLS 1.0) and a record containing a second
+   ClientHello or a ServerHello MUST have version 0x0303 (reflecting
+   TLS 1.2).  When negotiating prior versions of TLS, endpoints follow
+   the procedure and requirements provided in Appendix D.
+
+   When record protection has not yet been engaged, TLSPlaintext
+   structures are written directly onto the wire.  Once record
+   protection has started, TLSPlaintext records are protected and sent
 
 
 
@@ -4036,14 +4036,7 @@ Rescorla                     Standards Track                   [Page 72]
 RFC 8446                           TLS                         July 2018
 
 
-   ClientHello or a ServerHello MUST have version 0x0303 (reflecting
-   TLS 1.2).  When negotiating prior versions of TLS, endpoints follow
-   the procedure and requirements provided in Appendix D.
-
-   When record protection has not yet been engaged, TLSPlaintext
-   structures are written directly onto the wire.  Once record
-   protection has started, TLSPlaintext records are protected and sent
-   as described in the following section.  Note that application data
+   as described in the following section.  Note that Application Data
    records MUST NOT be written to the wire unprotected (see Section 2
    for details).
 
@@ -4085,18 +4078,19 @@ RFC 8446                           TLS                         July 2018
       total stays within record size limits.  See Section 5.4 for more
       details.
 
+   opaque_type  The outer opaque_type field of a TLSCiphertext record is
+      always set to the value 23 (application_data) for outward
+      compatibility with middleboxes accustomed to parsing previous
+      versions of TLS.  The actual content type of the record is found
+      in TLSInnerPlaintext.type after decryption.
+
+
 
 
 Rescorla                     Standards Track                   [Page 73]
 
 RFC 8446                           TLS                         July 2018
 
-
-   opaque_type  The outer opaque_type field of a TLSCiphertext record is
-      always set to the value 23 (application_data) for outward
-      compatibility with middleboxes accustomed to parsing previous
-      versions of TLS.  The actual content type of the record is found
-      in TLSInnerPlaintext.type after decryption.
 
    legacy_record_version  The legacy_record_version field is always
       0x0303.  TLS 1.3 TLSCiphertexts are not generated until after
@@ -4139,6 +4133,12 @@ RFC 8446                           TLS                         July 2018
    TLSInnerPlaintext.type and any padding supplied by the sender.  The
    length of the AEAD output will generally be larger than the
    plaintext, but by an amount that varies with the AEAD algorithm.
+   Since the ciphers might incorporate padding, the amount of overhead
+   could vary with different lengths of plaintext.  Symbolically,
+
+      AEADEncrypted =
+          AEAD-Encrypt(write_key, nonce, additional_data, plaintext)
+
 
 
 
@@ -4147,12 +4147,6 @@ Rescorla                     Standards Track                   [Page 74]
 
 RFC 8446                           TLS                         July 2018
 
-
-   Since the ciphers might incorporate padding, the amount of overhead
-   could vary with different lengths of plaintext.  Symbolically,
-
-      AEADEncrypted =
-          AEAD-Encrypt(write_key, nonce, additional_data, plaintext)
 
    Then the encrypted_record field of TLSCiphertext is set to
    AEADEncrypted.
@@ -4196,6 +4190,12 @@ RFC 8446                           TLS                         July 2018
    MUST NOT be used with TLS.  The per-record nonce for the AEAD
    construction is formed as follows:
 
+   1.  The 64-bit record sequence number is encoded in network byte
+       order and padded to the left with zeros to iv_length.
+
+   2.  The padded sequence number is XORed with the static
+       client_write_iv or server_write_iv, depending on the role.
+
 
 
 
@@ -4203,12 +4203,6 @@ Rescorla                     Standards Track                   [Page 75]
 
 RFC 8446                           TLS                         July 2018
 
-
-   1.  The 64-bit record sequence number is encoded in network byte
-       order and padded to the left with zeros to iv_length.
-
-   2.  The padded sequence number is XORed with the static
-       client_write_iv or server_write_iv, depending on the role.
 
    The resulting quantity (of length iv_length) is used as the
    per-record nonce.
@@ -4253,6 +4247,12 @@ RFC 8446                           TLS                         July 2018
    find a non-zero octet in the cleartext, it MUST terminate the
    connection with an "unexpected_message" alert.
 
+   The presence of padding does not change the overall record size
+   limitations: the full encoded TLSInnerPlaintext MUST NOT exceed 2^14
+   + 1 octets.  If the maximum fragment length is reduced -- as, for
+   example, by the max_fragment_length extension from [TLS-Record-Limit]
+
+
 
 
 Rescorla                     Standards Track                   [Page 76]
@@ -4260,10 +4260,6 @@ Rescorla                     Standards Track                   [Page 76]
 RFC 8446                           TLS                         July 2018
 
 
-   The presence of padding does not change the overall record size
-   limitations: the full encoded TLSInnerPlaintext MUST NOT exceed 2^14
-   + 1 octets.  If the maximum fragment length is reduced -- as, for
-   example, by the max_fragment_length extension from [TLS-Record-Limit]
    -- then the reduced limit applies to the full plaintext, including
    the content type and padding.
 
@@ -4271,10 +4267,10 @@ RFC 8446                           TLS                         July 2018
    a complex topic and is beyond the scope of this specification.  If
    the application-layer protocol on top of TLS has its own padding, it
    may be preferable to pad application_data TLS records within the
-   application layer.  Padding for encrypted handshake and alert TLS
-   records must still be handled at the TLS layer, though.  Later
-   documents may define padding selection algorithms or define a padding
-   policy request mechanism through TLS extensions or some other means.
+   application layer.  Padding for encrypted Handshake or Alert records
+   must still be handled at the TLS layer, though.  Later documents may
+   define padding selection algorithms or define a padding policy
+   request mechanism through TLS extensions or some other means.
 
 5.5.  Limits on Key Usage
 
@@ -4294,7 +4290,7 @@ RFC 8446                           TLS                         July 2018
 6.  Alert Protocol
 
    One of the content types supported by the TLS record layer is the
-   alert type.  Like other messages, alert messages are encrypted as
+   Alert type.  Like other messages, alert messages are encrypted as
    specified by the current connection state.
 
    Alert messages convey a description of the alert and a legacy field
@@ -4308,6 +4304,10 @@ RFC 8446                           TLS                         July 2018
 
    Error alerts indicate abortive closure of the connection (see
    Section 6.2).  Upon receiving an error alert, the TLS implementation
+   SHOULD indicate an error to the application and MUST NOT allow any
+   further data to be sent or received on the connection.  Servers and
+   clients MUST forget the secret values and keys established in failed
+
 
 
 
@@ -4316,15 +4316,12 @@ Rescorla                     Standards Track                   [Page 77]
 RFC 8446                           TLS                         July 2018
 
 
-   SHOULD indicate an error to the application and MUST NOT allow any
-   further data to be sent or received on the connection.  Servers and
-   clients MUST forget the secret values and keys established in failed
    connections, with the exception of the PSKs associated with session
    tickets, which SHOULD be discarded if possible.
 
    All the alerts listed in Section 6.2 MUST be sent with
    AlertLevel=fatal and MUST be treated as error alerts regardless of
-   the AlertLevel in the message.  Unknown alert types MUST be treated
+   the AlertLevel in the message.  Unknown Alert types MUST be treated
    as error alerts.
 
    Note: TLS defines two generic alerts (see Section 6) to use upon
@@ -4335,6 +4332,9 @@ RFC 8446                           TLS                         July 2018
    Peers which receive a message which is syntactically correct but
    semantically invalid (e.g., a DHE share of p - 1, or an invalid enum)
    MUST terminate the connection with an "illegal_parameter" alert.
+
+
+
 
 
 
@@ -4496,7 +4496,7 @@ RFC 8446                           TLS                         July 2018
    The following error alerts are defined:
 
    unexpected_message  An inappropriate message (e.g., the wrong
-      handshake message, premature application data, etc.) was received.
+      handshake message, premature Application Data, etc.) was received.
       This alert should never be observed in communication between
       proper implementations.
 
@@ -4673,7 +4673,7 @@ RFC 8446                           TLS                         July 2018
    including the handshake message type and length fields, but not
    including record layer headers.  Note that in some cases a zero-
    length Context (indicated by "") is passed to HKDF-Expand-Label.  The
-   Labels specified in this document are all ASCII strings and do not
+   labels specified in this document are all ASCII strings and do not
    include a trailing NUL byte.
 
    Note: With common hash functions, any label longer than 12 characters
@@ -4683,7 +4683,7 @@ RFC 8446                           TLS                         July 2018
 
    Keys are derived from two input secrets using the HKDF-Extract and
    Derive-Secret functions.  The general pattern for adding a new secret
-   is to use HKDF-Extract with the salt being the current secret state
+   is to use HKDF-Extract with the Salt being the current secret state
    and the Input Keying Material (IKM) being the new secret to be added.
    In this version of TLS 1.3, the two input secrets are:
 
@@ -4712,7 +4712,7 @@ RFC 8446                           TLS                         July 2018
       arrow.  For instance, the Early Secret is the Secret for
       generating the client_early_traffic_secret.
 
-   -  "0" indicates a string of Hash.length bytes set to 0.
+   -  "0" indicates a string of Hash.length bytes set to zero.
 
              0
              |
@@ -4777,7 +4777,7 @@ RFC 8446                           TLS                         July 2018
 
    The general pattern here is that the secrets shown down the left side
    of the diagram are just raw entropy without context, whereas the
-   secrets down the right side include handshake context and therefore
+   secrets down the right side include Handshake Context and therefore
    can be used to derive working keys without additional context.  Note
    that the different calls to Derive-Secret may take different Messages
    arguments, even with the same secret.  In a 0-RTT exchange,
@@ -4797,7 +4797,7 @@ RFC 8446                           TLS                         July 2018
    There are multiple potential Early Secret values, depending on which
    PSK the server ultimately selects.  The client will need to compute
    one for each potential PSK; if no PSK is selected, it will then need
-   to compute the early secret corresponding to the zero PSK.
+   to compute the Early Secret corresponding to the zero PSK.
 
    Once all the values which are to be derived from a given secret have
    been computed, that secret SHOULD be erased.
@@ -4862,8 +4862,8 @@ RFC 8446                           TLS                         July 2018
        +-------------------+---------------------------------------+
 
    All the traffic keying material is recomputed whenever the underlying
-   Secret changes (e.g., when changing from the handshake to application
-   data keys or upon a key update).
+   Secret changes (e.g., when changing from the handshake to Application
+   Data keys or upon a key update).
 
 
 
@@ -4893,15 +4893,14 @@ RFC 8446                           TLS                         July 2018
 
    For secp256r1, secp384r1, and secp521r1, ECDH calculations (including
    parameter and key generation as well as the shared secret
-   calculation) are performed according to [IEEE1363] using the Elliptic
-   Curve Key Agreement Scheme, Diffie-Hellman version 1 (ECKAS-DH1)
-   scheme with the identity map as the key derivation function (KDF), so
-   that the shared secret is the x-coordinate of the ECDH shared secret
-   elliptic curve point represented as an octet string.  Note that this
-   octet string ("Z" in IEEE 1363 terminology) as output by FE2OSP (the
-   Field Element to Octet String Conversion Primitive) has constant
-   length for any given field; leading zeros found in this octet string
-   MUST NOT be truncated.
+   calculation) are performed according to [IEEE1363] using the ECKAS-
+   DH1 scheme with the identity map as the key derivation function
+   (KDF), so that the shared secret is the x-coordinate of the ECDH
+   shared secret elliptic curve point represented as an octet string.
+   Note that this octet string ("Z" in IEEE 1363 terminology) as output
+   by FE2OSP (the Field Element to Octet String Conversion Primitive)
+   has constant length for any given field; leading zeros found in this
+   octet string MUST NOT be truncated.
 
    (Note that this use of the identity KDF is a technicality.  The
    complete picture is that ECDH is employed with a non-trivial KDF
@@ -4924,6 +4923,7 @@ RFC 8446                           TLS                         July 2018
    For X25519 and X448, implementations SHOULD use the approach
    specified in [RFC7748] to calculate the Diffie-Hellman shared secret.
    Implementations MUST check whether the computed Diffie-Hellman shared
+   secret is the all-zero value and abort if so, as described in
 
 
 
@@ -4932,7 +4932,6 @@ Rescorla                     Standards Track                   [Page 88]
 RFC 8446                           TLS                         July 2018
 
 
-   secret is the all-zero value and abort if so, as described in
    Section 6 of [RFC7748].  If implementors use an alternative
    implementation of these elliptic curves, they SHOULD perform the
    additional checks specified in Section 7 of [RFC7748].
@@ -4979,7 +4978,8 @@ RFC 8446                           TLS                         July 2018
    inherent replay protections for 0-RTT data.  There are two potential
    threats to be concerned with:
 
-
+   -  Network attackers who mount a replay attack by simply duplicating
+      a flight of 0-RTT data.
 
 
 
@@ -4987,9 +4987,6 @@ Rescorla                     Standards Track                   [Page 89]
 
 RFC 8446                           TLS                         July 2018
 
-
-   -  Network attackers who mount a replay attack by simply duplicating
-      a flight of 0-RTT data.
 
    -  Network attackers who take advantage of client retry behavior to
       arrange for the server to receive multiple copies of an
@@ -5035,6 +5032,9 @@ RFC 8446                           TLS                         July 2018
 
    The second class of attack cannot be prevented at the TLS layer and
    MUST be dealt with by any application.  Note that any application
+   whose clients implement any kind of retry behavior already needs to
+   implement some sort of anti-replay defense.
+
 
 
 
@@ -5043,9 +5043,6 @@ Rescorla                     Standards Track                   [Page 90]
 
 RFC 8446                           TLS                         July 2018
 
-
-   whose clients implement any kind of retry behavior already needs to
-   implement some sort of anti-replay defense.
 
 8.1.  Single-Use Tickets
 
@@ -5085,13 +5082,16 @@ RFC 8446                           TLS                         July 2018
    section and rejects 0-RTT if it is outside the recording window,
    falling back to the 1-RTT handshake.
 
-   If the expected arrival time is in the window, then the server checks
+   If the expected_arrival_time is in the window, then the server checks
    to see if it has recorded a matching ClientHello.  If one is found,
    it either aborts the handshake with an "illegal_parameter" alert or
    accepts the PSK but rejects 0-RTT.  If no matching ClientHello is
    found, then it accepts 0-RTT and then stores the ClientHello for as
    long as the expected_arrival_time is inside the window.  Servers MAY
    also implement data stores with false positives, such as Bloom
+   filters, in which case they MUST respond to apparent replay by
+   rejecting 0-RTT but MUST NOT abort the handshake.
+
 
 
 
@@ -5099,9 +5099,6 @@ Rescorla                     Standards Track                   [Page 91]
 
 RFC 8446                           TLS                         July 2018
 
-
-   filters, in which case they MUST respond to apparent replay by
-   rejecting 0-RTT but MUST NOT abort the handshake.
 
    The server MUST derive the storage key only from validated sections
    of the ClientHello.  If the ClientHello contains multiple PSK
@@ -5144,10 +5141,13 @@ RFC 8446                           TLS                         July 2018
    client retry, and then acceptable later for 0-RTT.  This is another
    variant of the second form of attack described above.
 
+8.3.  Freshness Checks
 
-
-
-
+   Because the ClientHello indicates the time at which the client sent
+   it, it is possible to efficiently determine whether a ClientHello was
+   likely sent reasonably recently and only accept 0-RTT for such a
+   ClientHello, otherwise falling back to a 1-RTT handshake.  This is
+   necessary for the ClientHello storage mechanism described in
 
 
 
@@ -5156,13 +5156,6 @@ Rescorla                     Standards Track                   [Page 92]
 RFC 8446                           TLS                         July 2018
 
 
-8.3.  Freshness Checks
-
-   Because the ClientHello indicates the time at which the client sent
-   it, it is possible to efficiently determine whether a ClientHello was
-   likely sent reasonably recently and only accept 0-RTT for such a
-   ClientHello, otherwise falling back to a 1-RTT handshake.  This is
-   necessary for the ClientHello storage mechanism described in
    Section 8.2 because otherwise the server needs to store an unlimited
    number of ClientHellos and is a useful optimization for self-
    contained single-use tickets because it allows efficient rejection of
@@ -5179,7 +5172,7 @@ RFC 8446                           TLS                         July 2018
    client's view of the age of the ticket by subtracting the ticket's
    "ticket_age_add" value from the "obfuscated_ticket_age" parameter in
    the client's "pre_shared_key" extension.  The server can determine
-   the "expected arrival time" of the ClientHello as:
+   the expected_arrival_time of the ClientHello as:
 
      expected_arrival_time = adjusted_creation_time + clients_ticket_age
 
@@ -5189,7 +5182,7 @@ RFC 8446                           TLS                         July 2018
    1-RTT handshake can be allowed to complete.
 
    There are several potential sources of error that might cause
-   mismatches between the expected arrival time and the measured time.
+   mismatches between the expected_arrival_time and the measured time.
    Variations in client and server clock rates are likely to be minimal,
    though potentially the absolute times may be off by large values.
    Network propagation delays are the most likely causes of a mismatch
@@ -5204,6 +5197,13 @@ RFC 8446                           TLS                         July 2018
 
    Note that freshness checking alone is not sufficient to prevent
    replays because it does not detect them during the error window,
+   which -- depending on bandwidth and system capacity -- could include
+   billions of replays in real-world settings.  In addition, this
+   freshness checking is only done at the time the ClientHello is
+   received and not when subsequent early Application Data records are
+   received.  After early data is accepted, records may continue to be
+   streamed to the server over a longer time period.
+
 
 
 
@@ -5211,13 +5211,6 @@ Rescorla                     Standards Track                   [Page 93]
 
 RFC 8446                           TLS                         July 2018
 
-
-   which -- depending on bandwidth and system capacity -- could include
-   billions of replays in real-world settings.  In addition, this
-   freshness checking is only done at the time the ClientHello is
-   received and not when subsequent early application data records are
-   received.  After early data is accepted, records may continue to be
-   streamed to the server over a longer time period.
 
 9.  Compliance Requirements
 
@@ -5259,6 +5252,13 @@ RFC 8446                           TLS                         July 2018
    All implementations MUST send and use these extensions when offering
    applicable features:
 
+   -  "supported_versions" is REQUIRED for all ClientHello, ServerHello,
+      and HelloRetryRequest messages.
+
+   -  "signature_algorithms" is REQUIRED for certificate authentication.
+
+   -  "supported_groups" is REQUIRED for ClientHello messages using DHE
+      or ECDHE key exchange.
 
 
 
@@ -5267,14 +5267,6 @@ Rescorla                     Standards Track                   [Page 94]
 
 RFC 8446                           TLS                         July 2018
 
-
-   -  "supported_versions" is REQUIRED for all ClientHello, ServerHello,
-      and HelloRetryRequest messages.
-
-   -  "signature_algorithms" is REQUIRED for certificate authentication.
-
-   -  "supported_groups" is REQUIRED for ClientHello messages using DHE
-      or ECDHE key exchange.
 
    -  "key_share" is REQUIRED for DHE or ECDHE key exchange.
 
@@ -5316,14 +5308,6 @@ RFC 8446                           TLS                         July 2018
    negotiate the most preferred common parameters.  The TLS handshake
    provides downgrade protection: Middleboxes passing traffic between a
    newer client and newer server without terminating TLS should be
-
-
-
-Rescorla                     Standards Track                   [Page 95]
-
-RFC 8446                           TLS                         July 2018
-
-
    unable to influence the handshake (see Appendix E.1).  At the same
    time, deployments update at different rates, so a newer client or
    server MAY continue to support older parameters, which would allow it
@@ -5331,6 +5315,14 @@ RFC 8446                           TLS                         July 2018
 
    For this to work, implementations MUST correctly handle extensible
    fields:
+
+
+
+
+Rescorla                     Standards Track                   [Page 95]
+
+RFC 8446                           TLS                         July 2018
+
 
    -  A client sending a ClientHello MUST support all parameters
       advertised in it.  Otherwise, the server may fail to interoperate
@@ -5371,6 +5363,14 @@ RFC 8446                           TLS                         July 2018
 
    The design of TLS 1.3 was constrained by widely deployed
    non-compliant TLS middleboxes (see Appendix D.4); however, it does
+   not relax the invariants.  Those middleboxes continue to be
+   non-compliant.
+
+10.  Security Considerations
+
+   Security issues are discussed throughout this memo, especially in
+   Appendices C, D, and E.
+
 
 
 
@@ -5379,14 +5379,6 @@ Rescorla                     Standards Track                   [Page 96]
 
 RFC 8446                           TLS                         July 2018
 
-
-   not relax the invariants.  Those middleboxes continue to be
-   non-compliant.
-
-10.  Security Considerations
-
-   Security issues are discussed throughout this memo, especially in
-   Appendices C, D, and E.
 
 11.  IANA Considerations
 
@@ -5402,7 +5394,7 @@ RFC 8446                           TLS                         July 2018
       IANA has added the cipher suites listed in Appendix B.4 to the
       registry.  The "Value" and "Description" columns are taken from
       the table.  The "DTLS-OK" and "Recommended" columns are both
-      marked as "Yes" for each new cipher suite.  [[This assumes
+      marked as "Y" for each new cipher suite.  [[This assumes
       [TLS-IANA-REG-UPD] has been applied.]]
 
    -  TLS ContentType Registry: Future values are allocated via
@@ -5411,30 +5403,20 @@ RFC 8446                           TLS                         July 2018
    -  TLS Alert Registry: Future values are allocated via Standards
       Action [RFC8126].  IANA has updated this registry to include
       values for "missing_extension" and "certificate_required".  The
-      "DTLS-OK" column is marked as "Yes" for each new alert.
+      "DTLS-OK" column is marked as "Y" for each new alert.
 
    -  TLS HandshakeType Registry: Future values are allocated via
       Standards Action [RFC8126].  IANA has updated this registry to
       rename item 4 from "NewSessionTicket" to "new_session_ticket" and
       to add the "hello_retry_request_RESERVED", "encrypted_extensions",
       "end_of_early_data", "key_update", and "message_hash" values.  The
-      "DTLS-OK" column is marked as "Yes" for each of these additions.
+      "DTLS-OK" column is marked as "Y" for each of these additions.
 
    This document also uses the TLS ExtensionType Values registry
    originally created in [RFC4366].  IANA has updated it to reference
    this document.  Changes to the registry follow:
 
    -  IANA has updated the registration policy as follows:
-
-
-
-
-
-
-Rescorla                     Standards Track                   [Page 97]
-
-RFC 8446                           TLS                         July 2018
-
 
       Values with the first byte in the range 0-254 (decimal) are
       assigned via Specification Required [RFC8126].  Values with the
@@ -5445,7 +5427,14 @@ RFC 8446                           TLS                         July 2018
       "cookie", "supported_versions", "certificate_authorities",
       "oid_filters", "post_handshake_auth", and
       "signature_algorithms_cert" extensions with the values defined in
-      this document and the "Recommended" value of "Yes".
+      this document and the "Recommended" value of "Y".
+
+
+
+Rescorla                     Standards Track                   [Page 97]
+
+RFC 8446                           TLS                         July 2018
+
 
    -  IANA has updated this registry to include a "TLS 1.3" column which
       lists the messages in which the extension may appear.  This column
@@ -5468,29 +5457,23 @@ RFC 8446                           TLS                         July 2018
       ecdsa_secp256r1_sha256, ecdsa_secp384r1_sha384,
       rsa_pss_rsae_sha256, rsa_pss_rsae_sha384, rsa_pss_rsae_sha512,
       rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, and
-      ed25519.
+      ed25519.  The "Recommended" column is assigned a value of "N"
+      unless explicitly requested, and only IETF Standards Track RFCs
+      can request a value of "Y".
 
    -  TLS PskKeyExchangeMode registry: Values in the range 0-253
       (decimal) are assigned via Specification Required [RFC8126].
       Values with the first byte 254 or 255 (decimal) are reserved for
       Private Use [RFC8126].  This registry has a "Recommended" column.
       The registry has been initially populated with psk_ke (0) and
-      psk_dhe_ke (1).  Both are marked as "Recommended".
+      psk_dhe_ke (1).  Both are marked as "Recommended".  The
+      "Recommended" column is assigned a value of "N" unless explicitly
+      requested, and only IETF Standards Track RFCs can request a value
+      of "Y".
 
 12.  References
 
 12.1.  Normative References
-
-
-
-
-
-
-
-Rescorla                     Standards Track                   [Page 98]
-
-RFC 8446                           TLS                         July 2018
-
 
    [DH76]     Diffie, W. and M. Hellman, "New directions in
               cryptography", IEEE Transactions on Information
@@ -5501,6 +5484,13 @@ RFC 8446                           TLS                         July 2018
               Operation: Galois/Counter Mode (GCM) and GMAC",
               NIST Special Publication 800-38D,
               DOI 10.6028/NIST.SP.800-38D, November 2007.
+
+
+
+Rescorla                     Standards Track                   [Page 98]
+
+RFC 8446                           TLS                         July 2018
+
 
    [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
               Hashing for Message Authentication", RFC 2104,
@@ -5541,17 +5531,22 @@ RFC 8446                           TLS                         July 2018
               DOI 10.17487/RFC6066, January 2011,
               <https://www.rfc-editor.org/info/rfc6066>.
 
+   [RFC6655]  McGrew, D. and D. Bailey, "AES-CCM Cipher Suites for
+              Transport Layer Security (TLS)", RFC 6655,
+              DOI 10.17487/RFC6655, July 2012,
+              <https://www.rfc-editor.org/info/rfc6655>.
+
+
+
+
+
+
 
 
 Rescorla                     Standards Track                   [Page 99]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [RFC6655]  McGrew, D. and D. Bailey, "AES-CCM Cipher Suites for
-              Transport Layer Security (TLS)", RFC 6655,
-              DOI 10.17487/RFC6655, July 2012,
-              <https://www.rfc-editor.org/info/rfc6655>.
 
    [RFC6960]  Santesson, S., Myers, M., Ankney, R., Malpani, A.,
               Galperin, S., and C. Adams, "X.509 Internet Public Key
@@ -5596,6 +5591,11 @@ RFC 8446                           TLS                         July 2018
               RFC 7919, DOI 10.17487/RFC7919, August 2016,
               <https://www.rfc-editor.org/info/rfc7919>.
 
+   [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
+              "PKCS #1: RSA Cryptography Specifications Version 2.2",
+              RFC 8017, DOI 10.17487/RFC8017, November 2016,
+              <https://www.rfc-editor.org/info/rfc8017>.
+
 
 
 
@@ -5603,11 +5603,6 @@ Rescorla                     Standards Track                  [Page 100]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
-              "PKCS #1: RSA Cryptography Specifications Version 2.2",
-              RFC 8017, DOI 10.17487/RFC8017, November 2016,
-              <https://www.rfc-editor.org/info/rfc8017>.
 
    [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
               Signature Algorithm (EdDSA)", RFC 8032,
@@ -5650,6 +5645,11 @@ RFC 8446                           TLS                         July 2018
               Symposium on Security and Privacy (San Jose),
               DOI 10.1109/SP.2016.37, May 2016.
 
+   [BBK17]    Bhargavan, K., Blanchet, B., and N. Kobeissi, "Verified
+              Models and Reference Implementations for the TLS 1.3
+              Standard Candidate", Proceedings of IEEE Symposium on
+              Security and Privacy (San Jose), DOI 10.1109/SP.2017.26,
+              May 2017.
 
 
 
@@ -5659,12 +5659,6 @@ Rescorla                     Standards Track                  [Page 101]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [BBK17]    Bhargavan, K., Blanchet, B., and N. Kobeissi, "Verified
-              Models and Reference Implementations for the TLS 1.3
-              Standard Candidate", Proceedings of IEEE Symposium on
-              Security and Privacy (San Jose), DOI 10.1109/SP.2017.26,
-              May 2017.
 
    [BDFKPPRSZZ16]
               Bhargavan, K., Delignat-Lavaud, A., Fournet, C.,
@@ -5708,6 +5702,12 @@ RFC 8446                           TLS                         July 2018
               SIGSAC Conference on Computer and Communications Security
               - CCS '16, DOI 10.1145/2976749.2978395, October 2016.
 
+   [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., Scott, S., and T.
+              van der Merwe, "Awkward Handshake: Possible mismatch of
+              client/server view on client authentication in post-
+              handshake mode in Revision 18", message to the TLS mailing
+              list, 10 February 2017, <https://www.ietf.org/mail-
+              archive/web/tls/current/msg22382.html>.
 
 
 
@@ -5715,13 +5715,6 @@ Rescorla                     Standards Track                  [Page 102]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [CHHSV17]  Cremers, C., Horvat, M., Hoyland, J., Scott, S., and T.
-              van der Merwe, "Awkward Handshake: Possible mismatch of
-              client/server view on client authentication in post-
-              handshake mode in Revision 18", message to the TLS mailing
-              list, 10 February 2017, <https://www.ietf.org/mail-
-              archive/web/tls/current/msg22382.html>.
 
    [CHSV16]   Cremers, C., Horvat, M., Scott, S., and T. van der Merwe,
               "Automated Analysis and Verification of TLS 1.3: 0-RTT,
@@ -5765,18 +5758,19 @@ RFC 8446                           TLS                         July 2018
               Elliptic Curve Digital Signature Algorithm (ECDSA)",
               ANSI ANS X9.62-2005, November 2005.
 
+   [FG17]     Fischlin, M. and F. Guenther, "Replay Attacks on Zero
+              Round-Trip Time: The Case of the TLS 1.3 Handshake
+              Candidates", Proceedings of EuroS&P 2017,
+              DOI 10.1109/EuroSP.2017.18, April 2017,
+              <https://eprint.iacr.org/2017/082>.
+
+
 
 
 Rescorla                     Standards Track                  [Page 103]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [FG17]     Fischlin, M. and F. Guenther, "Replay Attacks on Zero
-              Round-Trip Time: The Case of the TLS 1.3 Handshake
-              Candidates", Proceedings of EuroS&P 2017,
-              DOI 10.1109/EuroSP.2017.18, April 2017,
-              <https://eprint.iacr.org/2017/082>.
 
    [FGSW16]   Fischlin, M., Guenther, F., Schmidt, B., and B. Warinschi,
               "Key Confirmation in Key Exchange: A Formal Treatment and
@@ -5818,6 +5812,12 @@ RFC 8446                           TLS                         July 2018
               Institute of Standards and Technology,
               DOI 10.6028/NIST.SP.800-56Ar3, April 2018.
 
+   [Kraw10]   Krawczyk, H., "Cryptographic Extraction and Key
+              Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010,
+              DOI 10.1007/978-3-642-14623-7_34, August 2010,
+              <https://eprint.iacr.org/2010/264>.
+
+
 
 
 
@@ -5827,11 +5827,6 @@ Rescorla                     Standards Track                  [Page 104]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [Kraw10]   Krawczyk, H., "Cryptographic Extraction and Key
-              Derivation: The HKDF Scheme", Proceedings of CRYPTO 2010,
-              DOI 10.1007/978-3-642-14623-7_34, August 2010,
-              <https://eprint.iacr.org/2010/264>.
 
    [Kraw16]   Krawczyk, H., "A Unilateral-to-Mutual Authentication
               Compiler for Key Exchange (with Applications to Client
@@ -5873,6 +5868,11 @@ RFC 8446                           TLS                         July 2018
               December 2017, <https://www.ietf.org/mail-
               archive/web/tls/current/msg25091.html>.
 
+   [Res17b]   Rescorla, E., "More compatibility measurement results",
+              message to the TLS mailing list, 22 December 2017,
+              <https://www.ietf.org/mail-archive/web/tls/current/
+              msg25179.html>.
+
 
 
 
@@ -5883,11 +5883,6 @@ Rescorla                     Standards Track                  [Page 105]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [Res17b]   Rescorla, E., "More compatibility measurement results",
-              message to the TLS mailing list, 22 December 2017,
-              <https://www.ietf.org/mail-archive/web/tls/current/
-              msg25179.html>.
 
    [RFC3552]  Rescorla, E. and B. Korver, "Guidelines for Writing RFC
               Text on Security Considerations", BCP 72, RFC 3552,
@@ -5931,6 +5926,11 @@ RFC 8446                           TLS                         July 2018
               DOI 10.17487/RFC5764, May 2010,
               <https://www.rfc-editor.org/info/rfc5764>.
 
+   [RFC5929]  Altman, J., Williams, N., and L. Zhu, "Channel Bindings
+              for TLS", RFC 5929, DOI 10.17487/RFC5929, July 2010,
+              <https://www.rfc-editor.org/info/rfc5929>.
+
+
 
 
 
@@ -5939,10 +5939,6 @@ Rescorla                     Standards Track                  [Page 106]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [RFC5929]  Altman, J., Williams, N., and L. Zhu, "Channel Bindings
-              for TLS", RFC 5929, DOI 10.17487/RFC5929, July 2010,
-              <https://www.rfc-editor.org/info/rfc5929>.
 
    [RFC6091]  Mavrogiannopoulos, N. and D. Gillmor, "Using OpenPGP Keys
               for Transport Layer Security (TLS) Authentication",
@@ -5989,16 +5985,16 @@ RFC 8446                           TLS                         July 2018
               RFC 7627, DOI 10.17487/RFC7627, September 2015,
               <https://www.rfc-editor.org/info/rfc7627>.
 
+   [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
+              Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
+              October 2015, <https://www.rfc-editor.org/info/rfc7685>.
+
 
 
 Rescorla                     Standards Track                  [Page 107]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [RFC7685]  Langley, A., "A Transport Layer Security (TLS) ClientHello
-              Padding Extension", RFC 7685, DOI 10.17487/RFC7685,
-              October 2015, <https://www.rfc-editor.org/info/rfc7685>.
 
    [RFC7924]  Santesson, S. and H. Tschofenig, "Transport Layer Security
               (TLS) Cached Information Extension", RFC 7924,
@@ -6043,6 +6039,10 @@ RFC 8446                           TLS                         July 2018
               Layer Security (TLS)", Work in Progress, draft-ietf-tls-
               record-limit-03, May 2018.
 
+   [TLS13-TRACES]
+              Thomson, M., "Example Handshake Traces for TLS 1.3", Work
+              in Progress, draft-ietf-tls-tls13-vectors-04, May 2018.
+
 
 
 
@@ -6051,10 +6051,6 @@ Rescorla                     Standards Track                  [Page 108]
 
 RFC 8446                           TLS                         July 2018
 
-
-   [TLS13-TRACES]
-              Thomson, M., "Example Handshake Traces for TLS 1.3", Work
-              in Progress, draft-ietf-tls-tls13-vectors-04, May 2018.
 
    [X501]     ITU-T, "Information Technology - Open Systems
               Interconnection - The Directory: Models", ITU-T X.501,
@@ -6070,43 +6066,6 @@ Appendix A.  State Machine
    the send/recv key to the given key".
 
 A.1.  Client
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla                     Standards Track                  [Page 109]
-
-RFC 8446                           TLS                         July 2018
-
 
                               START <----+
                Send ClientHello |        | Recv HelloRetryRequest
@@ -6141,28 +6100,18 @@ RFC 8446                           TLS                         July 2018
 
    Note that with the transitions as shown above, clients may send
    alerts that derive from post-ServerHello messages in the clear or
+
+
+
+Rescorla                     Standards Track                  [Page 109]
+
+RFC 8446                           TLS                         July 2018
+
+
    with the early data keys.  If clients need to send such alerts, they
    SHOULD first rekey to the handshake keys if possible.
 
 A.2.  Server
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Rescorla                     Standards Track                  [Page 110]
-
-RFC 8446                           TLS                         July 2018
-
 
                               START <-----+
                Recv ClientHello |         | Send HelloRetryRequest
@@ -6205,6 +6154,16 @@ RFC 8446                           TLS                         July 2018
                                 v
                             CONNECTED
 
+
+
+
+
+
+Rescorla                     Standards Track                  [Page 110]
+
+RFC 8446                           TLS                         July 2018
+
+
 Appendix B.  Protocol Data Structures and Constant Values
 
    This appendix provides the normative protocol types and the
@@ -6212,13 +6171,6 @@ Appendix B.  Protocol Data Structures and Constant Values
    previous versions of TLS and are listed here for completeness.
    TLS 1.3 implementations MUST NOT send them but might receive them
    from older TLS implementations.
-
-
-
-Rescorla                     Standards Track                  [Page 111]
-
-RFC 8446                           TLS                         July 2018
-
 
 B.1.  Record Layer
 
@@ -6263,15 +6215,7 @@ B.2.  Alert Messages
 
 
 
-
-
-
-
-
-
-
-
-Rescorla                     Standards Track                  [Page 112]
+Rescorla                     Standards Track                  [Page 111]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6327,7 +6271,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 113]
+Rescorla                     Standards Track                  [Page 112]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6350,6 +6294,9 @@ B.3.  Handshake Protocol
           certificate_verify(15),
           client_key_exchange_RESERVED(16),
           finished(20),
+          certificate_url_RESERVED(21),
+          certificate_status_RESERVED(22),
+          supplemental_data_RESERVED(23),
           key_update(24),
           message_hash(254),
           (255)
@@ -6377,17 +6324,17 @@ B.3.1.  Key Exchange Messages
     uint16 ProtocolVersion;
     opaque Random[32];
 
-    uint8 CipherSuite[2];    /* Cryptographic suite selector */
-
-    struct {
 
 
 
-Rescorla                     Standards Track                  [Page 114]
+Rescorla                     Standards Track                  [Page 113]
 
 RFC 8446                           TLS                         July 2018
 
 
+    uint8 CipherSuite[2];    /* Cryptographic suite selector */
+
+    struct {
         ProtocolVersion legacy_version = 0x0303;    /* TLS v1.2 */
         Random random;
         opaque legacy_session_id<0..32>;
@@ -6433,17 +6380,17 @@ RFC 8446                           TLS                         July 2018
         RESERVED(46),                               /* Used but never
                                                           assigned */
         certificate_authorities(47),                /* RFC 8446 */
-        oid_filters(48),                            /* RFC 8446 */
-        post_handshake_auth(49),                    /* RFC 8446 */
-        signature_algorithms_cert(50),              /* RFC 8446 */
 
 
 
-Rescorla                     Standards Track                  [Page 115]
+Rescorla                     Standards Track                  [Page 114]
 
 RFC 8446                           TLS                         July 2018
 
 
+        oid_filters(48),                            /* RFC 8446 */
+        post_handshake_auth(49),                    /* RFC 8446 */
+        signature_algorithms_cert(50),              /* RFC 8446 */
         key_share(51),                              /* RFC 8446 */
         (65535)
     } ExtensionType;
@@ -6489,16 +6436,16 @@ RFC 8446                           TLS                         July 2018
 
     struct {
         opaque identity<1..2^16-1>;
-        uint32 obfuscated_ticket_age;
-    } PskIdentity;
 
 
 
-
-Rescorla                     Standards Track                  [Page 116]
+Rescorla                     Standards Track                  [Page 115]
 
 RFC 8446                           TLS                         July 2018
 
+
+        uint32 obfuscated_ticket_age;
+    } PskIdentity;
 
     opaque PskBinderEntry<32..255>;
 
@@ -6548,10 +6495,7 @@ B.3.1.3.  Signature Algorithm Extension
 
 
 
-
-
-
-Rescorla                     Standards Track                  [Page 117]
+Rescorla                     Standards Track                  [Page 116]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6607,7 +6551,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 118]
+Rescorla                     Standards Track                  [Page 117]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6663,7 +6607,7 @@ B.3.2.  Server Parameters Messages
 
 
 
-Rescorla                     Standards Track                  [Page 119]
+Rescorla                     Standards Track                  [Page 118]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6719,7 +6663,7 @@ B.3.3.  Authentication Messages
 
 
 
-Rescorla                     Standards Track                  [Page 120]
+Rescorla                     Standards Track                  [Page 119]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6775,7 +6719,7 @@ B.3.4.  Ticket Establishment
 
 
 
-Rescorla                     Standards Track                  [Page 121]
+Rescorla                     Standards Track                  [Page 120]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6831,7 +6775,7 @@ B.4.  Cipher Suites
 
 
 
-Rescorla                     Standards Track                  [Page 122]
+Rescorla                     Standards Track                  [Page 121]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6887,7 +6831,7 @@ C.2.  Certificates and Authentication
 
 
 
-Rescorla                     Standards Track                  [Page 123]
+Rescorla                     Standards Track                  [Page 122]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6943,7 +6887,7 @@ C.3.  Implementation Pitfalls
 
 
 
-Rescorla                     Standards Track                  [Page 124]
+Rescorla                     Standards Track                  [Page 123]
 
 RFC 8446                           TLS                         July 2018
 
@@ -6999,7 +6943,7 @@ C.4.  Client Tracking Prevention
 
 
 
-Rescorla                     Standards Track                  [Page 125]
+Rescorla                     Standards Track                  [Page 124]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7055,7 +6999,7 @@ Appendix D.  Backward Compatibility
 
 
 
-Rescorla                     Standards Track                  [Page 126]
+Rescorla                     Standards Track                  [Page 125]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7111,7 +7055,7 @@ D.1.  Negotiating with an Older Server
 
 
 
-Rescorla                     Standards Track                  [Page 127]
+Rescorla                     Standards Track                  [Page 126]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7148,9 +7092,9 @@ D.3.  0-RTT Backward Compatibility
    deployment could be downgraded to TLS 1.2.
 
    A client that attempts to send 0-RTT data MUST fail a connection if
-   it receives a ServerHello with TLS 1.2 or older.  A client that
-   attempts to repair this error SHOULD NOT send a TLS 1.2 ClientHello,
-   but instead send a TLS 1.3 ClientHello without 0-RTT data.
+   it receives a ServerHello with TLS 1.2 or older.  It can then retry
+   the connection with 0-RTT disabled.  To avoid a downgrade attack,
+   this SHOULD NOT disable TLS 1.3, only 0-RTT.
 
    To avoid this error condition, multi-server deployments SHOULD ensure
    a uniform and stable deployment of TLS 1.3 without 0-RTT prior to
@@ -7167,7 +7111,7 @@ D.4.  Middlebox Compatibility Mode
 
 
 
-Rescorla                     Standards Track                  [Page 128]
+Rescorla                     Standards Track                  [Page 127]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7223,7 +7167,7 @@ D.5.  Security Restrictions Related to Backward Compatibility
 
 
 
-Rescorla                     Standards Track                  [Page 129]
+Rescorla                     Standards Track                  [Page 128]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7279,7 +7223,7 @@ E.1.  Handshake
 
 
 
-Rescorla                     Standards Track                  [Page 130]
+Rescorla                     Standards Track                  [Page 129]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7335,7 +7279,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 131]
+Rescorla                     Standards Track                  [Page 130]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7391,7 +7335,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 132]
+Rescorla                     Standards Track                  [Page 131]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7410,7 +7354,7 @@ RFC 8446                           TLS                         July 2018
    Note: Exporters can produce arbitrary-length values.  If exporters
    are to be used as channel bindings, the exported value MUST be large
    enough to provide collision resistance.  The exporters provided in
-   TLS 1.3 are derived from the same handshake contexts as the early
+   TLS 1.3 are derived from the same Handshake Contexts as the early
    traffic keys and the application traffic keys, respectively, and thus
    have similar security properties.  Note that they do not include the
    client's certificate; future applications which wish to bind to the
@@ -7447,7 +7391,7 @@ E.1.1.  Key Derivation and HKDF
 
 
 
-Rescorla                     Standards Track                  [Page 133]
+Rescorla                     Standards Track                  [Page 132]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7503,7 +7447,7 @@ E.1.4.  Exporter Independence
 
 
 
-Rescorla                     Standards Track                  [Page 134]
+Rescorla                     Standards Track                  [Page 133]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7559,7 +7503,7 @@ E.2.  Record Layer
 
 
 
-Rescorla                     Standards Track                  [Page 135]
+Rescorla                     Standards Track                  [Page 134]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7615,7 +7559,7 @@ E.3.  Traffic Analysis
 
 
 
-Rescorla                     Standards Track                  [Page 136]
+Rescorla                     Standards Track                  [Page 135]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7671,7 +7615,7 @@ E.4.  Side-Channel Attacks
 
 
 
-Rescorla                     Standards Track                  [Page 137]
+Rescorla                     Standards Track                  [Page 136]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7727,7 +7671,7 @@ E.5.  Replay Attacks on 0-RTT
 
 
 
-Rescorla                     Standards Track                  [Page 138]
+Rescorla                     Standards Track                  [Page 137]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7783,7 +7727,7 @@ E.5.1.  Replay and Exporters
 
 
 
-Rescorla                     Standards Track                  [Page 139]
+Rescorla                     Standards Track                  [Page 138]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7839,7 +7783,7 @@ Contributors
 
 
 
-Rescorla                     Standards Track                  [Page 140]
+Rescorla                     Standards Track                  [Page 139]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7895,7 +7839,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 141]
+Rescorla                     Standards Track                  [Page 140]
 
 RFC 8446                           TLS                         July 2018
 
@@ -7951,7 +7895,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 142]
+Rescorla                     Standards Track                  [Page 141]
 
 RFC 8446                           TLS                         July 2018
 
@@ -8007,7 +7951,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 143]
+Rescorla                     Standards Track                  [Page 142]
 
 RFC 8446                           TLS                         July 2018
 
@@ -8063,7 +8007,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 144]
+Rescorla                     Standards Track                  [Page 143]
 
 RFC 8446                           TLS                         July 2018
 
@@ -8119,7 +8063,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 145]
+Rescorla                     Standards Track                  [Page 144]
 
 RFC 8446                           TLS                         July 2018
 
@@ -8175,7 +8119,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 146]
+Rescorla                     Standards Track                  [Page 145]
 
 RFC 8446                           TLS                         July 2018
 
@@ -8231,7 +8175,7 @@ RFC 8446                           TLS                         July 2018
 
 
 
-Rescorla                     Standards Track                  [Page 147]
+Rescorla                     Standards Track                  [Page 146]
 
 RFC 8446                           TLS                         July 2018
 
@@ -8287,4 +8231,4 @@ Author's Address
 
 
 
-Rescorla                     Standards Track                  [Page 148]
+Rescorla                     Standards Track                  [Page 147]
