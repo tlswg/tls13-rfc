@@ -4082,18 +4082,6 @@ leading zeros.</t>
 </section>
 <section anchor="elliptic-curve-diffie-hellman" title="Elliptic Curve Diffie-Hellman">
 
-<t>ECDH functions are used as follows:</t>
-
-<t><list style="symbols">
-  <t>The public key to put into the KeyShareEntry.key_exchange structure is the
-result of applying the ECDH scalar multiplication function to the secret key
-of appropriate length (into scalar input) and the standard public basepoint
-(into u-coordinate point input).</t>
-  <t>The ECDH shared secret is the result of applying the ECDH scalar multiplication
-function to the secret key (into scalar input) and the peer's public key
-(into u-coordinate point input). The output is used raw, with no processing.</t>
-</list></t>
-
 <t>For secp256r1, secp384r1, and secp521r1, ECDH calculations (including
 parameter and key generation as well as the shared secret calculation) are
 performed according to <xref target="IEEE1363"/> using the ECKAS-DH1
@@ -4108,6 +4096,18 @@ found in this octet string MUST NOT be truncated.</t>
 complete picture is that ECDH is employed with a non-trivial KDF
 because TLS does not directly use this secret for anything
 other than for computing other secrets.)</t>
+
+<t>ECDH functions are used as follows:</t>
+
+<t><list style="symbols">
+  <t>The public key to put into the KeyShareEntry.key_exchange structure is the
+result of applying the ECDH scalar multiplication function to the secret key
+of appropriate length (into scalar input) and the standard public basepoint
+(into u-coordinate point input).</t>
+  <t>The ECDH shared secret is the result of applying the ECDH scalar multiplication
+function to the secret key (into scalar input) and the peer's public key
+(into u-coordinate point input). The output is used raw, with no processing.</t>
+</list></t>
 
 <t>For X25519 and X448, implementations SHOULD use the approach specified
 in <xref target="RFC7748"/> to calculate the Diffie-Hellman shared secret.
