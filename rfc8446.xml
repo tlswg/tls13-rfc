@@ -2651,7 +2651,7 @@ containing a single certificate and set of extensions.</t>
   A set of extension values for the CertificateEntry. The "Extension"
 format is defined in <xref target="extensions"/>. Valid extensions for server
 certificates at present include the OCSP Status extension <xref
-target="RFC6066"/> and SignedCertificateTimestamp <xref target="RFC6962"/>;
+target="RFC6066"/> and SignedCertificateTimestamp extension <xref target="RFC6962"/>;
 future extensions may be defined for this message as well. Extensions in the
 Certificate message from the server MUST correspond to ones from the
 ClientHello message. Extensions in the Certificate message from the client
