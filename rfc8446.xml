@@ -1029,8 +1029,8 @@ so a client not offering a pre&nbhy;TLS&nbsp;1.3 session MUST generate a
 new 32-byte value. This value need not be random but SHOULD be
 unpredictable to avoid implementations fixating on a specific value
 (also known as ossification).
-Otherwise, it MUST be set as a zero-length vector (i.e., a single
-zero-byte length field).</t>
+Otherwise, it MUST be set as a zero-length vector (i.e., a
+zero-valued single byte length field).</t>
   <t hangText='cipher_suites'>
   A list of the symmetric cipher options supported by the
 client, specifically the record protection algorithm (including
@@ -3542,7 +3542,7 @@ to all zeros before encrypting.</t>
 <t>Application Data records may contain a zero-length TLSInnerPlaintext.content if
 the sender desires.  This permits generation of plausibly sized cover
 traffic in contexts where the presence or absence of activity may be
-sensitive.  Implementations MUST NOT send Handshake or Alert records
+sensitive.  Implementations MUST NOT send Handshake and Alert records
 that have a zero-length TLSInnerPlaintext.content; if such a message
 is received, the receiving implementation MUST terminate the connection
 with an "unexpected_message" alert.</t>
@@ -3566,7 +3566,7 @@ connection with an "unexpected_message" alert.</t>
 <t>The presence of padding does not change the overall record size
 limitations: the full encoded TLSInnerPlaintext MUST NOT exceed 2^14 + 1
 octets. If the maximum fragment length is reduced -- as, for example, by the
-max_fragment_length extension from <xref target="TLS-Record-Limit"></xref> --
+record_size_limit extension from <xref target="TLS-Record-Limit"></xref> --
 then the reduced limit applies to the full plaintext, including the
 content type and padding.</t>
 
@@ -4263,8 +4263,8 @@ rejecting 0-RTT but MUST NOT abort the handshake.</t>
 of the ClientHello. If the ClientHello contains multiple
 PSK identities, then an attacker can create multiple ClientHellos
 with different binder values for the less-preferred identity on the
-assumption that the server will not verify it as recommended
-by <xref target="pre-shared-key-extension"/>. I.e., if the
+assumption that the server will not verify it (as recommended
+by <xref target="pre-shared-key-extension"/>). I.e., if the
 client sends PSKs A and B but the server prefers A, then the
 attacker can change the binder for B without affecting the binder
 for A. If the binder for B is part of the storage key,
@@ -7259,7 +7259,7 @@ possible. If the total set of exporter labels is known, then
 implementations SHOULD pre-compute the inner Derive-Secret
 stage of the exporter computation for all those labels,
 then erase the [early_]exporter_master_secret, followed by
-each inner value as soon as it is known that they will not be
+each inner value as soon as it is known that it will not be
 needed again.</t>
 
 </section>
@@ -7564,17 +7564,7 @@ and many clients do not enforce this restriction.</t>
 
 </section>
 </section>
-<section anchor="working-group-information" title="Working Group Information">
 
-<t>The discussion list for the IETF TLS Working Group is located at the
-email address &lt;mailto:tls@ietf.org&gt;.
-Information on the group and on how to subscribe to the list is at
-&lt;https://www.ietf.org/mailman/listinfo/tls&gt;.</t>
-
-<t>Archives of the list can be found at
-&lt;https://www.ietf.org/mail&nbhy;archive/web/tls/current/index.html&gt;.</t>
-
-</section>
 <section anchor="contributors" title="Contributors" numbered="no">
 
 <figure><artwork><![CDATA[
