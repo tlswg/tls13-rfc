@@ -168,7 +168,7 @@ all public-key based key exchange mechanisms now provide forward secrecy.</t>
   <t>All handshake messages after the ServerHello are now encrypted. The
 newly introduced EncryptedExtensions message allows various extensions
 previously sent in the clear in the ServerHello to also enjoy
-confidentiality protection from active attackers.</t>
+confidentiality protection.</t>
   <t>The key derivation functions have been redesigned. The new design allows
 easier analysis by cryptographers due to their improved key separation
 properties. The HMAC-based Extract-and-Expand Key Derivation Function (HKDF)
