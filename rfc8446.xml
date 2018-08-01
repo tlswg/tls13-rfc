@@ -5973,6 +5973,24 @@ Original:
   <seriesInfo name="DOI" value="10.1186/s13635-016-0030-7"/>
 </reference>
 
+<reference anchor="SHAREDPSK" target="https://mailarchive.ietf.org/arch/msg/tls/FKB5oNxTVoIh59I3q9epHk6Q1Uw">
+  <front>
+    <title>Re: [TLS] on sharing PSKs between TLS 1.2 and TLS 1.3</title>
+    <author initials="E." surname="Rescorla"></author>
+    <date month="27 July" year="2018"></date>
+  </front>
+  <seriesInfo name="message to the" value="TLS mailing list"/>
+</reference>
+
+<reference anchor="UNIVERSALPSKS" target="https://mailarchive.ietf.org/arch/msg/tls/kfz1RGByOxE3Sf0eLsYs8Le2xn4">
+  <front>
+    <title>[TLS] Universal PSKs</title>
+    <author initials="D." surname="Benjamin"></author>
+    <date month="15 June" year="2018"></date>
+  </front>
+  <seriesInfo name="message to the" value="TLS mailing list"/>
+</reference>
+
     </references>
 
 <section anchor="state-machine" title="State Machine">
@@ -7437,6 +7455,26 @@ Nikos. Anyway, this is an IESG matter and you are AD, so perhaps you can
 resolve it or talk to Kathleen. -->
 
 </section>
+
+<section anchor="sharing-psks" title="Sharing PSKs">
+<t>
+TLS 1.3 takes a conservative approach to PSKs by binding them to a
+specific KDF. By contrast, TLS 1.2 allows PSKs to be used with any
+hash function and the TLS 1.2 PRF. Thus, any PSK which is used with
+both TLS 1.2 and TLS 1.3 must be used with only one hash in TLS 1.3,
+which is less than optimal if users want to provision a single PSK.
+In addition, while constructions in TLS 1.2 and TLS 1.3, although both
+based on HMAC, are very different and there is no known way in which
+reuse of the same PSK in TLS 1.3 and TLS 1.2 would produce related
+output, only limited analysis has been done of the safety of this
+practice. Implementations can ensure safety from cross-protocol key
+collisions by not reusing PSKs between TLS 1.3 and TLS 1.2. Future
+work such as [UNIVERSALPSK] or [SHAREDPSK] may result in a
+construction with a higher degree of flexibility and cryptographic
+assurance of key separation.
+</t>
+</section>
+
 <section anchor="attacks-on-static-rsa" title="Attacks on Static RSA">
 
 <t>Although TLS 1.3 does not use RSA key transport and so is not
