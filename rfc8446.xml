@@ -826,7 +826,7 @@ at runtime is not prescribed by the presentation language.</t>
 
 <t>The handshake protocol is used to negotiate the security parameters
 of a connection. Handshake messages are supplied to the TLS record layer, where
-they are encapsulated within one or more TLSPlaintext or TLSCiphertext structure  which are
+they are encapsulated within one or more TLSPlaintext or TLSCiphertext structures  which are
 processed and transmitted as specified by the current active connection state.</t>
 
 <figure><artwork><![CDATA[
@@ -1608,7 +1608,7 @@ hash the input with a specified hash algorithm and then proceed as usual.
 The code point groups listed above have the following meanings:</t>
 
 <t><list style="hanging">
-  <t hangText='RSASSA-PKCS1-v1_5 algorithms'>
+  <t hangText='RSASSA-PKCS1-v1_5 algorithms:'>
   Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <xref
 target="RFC8017"/> with the corresponding hash algorithm as defined in <xref
 target="SHS"/>. These values refer solely to signatures which appear in
@@ -1616,12 +1616,12 @@ certificates (see <xref target="server-certificate-selection"/>) and are not
 defined for use in signed TLS handshake messages, although they MAY appear in
 "signature_algorithms" and "signature_algorithms_cert" for backward
 compatibility with TLS&nbsp;1.2.</t>
-  <t hangText='ECDSA algorithms'>
+  <t hangText='ECDSA algorithms:'>
   Indicates a signature algorithm using ECDSA <xref target="ECDSA"/>, the corresponding
-curve as defined in ANSI X9.62 <xref target="X962"/> and FIPS 186-4 <xref target="DSS"/>, and the
+curve as defined in ANSI X9.62 <xref target="ECDSA"/> and FIPS 186-4 <xref target="DSS"/>, and the
 corresponding hash algorithm as defined in <xref target="SHS"/>. The signature is
 represented as a DER-encoded <xref target="X690"/> ECDSA-Sig-Value structure.</t>
-  <t hangText='RSASSA-PSS RSAE algorithms'>
+  <t hangText='RSASSA-PSS RSAE algorithms:'>
   Indicates a signature algorithm using RSASSA-PSS <xref target="RFC8017"/>
 with mask generation function 1. The digest used in the mask generation
 function and the digest being signed are both the corresponding hash algorithm
@@ -1629,11 +1629,11 @@ as defined in <xref target="SHS"/>. The length of the Salt MUST be equal to
 the length of the output of the digest algorithm. If the public key is carried
 in an X.509 certificate, it MUST use the rsaEncryption OID <xref
 target="RFC5280"/>.</t>
-  <t hangText='EdDSA algorithms'>
+  <t hangText='EdDSA algorithms:'>
   Indicates a signature algorithm using EdDSA as defined in
 <xref target="RFC8032"/> or its successors. Note that these correspond to the
 "PureEdDSA" algorithms and not the "prehash" variants.</t>
-  <t hangText='RSASSA-PSS PSS algorithms'>
+  <t hangText='RSASSA-PSS PSS algorithms:'>
   Indicates a signature algorithm using RSASSA-PSS <xref target="RFC8017"/> with mask
 generation function 1. The
 digest used in the mask generation function and the digest being signed are
@@ -1644,7 +1644,7 @@ it MUST use the RSASSA-PSS OID  <xref target="RFC5756"/>. When used in certifica
 the algorithm parameters MUST be DER encoded. If the corresponding
 public key's parameters are present, then the parameters in the signature
 MUST be identical to those in the public key.</t>
-  <t hangText='Legacy algorithms'>
+  <t hangText='Legacy algorithms:'>
   Indicates algorithms which are being deprecated because they use
 algorithms with known weaknesses, specifically SHA-1 which is used
 in this context with either (1)&nbsp;RSA using RSASSA&nbhy;PKCS1-v1_5 or
@@ -1710,7 +1710,7 @@ CertificateAuthoritiesExtension structure.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='authorities'>
+  <t hangText='authorities:'>
   A list of the distinguished names <xref target="X501"/> of acceptable
 certificate authorities, represented in DER-encoded <xref target="X690"/>
 format.  These distinguished names specify a desired distinguished name for
@@ -1746,7 +1746,7 @@ CertificateRequest message.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='filters'>
+  <t hangText='filters:'>
   A list of certificate extension OIDs <xref target="RFC5280"/> with their
 allowed value(s) and represented in DER-encoded <xref target="X690"/>
 format. Some certificate extension OIDs allow multiple values (e.g.,
@@ -1839,12 +1839,12 @@ ECDSA curves. Signature algorithms are now negotiated independently (see
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='Elliptic Curve Groups (ECDHE)'>
+  <t hangText='Elliptic Curve Groups (ECDHE):'>
   Indicates support for the corresponding named curve, defined in
 either FIPS 186-4 <xref target="DSS"/> or <xref target="RFC7748"/>.
 Values 0xFE00 through 0xFEFF are reserved for Private&nbsp;Use
 <xref target="RFC8126"/>.</t>
-  <t hangText='Finite Field Groups (DHE)'>
+  <t hangText='Finite Field Groups (DHE):'>
   Indicates support of the corresponding finite field
 group, defined in <xref target="RFC7919"/>.
 Values 0x01FC through 0x01FF are reserved for Private Use.</t>
@@ -1883,9 +1883,9 @@ group selection from the server, at the cost of an additional round trip
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='group'>
+  <t hangText='group:'>
   The named group for the key being exchanged.</t>
-  <t hangText='key_exchange'>
+  <t hangText='key_exchange:'>
   Key exchange information.  The contents of this field are
 determined by the specified group and its corresponding
 definition.
@@ -1904,7 +1904,7 @@ contains a "KeyShareClientHello" value:</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='client_shares'>
+  <t hangText='client_shares:'>
   A list of offered KeyShareEntry values in descending order of client preference.</t>
 </list></t>
 
@@ -1938,7 +1938,7 @@ extension contains a KeyShareHelloRetryRequest value:</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='selected_group'>
+  <t hangText='selected_group:'>
   The mutually supported group the server intends to negotiate and
 is requesting a retried ClientHello/KeyShare for.</t>
 </list></t>
@@ -1964,7 +1964,7 @@ extension contains a KeyShareServerHello value:</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='server_share'>
+  <t hangText='server_share:'>
   A single KeyShareEntry value that is in the same group as one of the
 client's shares.</t>
 </list></t>
@@ -2027,7 +2027,7 @@ take 48 octets each.  For P-521, they take 66 octets each.</t>
 peers MUST validate each other's public value Q by ensuring
 that the point is a valid point on the elliptic curve.
 The appropriate validation procedures are defined in Section&nbsp;4.3.7 of
-<xref target="X962"/> and alternatively in Section&nbsp;5.6.2.3 of <xref
+<xref target="ECDSA"/> and alternatively in Section&nbsp;5.6.2.3 of <xref
 target="KEYAGREEMENT"/>. This process consists of three
 steps: (1) verify that Q is not the point at infinity (O), (2) verify
 that for Q = (x, y) both integers x and y are in the correct interval, and
@@ -2073,10 +2073,10 @@ will just be that the client's attempts at resumption fail.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='psk_ke'>
+  <t hangText='psk_ke:'>
   PSK-only key establishment. In this mode, the server MUST&nbsp;NOT
 supply a "key_share" value.</t>
-  <t hangText='psk_dhe_ke'>
+  <t hangText='psk_dhe_ke:'>
   PSK with (EC)DHE key establishment. In this mode,
 the client and server MUST supply "key_share" values as described
 in <xref target="key-share"/>.</t>
@@ -2245,26 +2245,26 @@ with PSK key establishment.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='identity'>
+  <t hangText='identity:'>
   A label for a key. For instance, a ticket (as defined
 in <xref target="ticket-establishment"/>) or a label for a pre-shared key
 established externally.</t>
-  <t hangText='obfuscated_ticket_age'>
+  <t hangText='obfuscated_ticket_age:'>
   An obfuscated version of the age of the key.
 <xref target="ticket-age"/> describes how to form this value
 for identities established via the NewSessionTicket message.
 For identities established externally, an obfuscated_ticket_age of 0
 SHOULD be used, and servers MUST ignore the value.</t>
-  <t hangText='identities'>
+  <t hangText='identities:'>
   A list of the identities that the client is willing
 to negotiate with the server. If sent alongside the "early_data"
 extension (see <xref target="early-data-indication"/>), the first identity is the
 one used for 0-RTT data.</t>
-  <t hangText='binders'>
+  <t hangText='binders:'>
   A series of HMAC values, one for
 each PSK offered in the "pre_shared_keys" extension and in the same
 order, computed as described below.</t>
-  <t hangText='selected_identity'>
+  <t hangText='selected_identity:'>
   The server's chosen identity expressed as a (0-based) index into
 the identities in the client's list.</t>
 </list></t>
@@ -2435,7 +2435,7 @@ extensions and if any are found MUST abort the handshake with an
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='extensions'>
+  <t hangText='extensions:'>
   A list of extensions. For more information, see the table in <xref target="extensions"/>.</t>
 </list></t>
 
@@ -2456,7 +2456,7 @@ follow EncryptedExtensions.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='certificate_request_context'>
+  <t hangText='certificate_request_context:'>
   An opaque string which identifies the certificate request and
 which will be echoed in the client's Certificate message. The
 certificate_request_context MUST be unique within the scope
@@ -2469,7 +2469,7 @@ make the context unpredictable to the client (e.g., by
 randomly generating it) in order to prevent an attacker who
 has temporary access to the client's private key from
 pre-computing valid CertificateVerify messages.</t>
-  <t hangText='extensions'>
+  <t hangText='extensions:'>
   A set of extensions describing the parameters of the
 certificate being requested. The "signature_algorithms"
 extension MUST be specified, and other extensions may optionally be
@@ -2520,14 +2520,14 @@ included in the transcript hash.</t>
 <t>Based on these inputs, the messages then contain:</t>
 
 <t><list style="hanging">
-  <t hangText='Certificate'>
+  <t hangText='Certificate:'>
   The certificate to be used for authentication, and any
 supporting certificates in the chain. Note that certificate-based
 client authentication is not available in PSK (including 0-RTT) flows.</t>
-  <t hangText='CertificateVerify'>
+  <t hangText='CertificateVerify:'>
   A signature over the value Transcript&nbhy;Hash(Handshake Context,
 Certificate).</t>
-  <t hangText='Finished'>
+  <t hangText='Finished:'>
   A MAC over the value Transcript-Hash(Handshake Context, Certificate,
 CertificateVerify) using a MAC key derived from the Base Key.</t>
 </list></t>
@@ -2640,11 +2640,11 @@ be sent regardless of whether the Certificate message is empty.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='certificate_request_context'>
+  <t hangText='certificate_request_context:'>
   If this message is in response to a CertificateRequest, the
 value of certificate_request_context in that message. Otherwise
 (in the case of server authentication), this field SHALL be zero length.</t>
-  <t hangText='certificate_list'>
+  <t hangText='certificate_list:'>
   A sequence (chain) of CertificateEntry structures, each
 containing a single certificate and set of extensions.</t>
   <t hangText='extensions:'>
@@ -3093,7 +3093,7 @@ handshake, for example.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='ticket_lifetime'>
+  <t hangText='ticket_lifetime:'>
   Indicates the lifetime in seconds as a 32-bit unsigned integer in
 network byte order from the time of ticket issuance.
 Servers MUST NOT use any value greater than 604800&nbsp;seconds (7 days).
@@ -3103,21 +3103,21 @@ immediately. Clients MUST NOT cache tickets for longer than
 earlier based on local policy. A server MAY treat a ticket as valid
 for a shorter period of time than what is stated in the
 ticket_lifetime.</t>
-  <t hangText='ticket_age_add'>
+  <t hangText='ticket_age_add:'>
   A securely generated, random 32-bit value that is used to obscure the age of
 the ticket that the client includes in the "pre_shared_key" extension.
 The client-side ticket age is added to this value modulo 2^32 to
 obtain the value that is transmitted by the client.
 The server MUST generate a fresh value for each ticket it sends.</t>
-  <t hangText='ticket_nonce'>
+  <t hangText='ticket_nonce:'>
   A per-ticket value that is unique across all tickets issued on this
   connection.</t>
-  <t hangText='ticket'>
+  <t hangText='ticket:'>
   The value of the ticket to be used as the PSK identity.
 The ticket itself is an opaque label. It MAY be either a database lookup key
 or a self-encrypted and self-authenticated value.
 Section&nbsp;4 of <xref target="RFC5077"/> describes a recommended ticket construction mechanism.</t>
-  <t hangText='extensions'>
+  <t hangText='extensions:'>
   A set of extension values for the ticket. The "Extension"
 format is defined in <xref target="extensions"/>. Clients MUST ignore
 unrecognized extensions.</t>
@@ -3128,7 +3128,7 @@ unrecognized extensions.</t>
 (<xref target="early-data-indication"/>). It contains the following value:</t>
 
 <t><list style="hanging">
-  <t hangText='max_early_data_size'>
+  <t hangText='max_early_data_size:'>
   The maximum amount of 0-RTT data that the client is allowed to send when using
 this ticket, in bytes. Only Application Data payload (i.e., plaintext but
 not padding or the inner content type byte) is counted. A server
@@ -3207,7 +3207,7 @@ Upon receiving a KeyUpdate, the receiver MUST update its receiving keys.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='request_update'>
+  <t hangText='request_update:'>
   Indicates whether the recipient of the KeyUpdate should respond with its
 own KeyUpdate. If an implementation receives any other value, it MUST
 terminate the connection with an "illegal_parameter" alert.</t>
@@ -3334,9 +3334,9 @@ MAY be split across multiple records or coalesced into a single record.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='type'>
+  <t hangText='type:'>
   The higher-level protocol used to process the enclosed fragment.</t>
-  <t hangText='legacy_record_version'>
+  <t hangText='legacy_record_version:'>
   MUST be set to 0x0303 for all records generated by a
 TLS 1.3 implementation other than an initial ClientHello (i.e., one
 not generated after a HelloRetryRequest), where it
@@ -3344,12 +3344,12 @@ MAY also be 0x0301 for compatibility purposes.
 This field is deprecated and MUST be ignored for all purposes.
 Previous versions of TLS would use other values in this field
 under some circumstances.</t>
-  <t hangText='length'>
+  <t hangText='length:'>
   The length (in bytes) of the following TLSPlaintext.fragment. The
 length MUST NOT exceed 2^14 bytes. An endpoint that receives a record
 that exceeds this length MUST terminate the connection with a
 "record_overflow" alert.</t>
-  <t hangText='fragment'>
+  <t hangText='fragment:'>
   The data being transmitted. This value is transparent and is treated as an
 independent block to be dealt with by the higher-level protocol
 specified by the type field.</t>
@@ -3401,38 +3401,38 @@ by an encrypted body, which itself contains a type and optional padding.</t>
 ]]></artwork></figure>
 
 <t><list style="hanging">
-  <t hangText='content'>
+  <t hangText='content:'>
   The TLSPlaintext.fragment value, containing the byte encoding of a
 handshake or an alert message, or the raw bytes of the application's
 data to send.</t>
-  <t hangText='type'>
+  <t hangText='type:'>
   The TLSPlaintext.type value containing the content type of the record.</t>
-  <t hangText='zeros'>
+  <t hangText='zeros:'>
   An arbitrary-length run of zero-valued bytes may
 appear in the cleartext after the type field.  This provides an
 opportunity for senders to pad any TLS record by a chosen amount as
 long as the total stays within record size limits.  See
 <xref target="record-padding"/> for more details.</t>
-  <t hangText='opaque_type'>
+  <t hangText='opaque_type:'>
   The outer opaque_type field of a TLSCiphertext record is always set to the
 value 23 (application_data) for outward compatibility with
 middleboxes accustomed to parsing previous versions of TLS.  The
 actual content type of the record is found in TLSInnerPlaintext.type after
 decryption.</t>
-  <t hangText='legacy_record_version'>
+  <t hangText='legacy_record_version:'>
   The legacy_record_version field is always 0x0303.  TLS 1.3 TLSCiphertexts
 are not generated until after TLS&nbsp;1.3 has been negotiated, so there are
 no historical compatibility concerns where other values might be received.
 Note that the handshake protocol, including the ClientHello and ServerHello
 messages, authenticates the protocol version, so this value is redundant.</t>
-  <t hangText='length'>
+  <t hangText='length:'>
   The length (in bytes) of the following TLSCiphertext.encrypted_record, which
 is the sum of the lengths of the content and the padding, plus one
 for the inner content type, plus any expansion added by the AEAD algorithm.
 The length MUST&nbsp;NOT exceed 2^14 + 256 bytes.
 An endpoint that receives a record that exceeds this length MUST
 terminate the connection with a "record_overflow" alert.</t>
-  <t hangText='encrypted_record'>
+  <t hangText='encrypted_record:'>
   The AEAD-encrypted form of the serialized TLSInnerPlaintext structure.</t>
 </list></t>
 
@@ -3475,8 +3475,9 @@ or an error indicating that the decryption failed. There is no separate
 integrity check. Symbolically,</t>
 
 <figure><artwork><![CDATA[
-plaintext of encrypted_record =
-    AEAD-Decrypt(peer_write_key, nonce, additional_data, AEADEncrypted)
+   plaintext of encrypted_record =
+       AEAD-Decrypt(peer_write_key, nonce,
+                    additional_data, AEADEncrypted)
 ]]></artwork></figure>
 
 <t>If the decryption fails, the receiver MUST terminate the connection
@@ -3681,11 +3682,11 @@ enum) MUST terminate the connection with an "illegal_parameter" alert.</t>
 ending in order to avoid a truncation attack.</t>
 
 <t><list style="hanging">
-  <t hangText='close_notify'>
+  <t hangText='close_notify:'>
   This alert notifies the recipient that the sender will not send
 any more messages on this connection. Any data received after a
 closure alert has been received MUST be ignored.</t>
-  <t hangText='user_canceled'>
+  <t hangText='user_canceled:'>
   This alert notifies the recipient that the sender is canceling the
 handshake for some reason unrelated to a protocol failure. If a user
 cancels an operation after the handshake is complete, just closing the
@@ -3744,11 +3745,11 @@ provide a way to facilitate logging the sending and receiving of alerts.</t>
 <t>The following error alerts are defined:</t>
 
 <t><list style="hanging">
-  <t hangText='unexpected_message'>
+  <t hangText='unexpected_message:'>
   An inappropriate message (e.g., the wrong handshake message, premature
 Application Data, etc.) was received. This alert should never be
 observed in communication between proper implementations.</t>
-  <t hangText='bad_record_mac'>
+  <t hangText='bad_record_mac:'>
   This alert is returned if a record is received which cannot be
 deprotected. Because AEAD algorithms combine decryption and
 verification, and also to avoid side-channel attacks,
@@ -3756,41 +3757,41 @@ this alert is used for all deprotection failures.
 This alert should never be observed in communication between
 proper implementations, except when messages were corrupted
 in the network.</t>
-  <t hangText='record_overflow'>
+  <t hangText='record_overflow:'>
   A TLSCiphertext record was received that had a length more than
 2^14 + 256 bytes, or a record decrypted to a TLSPlaintext record
 with more than 2^14 bytes (or some other negotiated limit).
 This alert should never be observed in communication between
 proper implementations, except when messages were corrupted
 in the network.</t>
-  <t hangText='handshake_failure'>
+  <t hangText='handshake_failure:'>
   Receipt of a "handshake_failure" alert message indicates that the
 sender was unable to negotiate an acceptable set of security
 parameters given the options available.</t>
-  <t hangText='bad_certificate'>
+  <t hangText='bad_certificate:'>
   A certificate was corrupt, contained signatures that did not
 verify correctly, etc.</t>
-  <t hangText='unsupported_certificate'>
+  <t hangText='unsupported_certificate:'>
   A certificate was of an unsupported type.</t>
-  <t hangText='certificate_revoked'>
+  <t hangText='certificate_revoked:'>
   A certificate was revoked by its signer.</t>
-  <t hangText='certificate_expired'>
+  <t hangText='certificate_expired:'>
   A certificate has expired or is not currently valid.</t>
-  <t hangText='certificate_unknown'>
+  <t hangText='certificate_unknown:'>
   Some other (unspecified) issue arose in processing the
 certificate, rendering it unacceptable.</t>
-  <t hangText='illegal_parameter'>
+  <t hangText='illegal_parameter:'>
   A field in the handshake was incorrect or inconsistent with
 other fields. This alert is used for errors which conform to
 the formal protocol syntax but are otherwise incorrect.</t>
-  <t hangText='unknown_ca'>
+  <t hangText='unknown_ca:'>
   A valid certificate chain or partial chain was received, but the
 certificate was not accepted because the CA certificate could not
 be located or could not be matched with a known trust anchor.</t>
-  <t hangText='access_denied'>
+  <t hangText='access_denied:'>
   A valid certificate or PSK was received, but when access control was
 applied, the sender decided not to proceed with negotiation.</t>
-  <t hangText='decode_error'>
+  <t hangText='decode_error:'>
   A message could not be decoded because some field was out of the
 specified range or the length of the message was incorrect.
 This alert is used for errors where the message does not conform
@@ -3798,50 +3799,50 @@ to the formal protocol syntax.
 This alert should never be observed in communication between
 proper implementations, except when messages were corrupted
 in the network.</t>
-  <t hangText='decrypt_error'>
+  <t hangText='decrypt_error:'>
   A handshake (not record layer) cryptographic operation failed, including being unable
 to correctly verify a signature or validate a Finished message
 or a PSK binder.</t>
-  <t hangText='protocol_version'>
+  <t hangText='protocol_version:'>
   The protocol version the peer has attempted to negotiate is
 recognized but not supported (see <xref target="backward-compatibility"/>).</t>
-  <t hangText='insufficient_security'>
+  <t hangText='insufficient_security:'>
   Returned instead of "handshake_failure" when a negotiation has
 failed specifically because the server requires parameters more
 secure than those supported by the client.</t>
-  <t hangText='internal_error'>
+  <t hangText='internal_error:'>
   An internal error unrelated to the peer or the correctness of the
 protocol (such as a memory allocation failure) makes it impossible
 to continue.</t>
-  <t hangText='inappropriate_fallback'>
+  <t hangText='inappropriate_fallback:'>
   Sent by a server in response to an invalid connection retry
 attempt from a client (see <xref target="RFC7507"/>).</t>
-  <t hangText='missing_extension'>
+  <t hangText='missing_extension:'>
   Sent by endpoints that receive a handshake message not
 containing an extension that is mandatory to send for the offered TLS version
 or other negotiated parameters.</t>
-  <t hangText='unsupported_extension'>
+  <t hangText='unsupported_extension:'>
   Sent by endpoints receiving any handshake message containing
 an extension known to be prohibited for inclusion in the given handshake
 message, or including any extensions in a ServerHello or Certificate not first
 offered in the corresponding ClientHello.</t>
-  <t hangText='unrecognized_name'>
+  <t hangText='unrecognized_name:'>
   Sent by servers when no server exists identified by the name
 provided by the client via the "server_name" extension
 (see <xref target="RFC6066"/>).</t>
-  <t hangText='bad_certificate_status_response'>
+  <t hangText='bad_certificate_status_response:'>
   Sent by clients when an invalid or unacceptable OCSP response
 is provided by the server via the "status_request" extension
 (see <xref target="RFC6066"/>).</t>
-  <t hangText='unknown_psk_identity'>
+  <t hangText='unknown_psk_identity:'>
   Sent by servers when PSK key establishment is desired but no
 acceptable PSK identity is provided by the client. Sending this alert
 is OPTIONAL; servers MAY instead choose to send a "decrypt_error"
 alert to merely indicate an invalid PSK identity.</t>
-  <t hangText='certificate_required'>
+  <t hangText='certificate_required:'>
   Sent by servers when a client certificate is desired but none
 was provided by the client.</t>
-  <t hangText='no_application_protocol'>
+  <t hangText='no_application_protocol:'>
   Sent by servers when a client
 "application_layer_protocol_negotiation" extension advertises only protocols
 that the server does not support (see <xref target="RFC7301"/>).</t>
@@ -4505,7 +4506,8 @@ Appendices&nbsp;<xref target="implementation-notes" format="counter"/>,
 <section anchor="iana-considerations" title="IANA Considerations">
 
 <t>This document uses several registries that were originally created in
-<xref target="RFC4346"/>. IANA has updated these to reference this document.
+<xref target="RFC4346"/> and updated in <xref target="RFC8447"/>.
+IANA has updated these to reference this document.
 The registries and their allocation policies are below:</t>
 
 <t><list style="symbols">
@@ -4593,6 +4595,17 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
   <back>
 
     <references title='Normative References'>
+
+<reference anchor="ECDSA" >
+  <front>
+    <title>Public Key Cryptography for the Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)</title>
+    <author >
+      <organization>American National Standards Institute</organization>
+    </author>
+    <date year="2005" month="November"/>
+  </front>
+  <seriesInfo name="ANSI" value="ANS X9.62-2005"/>
+</reference>
 
 <reference  anchor='RFC2104' target='https://www.rfc-editor.org/info/rfc2104'>
 <front>
@@ -4765,35 +4778,6 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
   </front>
   <seriesInfo name="ISO/IEC" value="8825-1:2015"/>
 </reference>
-
-<reference anchor="X962" >
-  <front>
-    <title>Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)</title>
-    <author >
-      <organization>ANSI</organization>
-    </author>
-    <date month="September" year="1998"/>
-  </front>
-  <seriesInfo name="ANSI" value="X9.62"/>
-</reference>
-
-<!-- [rfced] Normative References:  Because (1) online searches
-indicate that the 1998 version of ANSI X9.62 is a draft (and we
-try to avoid listing drafts as Normative References) and
-(2) this document has the 2005 version - [ECDSA] - listed under
-Informative References, would it be appropriate to only list
-the 2005 version, under Normative References?
-
-Original:
- [X962]     ANSI, "Public Key Cryptography For The Financial Services
-            Industry: The Elliptic Curve Digital Signature Algorithm
-            (ECDSA)", ANSI X9.62, 1998.
-...
- [ECDSA]    American National Standards Institute, "Public Key
-            Cryptography for the Financial Services Industry: The
-            Elliptic Curve Digital Signature Algorithm (ECDSA)",
-            ANSI ANS X9.62-2005, November 2005. -->
-
 
 <reference anchor="GCM" >
   <front>
@@ -4971,6 +4955,9 @@ Original:
 <seriesInfo name='DOI' value='10.17487/RFC4366'/>
 </reference>
 
+<!-- If the 4492bis doc. is published before this one, should we note
+  somewhere in text that we're aware of it (possibly the last paragraph
+  of the Introduction)? -->
 <reference  anchor='RFC4492' target='https://www.rfc-editor.org/info/rfc4492'>
 <front>
 <title>Elliptic Curve Cryptography (ECC) Cipher Suites for Transport Layer Security (TLS)</title>
@@ -5171,16 +5158,6 @@ Original:
   </front>
   <seriesInfo name="NIST" value="FIPS PUB 186-4"/>
   <seriesInfo name="DOI" value="10.6028/NIST.FIPS.186-4"/>
-</reference>
-<reference anchor="ECDSA" >
-  <front>
-    <title>Public Key Cryptography for the Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)</title>
-    <author >
-      <organization>American National Standards Institute</organization>
-    </author>
-    <date year="2005" month="November"/>
-  </front>
-  <seriesInfo name="ANSI" value="ANS X9.62-2005"/>
 </reference>
 
 <reference anchor="RSA" >
@@ -5852,8 +5829,8 @@ Original:
   <seriesInfo name="DOI" value="10.6028/NIST.SP.800-56Ar3"/>
 </reference>
 
-<!-- draft-ietf-tls-iana-registry-updates: in queue in EDIT -->
-<reference anchor="TLS-IANA-REG-UPD">
+<!-- draft-ietf-tls-iana-registry-updates (RFC 8447; AUTH48) -->
+<reference anchor="RFC8447" target="https://www.rfc-editor.org/info/rfc8447">
 <front>
 <title>IANA Registry Updates for TLS and DTLS</title>
 <author initials='J' surname='Salowey' fullname='Joseph Salowey'>
@@ -5862,9 +5839,10 @@ Original:
 <author initials='S' surname='Turner' fullname='Sean Turner'>
     <organization />
 </author>
-<date month='May' year='2018' />
+<date month='August' year='2018' />
 </front>
-<seriesInfo name='Work in Progress,' value='draft-ietf-tls-iana-registry-updates-05'/>
+<seriesInfo name="RFC" value="8447"/>
+<seriesInfo name='DOI' value='10.17487/RFC8447'/>
 </reference>
 
 <!-- draft-ietf-tls-record-limit (EDIT) -->
@@ -6958,29 +6936,29 @@ Note that these properties are not necessarily independent, but reflect
 the protocol consumers' needs.</t>
 
 <t><list style="hanging">
-  <t hangText='Establishing the same session keys.'>
+  <t hangText='Establishing the same session keys:'>
   The handshake needs to output the same set of session keys on both sides of
 the handshake, provided that it completes successfully on each endpoint
 (see <xref target="CK01"/>, Definition 1, part 1).</t>
-  <t hangText='Secrecy of the session keys.'>
+  <t hangText='Secrecy of the session keys:'>
   The shared session keys should be known only to the communicating
 parties and not to the attacker (see <xref target="CK01"/>, Definition 1,
 part 2). Note that in a unilaterally authenticated connection, the attacker
 can establish its own session keys with the server, but those session keys are
 distinct from those established by the client.</t>
-  <t hangText='Peer authentication.'>
+  <t hangText='Peer authentication:'>
   The client's view of the peer identity should reflect the server's
 identity. If the client is authenticated, the server's view of the
 peer identity should match the client's identity.</t>
-  <t hangText='Uniqueness of the session keys.'>
+  <t hangText='Uniqueness of the session keys:'>
   Any two distinct handshakes should produce distinct, unrelated session
 keys. Individual session keys produced by a handshake should also be distinct
 and independent.</t>
-  <t hangText='Downgrade protection.'>
+  <t hangText='Downgrade protection:'>
   The cryptographic parameters should be the same on both sides and
 should be the same as if the peers had been communicating in the
 absence of an attack (see <xref target="BBFGKZ16"/>, Definitions 8 and 9).</t>
-  <t hangText='Forward secret with respect to long-term keys.'>
+  <t hangText='Forward secret with respect to long-term keys:'>
   If the long-term keying material (in this case the signature keys in
 certificate-based authentication modes or the external/resumption PSK in PSK
 with (EC)DHE modes) is compromised after the handshake is complete, this does
@@ -6988,14 +6966,14 @@ not compromise the security of the session key (see <xref target="DOW92"/>),
 as long as the session key itself has been erased. The forward secrecy
 property is not satisfied when PSK is used in the "psk_ke"
 PskKeyExchangeMode.</t>
-  <t hangText='Key Compromise Impersonation (KCI) resistance.'>
+  <t hangText='Key Compromise Impersonation (KCI) resistance:'>
   In a mutually authenticated connection with certificates, compromising the
 long&nbhy;term
 secret of one actor should not break that actor's authentication of their peer in
 the given connection (see <xref target="HGFS15"/>). For example, if a client's signature key is
 compromised, it should not be possible to impersonate arbitrary servers to that client
 in subsequent handshakes.</t>
-  <t hangText='Protection of endpoint identities.'>
+  <t hangText='Protection of endpoint identities:'>
   The server's identity (certificate) should be protected against passive
 attackers. The client's identity should be protected against both passive
 and active attackers.</t>
@@ -7182,22 +7160,22 @@ indicated in <xref target="limits-on-key-usage"/>, then the record layer should 
 guarantees:</t>
 
 <t><list style="hanging">
-  <t hangText='Confidentiality.'>
+  <t hangText='Confidentiality:'>
   An attacker should not be able to determine the plaintext contents
 of a given record.
   </t>
-  <t hangText='Integrity.'>
+  <t hangText='Integrity:'>
   An attacker should not be able to craft a new record which is
 different from an existing record which will be accepted by the receiver.
   </t>
-  <t hangText='Order protection/non-replayability.'>
+  <t hangText='Order protection/non-replayability:'>
   An attacker should not be able to cause the receiver to accept a
 record which it has already accepted or cause the receiver to accept
 record N+1 without having first processed record N.</t>
-  <t hangText='Length concealment.'>
+  <t hangText='Length concealment:'>
   Given a record with a given external length, the attacker should not be able
 to determine the amount of the record that is content versus padding.</t>
-  <t hangText='Forward secrecy after key change.'>
+  <t hangText='Forward secrecy after key change:'>
   If the traffic key update mechanism described in <xref target="key-update"/> has been
 used and the previous generation key is deleted, an attacker who compromises
 the endpoint should not be able to decrypt traffic encrypted with the old key.</t>
