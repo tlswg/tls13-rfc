@@ -1156,7 +1156,7 @@ Subsequent Handshake:
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#handshake-protocol" id="handshake-protocol">Handshake Protocol</a>
 </h1>
-<p id="rfc.section.4.p.1">The handshake protocol is used to negotiate the security parameters of a connection. Handshake messages are supplied to the TLS record layer, where they are encapsulated within one or more TLSPlaintext or TLSCiphertext structure  which are processed and transmitted as specified by the current active connection state.</p>
+<p id="rfc.section.4.p.1">The handshake protocol is used to negotiate the security parameters of a connection. Handshake messages are supplied to the TLS record layer, where they are encapsulated within one or more TLSPlaintext or TLSCiphertext structures  which are processed and transmitted as specified by the current active connection state.</p>
 <pre>
    enum {
        client_hello(1),
@@ -1585,17 +1585,17 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>RSASSA-PKCS1-v1_5 algorithms</dt>
+<dt>RSASSA-PKCS1-v1_5 algorithms:</dt>
 <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PKCS1-v1_5 <a href="#RFC8017" class="xref">[RFC8017]</a> with the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages, although they MAY appear in "signature_algorithms" and "signature_algorithms_cert" for backward compatibility with TLS&#160;1.2.</dd>
-<dt>ECDSA algorithms</dt>
-<dd style="margin-left: 8">Indicates a signature algorithm using ECDSA <a href="#ECDSA" class="xref">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#X962" class="xref">[X962]</a> and FIPS 186-4 <a href="#DSS" class="xref">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690" class="xref">[X690]</a> ECDSA-Sig-Value structure.</dd>
-<dt>RSASSA-PSS RSAE algorithms</dt>
+<dt>ECDSA algorithms:</dt>
+<dd style="margin-left: 8">Indicates a signature algorithm using ECDSA <a href="#ECDSA" class="xref">[ECDSA]</a>, the corresponding curve as defined in ANSI X9.62 <a href="#ECDSA" class="xref">[ECDSA]</a> and FIPS 186-4 <a href="#DSS" class="xref">[DSS]</a>, and the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. The signature is represented as a DER-encoded <a href="#X690" class="xref">[X690]</a> ECDSA-Sig-Value structure.</dd>
+<dt>RSASSA-PSS RSAE algorithms:</dt>
 <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC8017" class="xref">[RFC8017]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>. The length of the Salt MUST be equal to the length of the output of the digest algorithm. If the public key is carried in an X.509 certificate, it MUST use the rsaEncryption OID <a href="#RFC5280" class="xref">[RFC5280]</a>.</dd>
-<dt>EdDSA algorithms</dt>
+<dt>EdDSA algorithms:</dt>
 <dd style="margin-left: 8">Indicates a signature algorithm using EdDSA as defined in <a href="#RFC8032" class="xref">[RFC8032]</a> or its successors. Note that these correspond to the "PureEdDSA" algorithms and not the "prehash" variants.</dd>
-<dt>RSASSA-PSS PSS algorithms</dt>
+<dt>RSASSA-PSS PSS algorithms:</dt>
 <dd style="margin-left: 8">Indicates a signature algorithm using RSASSA-PSS <a href="#RFC8017" class="xref">[RFC8017]</a> with mask generation function 1. The digest used in the mask generation function and the digest being signed are both the corresponding hash algorithm as defined in <a href="#SHS" class="xref">[SHS]</a>.  The length of the Salt MUST be equal to the length of the digest algorithm. If the public key is carried in an X.509 certificate, it MUST use the RSASSA-PSS OID  <a href="#RFC5756" class="xref">[RFC5756]</a>. When used in certificate signatures, the algorithm parameters MUST be DER encoded. If the corresponding public key's parameters are present, then the parameters in the signature MUST be identical to those in the public key.</dd>
-<dt>Legacy algorithms</dt>
+<dt>Legacy algorithms:</dt>
 <dd style="margin-left: 8">Indicates algorithms which are being deprecated because they use algorithms with known weaknesses, specifically SHA-1 which is used in this context with either (1)&#160;RSA using RSASSA&#8209;PKCS1-v1_5 or (2)&#160;ECDSA.  These values refer solely to signatures which appear in certificates (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>) and are not defined for use in signed TLS handshake messages, although they MAY appear in "signature_algorithms" and "signature_algorithms_cert" for backward compatibility with TLS&#160;1.2.  Endpoints SHOULD NOT negotiate these algorithms but are permitted to do so solely for backward compatibility. Clients offering these values MUST list them as the lowest priority (listed after all other algorithms in SignatureSchemeList). TLS&#160;1.3 servers MUST NOT offer a SHA-1 signed certificate unless no valid certificate chain can be produced without it (see <a href="#server-certificate-selection" class="xref">Section 4.4.2.2</a>).</dd>
 </dl>
 <p id="rfc.section.4.2.3.p.7">The signatures on certificates that are self-signed or certificates that are trust anchors are not validated, since they begin a certification path (see <a href="#RFC5280" class="xref">[RFC5280]</a>, Section 3.2).  A certificate that begins a certification path MAY use a signature algorithm that is not advertised as being supported in the "signature_algorithms" extension.</p>
@@ -1623,7 +1623,7 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>authorities</dt>
+<dt>authorities:</dt>
 <dd style="margin-left: 8">A list of the distinguished names <a href="#X501" class="xref">[X501]</a> of acceptable certificate authorities, represented in DER-encoded <a href="#X690" class="xref">[X690]</a> format.  These distinguished names specify a desired distinguished name for a trust anchor or subordinate CA; thus, this message can be used to describe known trust anchors as well as a desired authorization space.</dd>
 </dl>
 <p id="rfc.section.4.2.4.p.4">The client MAY send the "certificate_authorities" extension in the ClientHello message. The server MAY send it in the CertificateRequest message.</p>
@@ -1645,7 +1645,7 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>filters</dt>
+<dt>filters:</dt>
 <dd style="margin-left: 8">A list of certificate extension OIDs <a href="#RFC5280" class="xref">[RFC5280]</a> with their allowed value(s) and represented in DER-encoded <a href="#X690" class="xref">[X690]</a> format. Some certificate extension OIDs allow multiple values (e.g., Extended Key Usage).  If the server has included a non-empty filters list, the client certificate included in the response MUST contain all of the specified extension OIDs that the client recognizes. For each extension OID recognized by the client, all of the specified values MUST be present in the client certificate (but the certificate MAY have other values as well). However, the client MUST ignore and skip any unrecognized certificate extension OIDs. If the client ignored some of the required certificate extension OIDs and supplied a certificate that does not satisfy the request, the server MAY at its discretion either continue the connection without client authentication or abort the handshake with an "unsupported_certificate" alert. Any given OID MUST NOT appear more than once in the filters list.</dd>
 </dl>
 <p id="rfc.section.4.2.5.p.3">PKIX RFCs define a variety of certificate extension OIDs and their corresponding value types. Depending on the type, matching certificate extension values are not necessarily bitwise-equal. It is expected that TLS implementations will rely on their PKI libraries to perform certificate selection using certificate extension OIDs.</p>
@@ -1695,9 +1695,9 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>Elliptic Curve Groups (ECDHE)</dt>
+<dt>Elliptic Curve Groups (ECDHE):</dt>
 <dd style="margin-left: 8">Indicates support for the corresponding named curve, defined in either FIPS 186-4 <a href="#DSS" class="xref">[DSS]</a> or <a href="#RFC7748" class="xref">[RFC7748]</a>.  Values 0xFE00 through 0xFEFF are reserved for Private&#160;Use <a href="#RFC8126" class="xref">[RFC8126]</a>.</dd>
-<dt>Finite Field Groups (DHE)</dt>
+<dt>Finite Field Groups (DHE):</dt>
 <dd style="margin-left: 8">Indicates support of the corresponding finite field group, defined in <a href="#RFC7919" class="xref">[RFC7919]</a>.  Values 0x01FC through 0x01FF are reserved for Private Use.</dd>
 </dl>
 <p id="rfc.section.4.2.7.p.5">Items in named_group_list are ordered according to the client's preferences (most preferred choice first).</p>
@@ -1716,9 +1716,9 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>group</dt>
+<dt>group:</dt>
 <dd style="margin-left: 8">The named group for the key being exchanged.</dd>
-<dt>key_exchange</dt>
+<dt>key_exchange:</dt>
 <dd style="margin-left: 8">Key exchange information.  The contents of this field are determined by the specified group and its corresponding definition.  Finite Field Diffie-Hellman <a href="#DH76" class="xref">[DH76]</a> parameters are described in <a href="#ffdhe-param" class="xref">Section 4.2.8.1</a>; Elliptic Curve Diffie-Hellman parameters are described in <a href="#ecdhe-param" class="xref">Section 4.2.8.2</a>.</dd>
 </dl>
 <p id="rfc.section.4.2.8.p.4">In the ClientHello message, the "extension_data" field of this extension contains a "KeyShareClientHello" value:</p>
@@ -1730,7 +1730,7 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>client_shares</dt>
+<dt>client_shares:</dt>
 <dd style="margin-left: 8">A list of offered KeyShareEntry values in descending order of client preference.</dd>
 </dl>
 <p id="rfc.section.4.2.8.p.6">This vector MAY be empty if the client is requesting a HelloRetryRequest.  Each KeyShareEntry value MUST correspond to a group offered in the "supported_groups" extension and MUST appear in the same order.  However, the values MAY be a non-contiguous subset of the "supported_groups" extension and MAY omit the most preferred groups. Such a situation could arise if the most preferred groups are new and unlikely to be supported in enough places to make pregenerating key shares for them efficient.</p>
@@ -1744,7 +1744,7 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>selected_group</dt>
+<dt>selected_group:</dt>
 <dd style="margin-left: 8">The mutually supported group the server intends to negotiate and is requesting a retried ClientHello/KeyShare for.</dd>
 </dl>
 <p id="rfc.section.4.2.8.p.10">Upon receipt of this extension in a HelloRetryRequest, the client MUST verify that (1) the selected_group field corresponds to a group which was provided in the "supported_groups" extension in the original ClientHello and (2) the selected_group field does not correspond to a group which was provided in the "key_share" extension in the original ClientHello. If either of these checks fails, then the client MUST abort the handshake with an "illegal_parameter" alert.  Otherwise, when sending the new ClientHello, the client MUST replace the original "key_share" extension with one containing only a new KeyShareEntry for the group indicated in the selected_group field of the triggering HelloRetryRequest.</p>
@@ -1757,7 +1757,7 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>server_share</dt>
+<dt>server_share:</dt>
 <dd style="margin-left: 8">A single KeyShareEntry value that is in the same group as one of the client's shares.</dd>
 </dl>
 <p id="rfc.section.4.2.8.p.13">If using (EC)DHE key establishment, servers offer exactly one KeyShareEntry in the ServerHello. This value MUST be in the same group as the KeyShareEntry value offered by the client that the server has selected for the negotiated key exchange.  Servers MUST&#160;NOT send a KeyShareEntry for any group not indicated in the "supported_groups" extension and MUST NOT send a KeyShareEntry when using the "psk_ke" PskKeyExchangeMode.  If using (EC)DHE key establishment and a HelloRetryRequest containing a "key_share" extension was received by the client, the client MUST verify that the selected NamedGroup in the ServerHello is the same as that in the HelloRetryRequest.  If this check fails, the client MUST abort the handshake with an "illegal_parameter" alert.</p>
@@ -1780,7 +1780,7 @@ Subsequent Handshake:
    } UncompressedPointRepresentation;
 </pre>
 <p id="rfc.section.4.2.8.2.p.3">X and Y, respectively, are the binary representations of the x and y values in network byte order.  There are no internal length markers, so each number representation occupies as many octets as implied by the curve parameters.  For P-256, this means that each of X and Y use 32 octets, padded on the left by zeros if necessary.  For P-384, they take 48 octets each.  For P-521, they take 66 octets each.</p>
-<p id="rfc.section.4.2.8.2.p.4">For the curves secp256r1, secp384r1, and secp521r1, peers MUST validate each other's public value Q by ensuring that the point is a valid point on the elliptic curve.  The appropriate validation procedures are defined in Section&#160;4.3.7 of <a href="#X962" class="xref">[X962]</a> and alternatively in Section&#160;5.6.2.3 of <a href="#KEYAGREEMENT" class="xref">[KEYAGREEMENT]</a>. This process consists of three steps: (1) verify that Q is not the point at infinity (O), (2) verify that for Q = (x, y) both integers x and y are in the correct interval, and (3) ensure that (x, y) is a correct solution to the elliptic curve equation.  For these curves, implementors do not need to verify membership in the correct subgroup.</p>
+<p id="rfc.section.4.2.8.2.p.4">For the curves secp256r1, secp384r1, and secp521r1, peers MUST validate each other's public value Q by ensuring that the point is a valid point on the elliptic curve.  The appropriate validation procedures are defined in Section&#160;4.3.7 of <a href="#ECDSA" class="xref">[ECDSA]</a> and alternatively in Section&#160;5.6.2.3 of <a href="#KEYAGREEMENT" class="xref">[KEYAGREEMENT]</a>. This process consists of three steps: (1) verify that Q is not the point at infinity (O), (2) verify that for Q = (x, y) both integers x and y are in the correct interval, and (3) ensure that (x, y) is a correct solution to the elliptic curve equation.  For these curves, implementors do not need to verify membership in the correct subgroup.</p>
 <p id="rfc.section.4.2.8.2.p.5">For X25519 and X448, the contents of the public value are the byte string inputs and outputs of the corresponding functions defined in <a href="#RFC7748" class="xref">[RFC7748]</a>: 32 bytes for X25519 and 56 bytes for X448.</p>
 <p id="rfc.section.4.2.8.2.p.6">Note: Versions of TLS prior to 1.3 permitted point format negotiation; TLS 1.3 removes this feature in favor of a single point format for each curve.</p>
 <h1 id="rfc.section.4.2.9">
@@ -1799,9 +1799,9 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>psk_ke</dt>
+<dt>psk_ke:</dt>
 <dd style="margin-left: 8">PSK-only key establishment. In this mode, the server MUST&#160;NOT supply a "key_share" value.</dd>
-<dt>psk_dhe_ke</dt>
+<dt>psk_dhe_ke:</dt>
 <dd style="margin-left: 8">PSK with (EC)DHE key establishment. In this mode, the client and server MUST supply "key_share" values as described in <a href="#key-share" class="xref">Section 4.2.8</a>.</dd>
 </dl>
 <p id="rfc.section.4.2.9.p.5">Any future values that are allocated must ensure that the transmitted protocol messages unambiguously identify which mode was selected by the server; at present, this is indicated by the presence of the "key_share" in the ServerHello.</p>
@@ -1875,15 +1875,15 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>identity</dt>
+<dt>identity:</dt>
 <dd style="margin-left: 8">A label for a key. For instance, a ticket (as defined in <a href="#ticket-establishment" class="xref">Appendix B.3.4</a>) or a label for a pre-shared key established externally.</dd>
-<dt>obfuscated_ticket_age</dt>
+<dt>obfuscated_ticket_age:</dt>
 <dd style="margin-left: 8">An obfuscated version of the age of the key.  <a href="#ticket-age" class="xref">Section 4.2.11.1</a> describes how to form this value for identities established via the NewSessionTicket message.  For identities established externally, an obfuscated_ticket_age of 0 SHOULD be used, and servers MUST ignore the value.</dd>
-<dt>identities</dt>
+<dt>identities:</dt>
 <dd style="margin-left: 8">A list of the identities that the client is willing to negotiate with the server. If sent alongside the "early_data" extension (see <a href="#early-data-indication" class="xref">Section 4.2.10</a>), the first identity is the one used for 0-RTT data.</dd>
-<dt>binders</dt>
+<dt>binders:</dt>
 <dd style="margin-left: 8">A series of HMAC values, one for each PSK offered in the "pre_shared_keys" extension and in the same order, computed as described below.</dd>
-<dt>selected_identity</dt>
+<dt>selected_identity:</dt>
 <dd style="margin-left: 8">The server's chosen identity expressed as a (0-based) index into the identities in the client's list.</dd>
 </dl>
 <p id="rfc.section.4.2.11.p.4">Each PSK is associated with a single Hash algorithm. For PSKs established via the ticket mechanism (<a href="#NSTMessage" class="xref">Section 4.6.1</a>), this is the KDF Hash algorithm on the connection where the ticket was established.  For externally established PSKs, the Hash algorithm MUST be set when the PSK is established or default to SHA-256 if no such algorithm is defined. The server MUST ensure that it selects a compatible PSK (if any) and cipher suite.</p>
@@ -1936,7 +1936,7 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>extensions</dt>
+<dt>extensions:</dt>
 <dd style="margin-left: 8">A list of extensions. For more information, see the table in <a href="#extensions" class="xref">Section 4.2</a>.</dd>
 </dl>
 <h1 id="rfc.section.4.3.2">
@@ -1953,9 +1953,9 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>certificate_request_context</dt>
+<dt>certificate_request_context:</dt>
 <dd style="margin-left: 8">An opaque string which identifies the certificate request and which will be echoed in the client's Certificate message. The certificate_request_context MUST be unique within the scope of this connection (thus preventing replay of client CertificateVerify messages). This field SHALL be zero length unless used for the post-handshake authentication exchanges described in <a href="#post-handshake-authentication" class="xref">Section 4.6.2</a>.  When requesting post-handshake authentication, the server SHOULD make the context unpredictable to the client (e.g., by randomly generating it) in order to prevent an attacker who has temporary access to the client's private key from pre-computing valid CertificateVerify messages.</dd>
-<dt>extensions</dt>
+<dt>extensions:</dt>
 <dd style="margin-left: 8">A set of extensions describing the parameters of the certificate being requested. The "signature_algorithms" extension MUST be specified, and other extensions may optionally be included if defined for this message.  Clients MUST ignore unrecognized extensions.</dd>
 </dl>
 <p id="rfc.section.4.3.2.p.4">In prior versions of TLS, the CertificateRequest message carried a list of signature algorithms and certificate authorities which the server would accept. In TLS 1.3, the former is expressed by sending the "signature_algorithms" and optionally "signature_algorithms_cert" extensions. The latter is expressed by sending the "certificate_authorities" extension (see <a href="#certificate-authorities" class="xref">Section 4.2.4</a>).</p>
@@ -1976,11 +1976,11 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>Certificate</dt>
+<dt>Certificate:</dt>
 <dd style="margin-left: 8">The certificate to be used for authentication, and any supporting certificates in the chain. Note that certificate-based client authentication is not available in PSK (including 0-RTT) flows.</dd>
-<dt>CertificateVerify</dt>
+<dt>CertificateVerify:</dt>
 <dd style="margin-left: 8">A signature over the value Transcript&#8209;Hash(Handshake Context, Certificate).</dd>
-<dt>Finished</dt>
+<dt>Finished:</dt>
 <dd style="margin-left: 8">A MAC over the value Transcript-Hash(Handshake Context, Certificate, CertificateVerify) using a MAC key derived from the Base Key.</dd>
 </dl>
 <p id="rfc.section.4.4.p.6">The following table defines the Handshake Context and MAC Base Key for each scenario:</p>
@@ -2061,9 +2061,9 @@ Subsequent Handshake:
 <p></p>
 
 <dl>
-<dt>certificate_request_context</dt>
+<dt>certificate_request_context:</dt>
 <dd style="margin-left: 8">If this message is in response to a CertificateRequest, the value of certificate_request_context in that message. Otherwise (in the case of server authentication), this field SHALL be zero length.</dd>
-<dt>certificate_list</dt>
+<dt>certificate_list:</dt>
 <dd style="margin-left: 8">A sequence (chain) of CertificateEntry structures, each containing a single certificate and set of extensions.</dd>
 <dt>extensions:</dt>
 <dd style="margin-left: 8">A set of extension values for the CertificateEntry. The "Extension" format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions for server certificates at present include the OCSP Status extension <a href="#RFC6066" class="xref">[RFC6066]</a> and SignedCertificateTimestamp extension <a href="#RFC6962" class="xref">[RFC6962]</a>; future extensions may be defined for this message as well. Extensions in the Certificate message from the server MUST correspond to ones from the ClientHello message. Extensions in the Certificate message from the client MUST correspond with extensions in the CertificateRequest message from the server. If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
@@ -2246,22 +2246,22 @@ finished_key =
 <p></p>
 
 <dl>
-<dt>ticket_lifetime</dt>
+<dt>ticket_lifetime:</dt>
 <dd style="margin-left: 8">Indicates the lifetime in seconds as a 32-bit unsigned integer in network byte order from the time of ticket issuance.  Servers MUST NOT use any value greater than 604800&#160;seconds (7 days).  The value of zero indicates that the ticket should be discarded immediately. Clients MUST NOT cache tickets for longer than 7 days, regardless of the ticket_lifetime, and MAY delete tickets earlier based on local policy. A server MAY treat a ticket as valid for a shorter period of time than what is stated in the ticket_lifetime.</dd>
-<dt>ticket_age_add</dt>
+<dt>ticket_age_add:</dt>
 <dd style="margin-left: 8">A securely generated, random 32-bit value that is used to obscure the age of the ticket that the client includes in the "pre_shared_key" extension.  The client-side ticket age is added to this value modulo 2^32 to obtain the value that is transmitted by the client.  The server MUST generate a fresh value for each ticket it sends.</dd>
-<dt>ticket_nonce</dt>
+<dt>ticket_nonce:</dt>
 <dd style="margin-left: 8">A per-ticket value that is unique across all tickets issued on this connection.</dd>
-<dt>ticket</dt>
+<dt>ticket:</dt>
 <dd style="margin-left: 8">The value of the ticket to be used as the PSK identity.  The ticket itself is an opaque label. It MAY be either a database lookup key or a self-encrypted and self-authenticated value.  Section&#160;4 of <a href="#RFC5077" class="xref">[RFC5077]</a> describes a recommended ticket construction mechanism.</dd>
-<dt>extensions</dt>
+<dt>extensions:</dt>
 <dd style="margin-left: 8">A set of extension values for the ticket. The "Extension" format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Clients MUST ignore unrecognized extensions.</dd>
 </dl>
 <p id="rfc.section.4.6.1.p.9">The sole extension currently defined for NewSessionTicket is "early_data", indicating that the ticket may be used to send 0-RTT data (<a href="#early-data-indication" class="xref">Section 4.2.10</a>). It contains the following value:</p>
 <p></p>
 
 <dl>
-<dt>max_early_data_size</dt>
+<dt>max_early_data_size:</dt>
 <dd style="margin-left: 8">The maximum amount of 0-RTT data that the client is allowed to send when using this ticket, in bytes. Only Application Data payload (i.e., plaintext but not padding or the inner content type byte) is counted. A server receiving more than max_early_data_size bytes of 0-RTT data SHOULD terminate the connection with an "unexpected_message" alert.  Note that servers that reject early data due to lack of cryptographic material will be unable to differentiate padding from content, so clients SHOULD&#160;NOT depend on being able to send large quantities of padding in early data records.</dd>
 </dl>
 <p id="rfc.section.4.6.1.p.11">The PSK associated with the ticket is computed as:</p>
@@ -2293,7 +2293,7 @@ finished_key =
 <p></p>
 
 <dl>
-<dt>request_update</dt>
+<dt>request_update:</dt>
 <dd style="margin-left: 8">Indicates whether the recipient of the KeyUpdate should respond with its own KeyUpdate. If an implementation receives any other value, it MUST terminate the connection with an "illegal_parameter" alert.</dd>
 </dl>
 <p id="rfc.section.4.6.3.p.3">If the request_update field is set to "update_requested", then the receiver MUST send a KeyUpdate of its own with request_update set to "update_not_requested" prior to sending its next Application Data record. This mechanism allows either side to force an update to the entire connection, but causes an implementation which receives multiple KeyUpdates while it is silent to respond with a single update. Note that implementations may receive an arbitrary number of messages between sending a KeyUpdate with request_update set to "update_requested" and receiving the peer's KeyUpdate, because those messages may already be in flight.  However, because send and receive keys are derived from independent traffic secrets, retaining the receive traffic secret does not threaten the forward secrecy of data sent before the sender changed keys.</p>
@@ -2340,13 +2340,13 @@ finished_key =
 <p></p>
 
 <dl>
-<dt>type</dt>
+<dt>type:</dt>
 <dd style="margin-left: 8">The higher-level protocol used to process the enclosed fragment.</dd>
-<dt>legacy_record_version</dt>
+<dt>legacy_record_version:</dt>
 <dd style="margin-left: 8">MUST be set to 0x0303 for all records generated by a TLS 1.3 implementation other than an initial ClientHello (i.e., one not generated after a HelloRetryRequest), where it MAY also be 0x0301 for compatibility purposes.  This field is deprecated and MUST be ignored for all purposes.  Previous versions of TLS would use other values in this field under some circumstances.</dd>
-<dt>length</dt>
+<dt>length:</dt>
 <dd style="margin-left: 8">The length (in bytes) of the following TLSPlaintext.fragment. The length MUST NOT exceed 2^14 bytes. An endpoint that receives a record that exceeds this length MUST terminate the connection with a "record_overflow" alert.</dd>
-<dt>fragment</dt>
+<dt>fragment:</dt>
 <dd style="margin-left: 8">The data being transmitted. This value is transparent and is treated as an independent block to be dealt with by the higher-level protocol specified by the type field.</dd>
 </dl>
 <p id="rfc.section.5.1.p.8">This document describes TLS 1.3, which uses the version 0x0304.  This version value is historical, deriving from the use of 0x0301 for TLS&#160;1.0 and 0x0300 for SSL 3.0. In order to maximize backward compatibility, a record containing an initial ClientHello SHOULD have version 0x0301 (reflecting TLS 1.0) and a record containing a second ClientHello or a ServerHello MUST have version 0x0303 (reflecting TLS&#160;1.2). When negotiating prior versions of TLS, endpoints follow the procedure and requirements provided in <a href="#backward-compatibility" class="xref">Appendix D</a>.</p>
@@ -2372,19 +2372,19 @@ finished_key =
 <p></p>
 
 <dl>
-<dt>content</dt>
+<dt>content:</dt>
 <dd style="margin-left: 8">The TLSPlaintext.fragment value, containing the byte encoding of a handshake or an alert message, or the raw bytes of the application's data to send.</dd>
-<dt>type</dt>
+<dt>type:</dt>
 <dd style="margin-left: 8">The TLSPlaintext.type value containing the content type of the record.</dd>
-<dt>zeros</dt>
+<dt>zeros:</dt>
 <dd style="margin-left: 8">An arbitrary-length run of zero-valued bytes may appear in the cleartext after the type field.  This provides an opportunity for senders to pad any TLS record by a chosen amount as long as the total stays within record size limits.  See <a href="#record-padding" class="xref">Section 5.4</a> for more details.</dd>
-<dt>opaque_type</dt>
+<dt>opaque_type:</dt>
 <dd style="margin-left: 8">The outer opaque_type field of a TLSCiphertext record is always set to the value 23 (application_data) for outward compatibility with middleboxes accustomed to parsing previous versions of TLS.  The actual content type of the record is found in TLSInnerPlaintext.type after decryption.</dd>
-<dt>legacy_record_version</dt>
+<dt>legacy_record_version:</dt>
 <dd style="margin-left: 8">The legacy_record_version field is always 0x0303.  TLS 1.3 TLSCiphertexts are not generated until after TLS&#160;1.3 has been negotiated, so there are no historical compatibility concerns where other values might be received.  Note that the handshake protocol, including the ClientHello and ServerHello messages, authenticates the protocol version, so this value is redundant.</dd>
-<dt>length</dt>
+<dt>length:</dt>
 <dd style="margin-left: 8">The length (in bytes) of the following TLSCiphertext.encrypted_record, which is the sum of the lengths of the content and the padding, plus one for the inner content type, plus any expansion added by the AEAD algorithm.  The length MUST&#160;NOT exceed 2^14 + 256 bytes.  An endpoint that receives a record that exceeds this length MUST terminate the connection with a "record_overflow" alert.</dd>
-<dt>encrypted_record</dt>
+<dt>encrypted_record:</dt>
 <dd style="margin-left: 8">The AEAD-encrypted form of the serialized TLSInnerPlaintext structure.</dd>
 </dl>
 <p id="rfc.section.5.2.p.3">AEAD algorithms take as input a single key, a nonce, a plaintext, and "additional data" to be included in the authentication check, as described in Section&#160;2.1 of <a href="#RFC5116" class="xref">[RFC5116]</a>. The key is either the client_write_key or the server_write_key, the nonce is derived from the sequence number and the client_write_iv or server_write_iv (see <a href="#nonce" class="xref">Section 5.3</a>), and the additional data input is the record header.  I.e.,</p>
@@ -2402,8 +2402,9 @@ finished_key =
 <p id="rfc.section.5.2.p.6">The encrypted_record field of TLSCiphertext is set to AEADEncrypted.</p>
 <p id="rfc.section.5.2.p.7">In order to decrypt and verify, the cipher takes as input the key, nonce, additional data, and the AEADEncrypted value. The output is either the plaintext or an error indicating that the decryption failed. There is no separate integrity check. Symbolically,</p>
 <pre>
-plaintext of encrypted_record =
-    AEAD-Decrypt(peer_write_key, nonce, additional_data, AEADEncrypted)
+   plaintext of encrypted_record =
+       AEAD-Decrypt(peer_write_key, nonce,
+                    additional_data, AEADEncrypted)
 </pre>
 <p id="rfc.section.5.2.p.8">If the decryption fails, the receiver MUST terminate the connection with a "bad_record_mac" alert.</p>
 <p id="rfc.section.5.2.p.9">An AEAD algorithm used in TLS 1.3 MUST NOT produce an expansion greater than 255 octets. An endpoint that receives a record from its peer with TLSCiphertext.length larger than 2^14 + 256 octets MUST terminate the connection with a "record_overflow" alert.  This limit is derived from the maximum TLSInnerPlaintext length of 2^14 octets + 1 octet for ContentType + the maximum AEAD expansion of 255 octets.</p>
@@ -2490,9 +2491,9 @@ plaintext of encrypted_record =
 <p></p>
 
 <dl>
-<dt>close_notify</dt>
+<dt>close_notify:</dt>
 <dd style="margin-left: 8">This alert notifies the recipient that the sender will not send any more messages on this connection. Any data received after a closure alert has been received MUST be ignored.</dd>
-<dt>user_canceled</dt>
+<dt>user_canceled:</dt>
 <dd style="margin-left: 8">This alert notifies the recipient that the sender is canceling the handshake for some reason unrelated to a protocol failure. If a user cancels an operation after the handshake is complete, just closing the connection by sending a "close_notify" is more appropriate. This alert SHOULD be followed by a "close_notify". This alert generally has AlertLevel=warning.</dd>
 </dl>
 <p id="rfc.section.6.1.p.3">Either party MAY initiate a close of its write side of the connection by sending a "close_notify" alert. Any data received after a closure alert has been received MUST be ignored. If a transport-level close is received prior to a "close_notify", the receiver cannot know that all the data that was sent has been received.</p>
@@ -2508,55 +2509,55 @@ plaintext of encrypted_record =
 <p></p>
 
 <dl>
-<dt>unexpected_message</dt>
+<dt>unexpected_message:</dt>
 <dd style="margin-left: 8">An inappropriate message (e.g., the wrong handshake message, premature Application Data, etc.) was received. This alert should never be observed in communication between proper implementations.</dd>
-<dt>bad_record_mac</dt>
+<dt>bad_record_mac:</dt>
 <dd style="margin-left: 8">This alert is returned if a record is received which cannot be deprotected. Because AEAD algorithms combine decryption and verification, and also to avoid side-channel attacks, this alert is used for all deprotection failures.  This alert should never be observed in communication between proper implementations, except when messages were corrupted in the network.</dd>
-<dt>record_overflow</dt>
+<dt>record_overflow:</dt>
 <dd style="margin-left: 8">A TLSCiphertext record was received that had a length more than 2^14 + 256 bytes, or a record decrypted to a TLSPlaintext record with more than 2^14 bytes (or some other negotiated limit).  This alert should never be observed in communication between proper implementations, except when messages were corrupted in the network.</dd>
-<dt>handshake_failure</dt>
+<dt>handshake_failure:</dt>
 <dd style="margin-left: 8">Receipt of a "handshake_failure" alert message indicates that the sender was unable to negotiate an acceptable set of security parameters given the options available.</dd>
-<dt>bad_certificate</dt>
+<dt>bad_certificate:</dt>
 <dd style="margin-left: 8">A certificate was corrupt, contained signatures that did not verify correctly, etc.</dd>
-<dt>unsupported_certificate</dt>
+<dt>unsupported_certificate:</dt>
 <dd style="margin-left: 8">A certificate was of an unsupported type.</dd>
-<dt>certificate_revoked</dt>
+<dt>certificate_revoked:</dt>
 <dd style="margin-left: 8">A certificate was revoked by its signer.</dd>
-<dt>certificate_expired</dt>
+<dt>certificate_expired:</dt>
 <dd style="margin-left: 8">A certificate has expired or is not currently valid.</dd>
-<dt>certificate_unknown</dt>
+<dt>certificate_unknown:</dt>
 <dd style="margin-left: 8">Some other (unspecified) issue arose in processing the certificate, rendering it unacceptable.</dd>
-<dt>illegal_parameter</dt>
+<dt>illegal_parameter:</dt>
 <dd style="margin-left: 8">A field in the handshake was incorrect or inconsistent with other fields. This alert is used for errors which conform to the formal protocol syntax but are otherwise incorrect.</dd>
-<dt>unknown_ca</dt>
+<dt>unknown_ca:</dt>
 <dd style="margin-left: 8">A valid certificate chain or partial chain was received, but the certificate was not accepted because the CA certificate could not be located or could not be matched with a known trust anchor.</dd>
-<dt>access_denied</dt>
+<dt>access_denied:</dt>
 <dd style="margin-left: 8">A valid certificate or PSK was received, but when access control was applied, the sender decided not to proceed with negotiation.</dd>
-<dt>decode_error</dt>
+<dt>decode_error:</dt>
 <dd style="margin-left: 8">A message could not be decoded because some field was out of the specified range or the length of the message was incorrect.  This alert is used for errors where the message does not conform to the formal protocol syntax.  This alert should never be observed in communication between proper implementations, except when messages were corrupted in the network.</dd>
-<dt>decrypt_error</dt>
+<dt>decrypt_error:</dt>
 <dd style="margin-left: 8">A handshake (not record layer) cryptographic operation failed, including being unable to correctly verify a signature or validate a Finished message or a PSK binder.</dd>
-<dt>protocol_version</dt>
+<dt>protocol_version:</dt>
 <dd style="margin-left: 8">The protocol version the peer has attempted to negotiate is recognized but not supported (see <a href="#backward-compatibility" class="xref">Appendix D</a>).</dd>
-<dt>insufficient_security</dt>
+<dt>insufficient_security:</dt>
 <dd style="margin-left: 8">Returned instead of "handshake_failure" when a negotiation has failed specifically because the server requires parameters more secure than those supported by the client.</dd>
-<dt>internal_error</dt>
+<dt>internal_error:</dt>
 <dd style="margin-left: 8">An internal error unrelated to the peer or the correctness of the protocol (such as a memory allocation failure) makes it impossible to continue.</dd>
-<dt>inappropriate_fallback</dt>
+<dt>inappropriate_fallback:</dt>
 <dd style="margin-left: 8">Sent by a server in response to an invalid connection retry attempt from a client (see <a href="#RFC7507" class="xref">[RFC7507]</a>).</dd>
-<dt>missing_extension</dt>
+<dt>missing_extension:</dt>
 <dd style="margin-left: 8">Sent by endpoints that receive a handshake message not containing an extension that is mandatory to send for the offered TLS version or other negotiated parameters.</dd>
-<dt>unsupported_extension</dt>
+<dt>unsupported_extension:</dt>
 <dd style="margin-left: 8">Sent by endpoints receiving any handshake message containing an extension known to be prohibited for inclusion in the given handshake message, or including any extensions in a ServerHello or Certificate not first offered in the corresponding ClientHello.</dd>
-<dt>unrecognized_name</dt>
+<dt>unrecognized_name:</dt>
 <dd style="margin-left: 8">Sent by servers when no server exists identified by the name provided by the client via the "server_name" extension (see <a href="#RFC6066" class="xref">[RFC6066]</a>).</dd>
-<dt>bad_certificate_status_response</dt>
+<dt>bad_certificate_status_response:</dt>
 <dd style="margin-left: 8">Sent by clients when an invalid or unacceptable OCSP response is provided by the server via the "status_request" extension (see <a href="#RFC6066" class="xref">[RFC6066]</a>).</dd>
-<dt>unknown_psk_identity</dt>
+<dt>unknown_psk_identity:</dt>
 <dd style="margin-left: 8">Sent by servers when PSK key establishment is desired but no acceptable PSK identity is provided by the client. Sending this alert is OPTIONAL; servers MAY instead choose to send a "decrypt_error" alert to merely indicate an invalid PSK identity.</dd>
-<dt>certificate_required</dt>
+<dt>certificate_required:</dt>
 <dd style="margin-left: 8">Sent by servers when a client certificate is desired but none was provided by the client.</dd>
-<dt>no_application_protocol</dt>
+<dt>no_application_protocol:</dt>
 <dd style="margin-left: 8">Sent by servers when a client "application_layer_protocol_negotiation" extension advertises only protocols that the server does not support (see <a href="#RFC7301" class="xref">[RFC7301]</a>).</dd>
 </dl>
 <p id="rfc.section.6.2.p.5">New Alert values are assigned by IANA as described in <a href="#iana-considerations" class="xref">Section 11</a>.</p>
@@ -2851,7 +2852,7 @@ TLS-Exporter(label, context_value, key_length) =
 <h1 id="rfc.section.11">
 <a href="#rfc.section.11">11.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
 </h1>
-<p id="rfc.section.11.p.1">This document uses several registries that were originally created in <a href="#RFC4346" class="xref">[RFC4346]</a>. IANA has updated these to reference this document.  The registries and their allocation policies are below:</p>
+<p id="rfc.section.11.p.1">This document uses several registries that were originally created in <a href="#RFC4346" class="xref">[RFC4346]</a> and updated in <a href="#RFC8447" class="xref">[RFC8447]</a>.  IANA has updated these to reference this document.  The registries and their allocation policies are below:</p>
 <p></p>
 
 <ul>
@@ -2884,6 +2885,11 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="DH76">[DH76]</b></td>
 <td class="top">
 <a>Diffie, W.</a> and <a>M. Hellman</a>, "<a>New directions in cryptography</a>", IEEE Transactions on Information Theory, Vol. 22 No. 6, pp. 644-654, DOI 10.1109/TIT.1976.1055638, November 1976.</td>
+</tr>
+<tr>
+<td class="reference"><b id="ECDSA">[ECDSA]</b></td>
+<td class="top">
+<a>American National Standards Institute</a>, "<a>Public Key Cryptography for the Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)</a>", ANSI ANS X9.62-2005, November 2005.</td>
 </tr>
 <tr>
 <td class="reference"><b id="GCM">[GCM]</b></td>
@@ -3010,11 +3016,6 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="top">
 <a>ITU-T</a>, "<a>Information technology -- ASN.1 encoding rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)</a>", ISO/IEC 8825-1:2015, November 2015.</td>
 </tr>
-<tr>
-<td class="reference"><b id="X962">[X962]</b></td>
-<td class="top">
-<a>ANSI</a>, "<a>Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)</a>", ANSI X9.62, September 1998.</td>
-</tr>
 </tbody></table>
 <h1 id="rfc.references.2">
 <a href="#rfc.references.2">12.2.</a> Informative References</h1>
@@ -3108,11 +3109,6 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="DSS">[DSS]</b></td>
 <td class="top">
 <a>National Institute of Standards and Technology, U.S. Department of Commerce</a>, "<a>Digital Signature Standard (DSS)</a>", NIST FIPS PUB 186-4, DOI 10.6028/NIST.FIPS.186-4, July 2013.</td>
-</tr>
-<tr>
-<td class="reference"><b id="ECDSA">[ECDSA]</b></td>
-<td class="top">
-<a>American National Standards Institute</a>, "<a>Public Key Cryptography for the Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)</a>", ANSI ANS X9.62-2005, November 2005.</td>
 </tr>
 <tr>
 <td class="reference"><b id="FG17">[FG17]</b></td>
@@ -3315,6 +3311,11 @@ TLS-Exporter(label, context_value, key_length) =
 <a>Schinazi, D.</a> and <a>T. Pauly</a>, "<a href="https://tools.ietf.org/html/rfc8305">Happy Eyeballs Version 2: Better Connectivity Using Concurrency</a>", RFC 8305, DOI 10.17487/RFC8305, December 2017.</td>
 </tr>
 <tr>
+<td class="reference"><b id="RFC8447">[RFC8447]</b></td>
+<td class="top">
+<a>Salowey, J.</a> and <a>S. Turner</a>, "<a href="https://tools.ietf.org/html/rfc8447">IANA Registry Updates for TLS and DTLS</a>", RFC 8447, DOI 10.17487/RFC8447, August 2018.</td>
+</tr>
+<tr>
 <td class="reference"><b id="RSA">[RSA]</b></td>
 <td class="top">
 <a>Rivest, R.</a>, <a>Shamir, A.</a> and <a>L. Adleman</a>, "<a>A Method for Obtaining Digital Signatures and Public-Key Cryptosystems</a>", Communications of the ACM, Vol. 21 No. 2, pp. 120-126, DOI 10.1145/359340.359342, February 1978.</td>
@@ -3338,11 +3339,6 @@ TLS-Exporter(label, context_value, key_length) =
 <td class="reference"><b id="TIMING">[TIMING]</b></td>
 <td class="top">
 <a>Boneh, D.</a> and <a>D. Brumley</a>, "<a>Remote Timing Attacks Are Practical</a>", USENIX Security Symposium, August 2003.</td>
-</tr>
-<tr>
-<td class="reference"><b id="TLS-IANA-REG-UPD">[TLS-IANA-REG-UPD]</b></td>
-<td class="top">
-<a>Salowey, J.</a> and <a>S. Turner</a>, "<a>IANA Registry Updates for TLS and DTLS</a>", Work in Progress, draft-ietf-tls-iana-registry-updates-05, May 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="TLS-Record-Limit">[TLS-Record-Limit]</b></td>
@@ -4081,21 +4077,21 @@ here                  +--------+--------+
 <p></p>
 
 <dl>
-<dt>Establishing the same session keys.</dt>
+<dt>Establishing the same session keys:</dt>
 <dd style="margin-left: 8">The handshake needs to output the same set of session keys on both sides of the handshake, provided that it completes successfully on each endpoint (see <a href="#CK01" class="xref">[CK01]</a>, Definition 1, part 1).</dd>
-<dt>Secrecy of the session keys.</dt>
+<dt>Secrecy of the session keys:</dt>
 <dd style="margin-left: 8">The shared session keys should be known only to the communicating parties and not to the attacker (see <a href="#CK01" class="xref">[CK01]</a>, Definition 1, part 2). Note that in a unilaterally authenticated connection, the attacker can establish its own session keys with the server, but those session keys are distinct from those established by the client.</dd>
-<dt>Peer authentication.</dt>
+<dt>Peer authentication:</dt>
 <dd style="margin-left: 8">The client's view of the peer identity should reflect the server's identity. If the client is authenticated, the server's view of the peer identity should match the client's identity.</dd>
-<dt>Uniqueness of the session keys.</dt>
+<dt>Uniqueness of the session keys:</dt>
 <dd style="margin-left: 8">Any two distinct handshakes should produce distinct, unrelated session keys. Individual session keys produced by a handshake should also be distinct and independent.</dd>
-<dt>Downgrade protection.</dt>
+<dt>Downgrade protection:</dt>
 <dd style="margin-left: 8">The cryptographic parameters should be the same on both sides and should be the same as if the peers had been communicating in the absence of an attack (see <a href="#BBFGKZ16" class="xref">[BBFGKZ16]</a>, Definitions 8 and 9).</dd>
-<dt>Forward secret with respect to long-term keys.</dt>
+<dt>Forward secret with respect to long-term keys:</dt>
 <dd style="margin-left: 8">If the long-term keying material (in this case the signature keys in certificate-based authentication modes or the external/resumption PSK in PSK with (EC)DHE modes) is compromised after the handshake is complete, this does not compromise the security of the session key (see <a href="#DOW92" class="xref">[DOW92]</a>), as long as the session key itself has been erased. The forward secrecy property is not satisfied when PSK is used in the "psk_ke" PskKeyExchangeMode.</dd>
-<dt>Key Compromise Impersonation (KCI) resistance.</dt>
+<dt>Key Compromise Impersonation (KCI) resistance:</dt>
 <dd style="margin-left: 8">In a mutually authenticated connection with certificates, compromising the long&#8209;term secret of one actor should not break that actor's authentication of their peer in the given connection (see <a href="#HGFS15" class="xref">[HGFS15]</a>). For example, if a client's signature key is compromised, it should not be possible to impersonate arbitrary servers to that client in subsequent handshakes.</dd>
-<dt>Protection of endpoint identities.</dt>
+<dt>Protection of endpoint identities:</dt>
 <dd style="margin-left: 8">The server's identity (certificate) should be protected against passive attackers. The client's identity should be protected against both passive and active attackers.</dd>
 </dl>
 <p id="rfc.section.E.1.p.5">Informally, the signature-based modes of TLS 1.3 provide for the establishment of a unique, secret, shared key established by an (EC)DHE key exchange and authenticated by the server's signature over the handshake transcript, as well as tied to the server's identity by a MAC. If the client is authenticated by a certificate, it also signs over the handshake transcript and provides a MAC tied to both identities. <a href="#SIGMA" class="xref">[SIGMA]</a> describes the design and analysis of this type of key exchange protocol. If fresh (EC)DHE keys are used for each connection, then the output keys are forward secret.</p>
@@ -4137,15 +4133,15 @@ here                  +--------+--------+
 <p></p>
 
 <dl>
-<dt>Confidentiality.</dt>
+<dt>Confidentiality:</dt>
 <dd style="margin-left: 8">An attacker should not be able to determine the plaintext contents of a given record.  </dd>
-<dt>Integrity.</dt>
+<dt>Integrity:</dt>
 <dd style="margin-left: 8">An attacker should not be able to craft a new record which is different from an existing record which will be accepted by the receiver.  </dd>
-<dt>Order protection/non-replayability.</dt>
+<dt>Order protection/non-replayability:</dt>
 <dd style="margin-left: 8">An attacker should not be able to cause the receiver to accept a record which it has already accepted or cause the receiver to accept record N+1 without having first processed record N.</dd>
-<dt>Length concealment.</dt>
+<dt>Length concealment:</dt>
 <dd style="margin-left: 8">Given a record with a given external length, the attacker should not be able to determine the amount of the record that is content versus padding.</dd>
-<dt>Forward secrecy after key change.</dt>
+<dt>Forward secrecy after key change:</dt>
 <dd style="margin-left: 8">If the traffic key update mechanism described in <a href="#key-update" class="xref">Section 4.6.3</a> has been used and the previous generation key is deleted, an attacker who compromises the endpoint should not be able to decrypt traffic encrypted with the old key.</dd>
 </dl>
 <p id="rfc.section.E.2.p.3">Informally, TLS 1.3 provides these properties by AEAD-protecting the plaintext with a strong key. AEAD encryption <a href="#RFC5116" class="xref">[RFC5116]</a> provides confidentiality and integrity for the data. Non-replayability is provided by using a separate nonce for each record, with the nonce being derived from the record sequence number (<a href="#nonce" class="xref">Section 5.3</a>), with the sequence number being maintained independently at both sides; thus, records which are delivered out of order result in AEAD deprotection failures.  In order to prevent mass cryptanalysis when the same plaintext is repeatedly encrypted by different users under the same key (as is commonly the case for HTTP), the nonce is formed by mixing the sequence number with a secret per-connection initialization vector derived along with the traffic keys.  See <a href="#BT16" class="xref">[BT16]</a> for analysis of this construction.</p>
