@@ -2770,6 +2770,9 @@ information).</t>
 above-mentioned criteria (in addition to other criteria, such as
 transport-layer endpoint, local configuration, and preferences).</t>
 
+<t>Note that there are certificates that use algorithm combinations that
+cannot currently be used with TLS.</t>
+
 </section>
 <section anchor="client-certificate-selection" title="Client Certificate Selection">
 
@@ -2804,10 +2807,10 @@ the handshake with a "decode_error" alert.</t>
 
 <t>If the client does not send any certificates (i.e., it sends an empty
 Certificate message),
-the server MAY at its discretion either continue the handshake without client
+the server may at its discretion either continue the handshake without client
 authentication or abort the handshake with a "certificate_required"
 alert. Also, if some aspect of the certificate chain was unacceptable (e.g.,
-it was not signed by a known, trusted CA), the server MAY at its discretion
+it was not signed by a known, trusted CA), the server may at its discretion
 either continue the handshake (considering the client unauthenticated) or
 abort the handshake.</t>
 
@@ -2817,7 +2820,7 @@ handshake with a "bad_certificate" alert.  SHA-1 is deprecated, and it
 is RECOMMENDED that any endpoint receiving any certificate which it
 would need to validate using any signature algorithm using a SHA-1
 hash abort the handshake with a "bad_certificate" alert. For clarity,
-this means that endpoints MAY accept these algorithms for
+this means that endpoints can accept these algorithms for
 certificates that are self-signed or are trust anchors.</t>
 
 <t>All endpoints are RECOMMENDED to transition to SHA-256 or better as soon
@@ -2993,9 +2996,10 @@ As noted above, the HMAC input can generally be implemented by a running
 hash, i.e., just the handshake hash at this point.</t>
 
 <t>In previous versions of TLS, the verify_data was always 12 octets long. In
-TLS 1.3, it is the size of the HMAC output for the Hash used for the handshake.</t>
+TLS 1.3, it is the size of the HMAC output for the Hash used for the handshake.
+Implementations receiving a verify_data with length shorter than 12 octets MUST abort the handshake with an "insufficient_security" alert.</t>
 
-<t>Note: Alerts and any other record types are not handshake messages
+<t>Note: Alerts and any other non-handshake record types are not handshake messages
 and are not included in the hash computations.</t>
 
 <t>Any records following a Finished message MUST be encrypted under the
@@ -3011,9 +3015,9 @@ server in response to client Certificate and CertificateVerify messages.</t>
    struct {} EndOfEarlyData;
 ]]></artwork></figure>
 
-<t>If the server sent an "early_data" extension, the client MUST send an
+<t>If the server sent an "early_data" extension in EncryptedExtensions, the client MUST send an
 EndOfEarlyData message after receiving the server Finished.  If the server does
-not send an "early_data" extension, then the client MUST&nbsp;NOT send an
+not send an "early_data" extension in EncryptedExtensions, then the client MUST&nbsp;NOT send an
 EndOfEarlyData message. This message indicates that all
 0-RTT application_data messages, if any, have been transmitted and
 that the following records are protected under handshake traffic keys.
@@ -3115,8 +3119,7 @@ The server MUST generate a fresh value for each ticket it sends.</t>
   <t hangText='ticket:'>
   The value of the ticket to be used as the PSK identity.
 The ticket itself is an opaque label. It MAY be either a database lookup key
-or a self-encrypted and self-authenticated value.
-Section&nbsp;4 of <xref target="RFC5077"/> describes a recommended ticket construction mechanism.</t>
+or a self-encrypted and self-authenticated value.</t>
   <t hangText='extensions:'>
   A set of extension values for the ticket. The "Extension"
 format is defined in <xref target="extensions"/>. Clients MUST ignore
@@ -3249,7 +3252,7 @@ then delivered to higher-level clients.</t>
 
 <t>TLS records are typed, which allows multiple higher-level protocols to
 be multiplexed over the same record layer. This document specifies
-four content types: handshake, Application Data, alert, and
+four content types: handshake, application_data, alert, and
 change_cipher_spec.
 The change_cipher_spec record is used only for compatibility purposes
 (see <xref target="middlebox"/>).</t>
@@ -3281,7 +3284,7 @@ are assigned by IANA in the TLS ContentType Registry as described in
 
 <t>The record layer fragments information blocks into TLSPlaintext
 records carrying data in chunks of 2^14 bytes or less. Message
-boundaries are handled differently, depending on the underlying
+boundaries are handled differently depending on the underlying
 ContentType. Any future content types MUST specify appropriate
 rules.
 Note that these rules are stricter than what was enforced in TLS 1.2.</t>
@@ -3623,7 +3626,7 @@ the PSKs associated with session tickets, which SHOULD be discarded if
 possible.</t>
 
 <t>All the alerts listed in <xref target="error-alerts"/> MUST be sent with
-AlertLevel=fatal and MUST be treated as error alerts
+AlertLevel=fatal and MUST be treated as error alerts when received
 regardless of the AlertLevel in the
 message. Unknown Alert types MUST be treated as error alerts.</t>
 
@@ -3825,7 +3828,7 @@ or other negotiated parameters.</t>
   Sent by endpoints receiving any handshake message containing
 an extension known to be prohibited for inclusion in the given handshake
 message, or including any extensions in a ServerHello or Certificate not first
-offered in the corresponding ClientHello.</t>
+offered in the corresponding ClientHello or CertificateRequest.</t>
   <t hangText='unrecognized_name:'>
   Sent by servers when no server exists identified by the name
 provided by the client via the "server_name" extension
@@ -3948,7 +3951,7 @@ generating the client_early_traffic_secret.</t>
        Derive-Secret(., "derived", "")
              |
              v
-(EC)DHE -> HKDF-Extract = Handshake Secret
+   (EC)DHE -> HKDF-Extract = Handshake Secret
              |
              +-----> Derive-Secret(., "c hs traffic",
              |                     ClientHello...ServerHello)
@@ -3961,7 +3964,7 @@ generating the client_early_traffic_secret.</t>
        Derive-Secret(., "derived", "")
              |
              v
-  0 -> HKDF-Extract = Master Secret
+   0 -> HKDF-Extract = Master Secret
              |
              +-----> Derive-Secret(., "c ap traffic",
              |                     ClientHello...server Finished)
@@ -4073,11 +4076,11 @@ Application Data keys or upon a key update).</t>
 
 <t>For finite field groups, a conventional Diffie-Hellman
 <xref target="DH76"/> computation is performed.
-The negotiated key (Z) is converted to a byte string by encoding in big-endian and
+The negotiated key (Z) is converted to a byte string by encoding in big-endian form and
 left-padded with zeros up to the size of the prime. This byte string is used as the
 shared secret in the key schedule as specified above.</t>
 
-<t>Note that this construction differs from previous versions of TLS which remove
+<t>Note that this construction differs from previous versions of TLS which removed
 leading zeros.</t>
 
 </section>
@@ -4302,7 +4305,7 @@ replays which were originally sent during that period.</t>
 then a ClientHello may be received that is outside the window in the
 future, in which case it might be accepted for 1-RTT, causing a client retry,
 and then acceptable later for 0-RTT. This is another variant of
-the second form of attack described above.</t>
+the second form of attack described in <xref target="anti-replay"></xref>.</t>
 
 </section>
 <section anchor="freshness-checks" title="Freshness Checks">
@@ -4313,7 +4316,7 @@ likely sent reasonably recently and only accept 0-RTT for such a
 ClientHello, otherwise falling back to a 1-RTT handshake.
 This is necessary for the ClientHello storage mechanism
 described in <xref target="client-hello-recording"/> because otherwise the
-server needs to store an unlimited number of ClientHellos and is a useful
+server needs to store an unlimited number of ClientHellos, and is a useful
 optimization for self-contained single-use tickets because it allows efficient
 rejection of ClientHellos which cannot be used for 0-RTT.</t>
 
@@ -4372,11 +4375,13 @@ streamed to the server over a longer time period.</t>
 
 <section anchor="mandatory-to-implement-cipher-suites" title="Mandatory-to-Implement Cipher Suites">
 
-<t>In the absence of an application profile standard specifying otherwise, a
+<t>In the absence of an application profile standard specifying otherwise:</t>
+
+<t>A
 TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 <xref
 target="GCM"></xref> cipher suite and SHOULD implement the
 TLS_AES_256_GCM_SHA384 <xref target="GCM"></xref> and
-TLS_CHACHA20_POLY1305_SHA256 <xref target="RFC7539"></xref> cipher suites (see
+TLS_CHACHA20_POLY1305_SHA256 <xref target="RFC8439"></xref> cipher suites (see
 <xref target="cipher-suites"/>).</t>
 
 <t>A TLS-compliant application MUST support digital signatures with
@@ -4579,18 +4584,17 @@ The registry has been initially populated with the values described in
 rsa_pss_rsae_sha256, rsa_pss_rsae_sha384, rsa_pss_rsae_sha512,
 rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, and ed25519.
 The "Recommended" column is assigned a value of "N" unless explicitly
-requested, and only IETF Standards Track RFCs can request a value of "Y".
-</t>
+requested, and adding a value with a "Recommended" value of "Y" requires Standards Action <xref target="RFC8126"/>.</t>
 
   <t>TLS PskKeyExchangeMode registry: Values in the
 range 0-253 (decimal) are assigned via Specification Required
-<xref target="RFC8126"></xref>.  Values with the first byte 254 or 255
+<xref target="RFC8126"></xref>.  The values 254 and 255
 (decimal) are reserved for Private Use <xref target="RFC8126"></xref>.  This
 registry has a "Recommended" column.  The registry has been initially
 populated with psk_ke (0) and psk_dhe_ke (1).  Both are marked as
 "Recommended".
 The "Recommended" column is assigned a value of "N" unless explicitly
-requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
+requested, and adding a value with a "Recommended" value of "Y" requires Standards Action <xref target="RFC8126"/>.</t>
 </list></t>
 
 </section>
@@ -4682,15 +4686,15 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
 <seriesInfo name='DOI' value='10.17487/RFC6655'/>
 </reference>
 
-<reference  anchor='RFC7539' target='https://www.rfc-editor.org/info/rfc7539'>
+<reference  anchor='RFC8439' target='https://www.rfc-editor.org/info/rfc8439'>
 <front>
 <title>ChaCha20 and Poly1305 for IETF Protocols</title>
 <author initials='Y.' surname='Nir' fullname='Y. Nir'><organization /></author>
 <author initials='A.' surname='Langley' fullname='A. Langley'><organization /></author>
 <date year='2015' month='May' />
 </front>
-<seriesInfo name='RFC' value='7539'/>
-<seriesInfo name='DOI' value='10.17487/RFC7539'/>
+<seriesInfo name='RFC' value='8439'/>
+<seriesInfo name='DOI' value='10.17487/RFC8439'/>
 </reference>
 
 <reference  anchor='RFC7748' target='https://www.rfc-editor.org/info/rfc7748'>
@@ -6247,14 +6251,14 @@ from older TLS implementations.</t>
        server_certificate_type(20),                /* RFC 7250 */
        padding(21),                                /* RFC 7685 */
        RESERVED(40),                               /* Used but never
-                                                         assigned */
+                                                      assigned */
        pre_shared_key(41),                         /* RFC 8446 */
        early_data(42),                             /* RFC 8446 */
        supported_versions(43),                     /* RFC 8446 */
        cookie(44),                                 /* RFC 8446 */
        psk_key_exchange_modes(45),                 /* RFC 8446 */
        RESERVED(46),                               /* Used but never
-                                                         assigned */
+                                                      assigned */
        certificate_authorities(47),                /* RFC 8446 */
        oid_filters(48),                            /* RFC 8446 */
        post_handshake_auth(49),                    /* RFC 8446 */
@@ -6407,7 +6411,9 @@ from older TLS implementations.</t>
        /* Elliptic Curve Groups (ECDHE) */
        obsolete_RESERVED(0x0001..0x0016),
        secp256r1(0x0017), secp384r1(0x0018), secp521r1(0x0019),
-       obsolete_RESERVED(0x001A..0x001C),
+       brainpoolP256r1_RESERVED(0x001A),
+       brainpoolP384r1_RESERVED(0x001B),
+       brainpoolP521r1_RESERVED(0x001C),
        x25519(0x001D), x448(0x001E),
 
        /* Finite Field Groups (DHE) */
@@ -6427,7 +6433,9 @@ from older TLS implementations.</t>
 ]]></artwork></figure>
 
 <t>Values within "obsolete_RESERVED" ranges are used in previous versions
-of TLS and MUST NOT be offered or negotiated by TLS 1.3 implementations.
+of TLS and MUST NOT be offered by TLS 1.3 implementations.
+Values marked "_RESERVED" are not defined for use in TLS 1.3 and MUST NOT
+be negotiated by TLS 1.3 implementations.
 The obsolete curves have various known/theoretical weaknesses or have
 had very little usage, in some cases only due to unintentional
 server configuration issues. They are no longer considered appropriate
@@ -6578,7 +6586,7 @@ Cipher suite names follow the naming convention:</t>
 <t>The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM, and
 AEAD_AES_128_CCM are defined in
 <xref target="RFC5116"/>. AEAD_CHACHA20_POLY1305 is defined in
-<xref target="RFC7539"/>. AEAD_AES_128_CCM_8 is defined in
+<xref target="RFC8439"/>. AEAD_AES_128_CCM_8 is defined in
 <xref target="RFC6655"/>. The corresponding hash algorithms are defined in
 <xref target="SHS"/>.</t>
 
@@ -6602,7 +6610,7 @@ provides several recommendations to assist implementors.
 
 <t>TLS requires a cryptographically secure pseudorandom number generator (CSPRNG).
 In most cases, the operating system provides an appropriate facility such
-as /dev/urandom, which should be used absent other (performance) concerns.
+as /dev/urandom, which should be used absent other (e.g., performance) concerns.
 It is RECOMMENDED to use an existing CSPRNG implementation in
 preference to crafting a new one. Many adequate cryptographic libraries
 are already available under favorable license terms.  Should those prove
@@ -7599,7 +7607,7 @@ Facebook
 subodh@fb.com
 
 Benjamin Kaduk
-Akamai
+Akamai Technologies
 kaduk@mit.edu
 
 Hubert Kario
