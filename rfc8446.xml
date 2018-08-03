@@ -5959,7 +5959,7 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
   </author>
   <date year="1998"/>
   </front>
-  <seriesInfo name="Proceedings of" value="CRYPTO 1998"/>
+  <seriesInfo name="Proceedings of" value="CRYPTO '98"/>
 </reference>
 </references>
 
