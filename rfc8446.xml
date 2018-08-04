@@ -61,7 +61,7 @@ authenticated. Authentication can happen via asymmetric cryptography
 (e.g., RSA <xref target="RSA"/>, the Elliptic Curve Digital Signature
 Algorithm (ECDSA) <xref target="ECDSA"/>, or the Edwards-Curve Digital
 Signature Algorithm (EdDSA) <xref target="RFC8032"/>)
-or a (symmetric) pre-shared key (PSK).</t>
+or a symmetric pre-shared key (PSK).</t>
   <t>Confidentiality: Data sent over the channel after establishment
 is only visible to the
 endpoints. TLS does not hide the length of the data it transmits,
@@ -1228,8 +1228,9 @@ However, for convenience we discuss "HelloRetryRequest" throughout this
 document as if it were a distinct message.</t>
 
 <t>The server's extensions MUST contain "supported_versions".
-The server SHOULD send only the extensions necessary for the
-client to generate a correct ClientHello pair. As with the ServerHello, a
+Additionally, it SHOULD contain the minimal set of extensions
+necessary for the client to generate a correct ClientHello pair. As
+with the ServerHello, a
 HelloRetryRequest MUST NOT contain any extensions that were not first
 offered by the client in its ClientHello, with the exception of
 optionally the "cookie" (see <xref target="cookie"/>) extension.</t>
@@ -1862,7 +1863,7 @@ completed handshake to change what groups they use in their
 "key_share" extension in subsequent connections.
 If the server has a group it prefers to the
 ones in the "key_share" extension but is still willing to accept the
-ClientHello without sending a HelloRetryRequest, it SHOULD send "supported_groups" to update the
+ClientHello, it SHOULD send "supported_groups" to update the
 client's view of its preferences; this extension SHOULD contain all groups
 the server supports, regardless of whether they are currently
 supported by the client.</t>
@@ -2263,7 +2264,7 @@ extension (see <xref target="early-data-indication"/>), the first identity is th
 one used for 0-RTT data.</t>
   <t hangText='binders:'>
   A series of HMAC values, one for
-each PSK identity in identities and in the same
+each value in the identities list and in the same
 order, computed as described below.</t>
   <t hangText='selected_identity:'>
   The server's chosen identity expressed as a (0-based) index into
@@ -2524,7 +2525,7 @@ included in the transcript hash.</t>
   <t hangText='Certificate:'>
   The certificate to be used for authentication, and any
 supporting certificates in the chain. Note that certificate-based
-client authentication is not available in PSK (including 0-RTT) handshake flows.</t>
+client authentication is not available in PSK handshake flows (including 0-RTT).</t>
   <t hangText='CertificateVerify:'>
   A signature over the value Transcript&nbhy;Hash(Handshake Context,
 Certificate).</t>
@@ -2770,9 +2771,6 @@ information).</t>
 above-mentioned criteria (in addition to other criteria, such as
 transport-layer endpoint, local configuration, and preferences).</t>
 
-<t>Note that there are certificates that use algorithm combinations that
-cannot currently be used with TLS.</t>
-
 </section>
 <section anchor="client-certificate-selection" title="Client Certificate Selection">
 
@@ -2792,9 +2790,6 @@ prior versions of TLS.</t>
 extension, the end-entity certificate MUST match the extension OIDs
 that are recognized by the client, as described in <xref target="oid-filters"/>.</t>
 </list></t>
-
-<t>Note that, as with the server certificate, there are certificates that use
-algorithm combinations that cannot be currently used with&nbsp;TLS.</t>
 
 </section>
 <section anchor="receiving-a-certificate-message" title="Receiving a Certificate Message">
