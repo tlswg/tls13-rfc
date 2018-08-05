@@ -4684,7 +4684,7 @@ requested, and adding a value with a "Recommended" value of "Y" requires Standar
 <title>ChaCha20 and Poly1305 for IETF Protocols</title>
 <author initials='Y.' surname='Nir' fullname='Y. Nir'><organization /></author>
 <author initials='A.' surname='Langley' fullname='A. Langley'><organization /></author>
-<date year='2015' month='May' />
+<date year='2018' month='June' />
 </front>
 <seriesInfo name='RFC' value='8439'/>
 <seriesInfo name='DOI' value='10.17487/RFC8439'/>
