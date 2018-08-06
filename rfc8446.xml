@@ -13,7 +13,7 @@
 <?rfc text-list-symbols="-o*+"?>
 
 <rfc ipr="pre5378Trust200902" number="8446" category="std"
- obsoletes="5077, 5246, 6961" updates="4492, 5705, 6066"
+ obsoletes="5077, 5246, 6961" updates="5705, 6066"
  submissionType="IETF" consensus="yes">
 
   <front>
@@ -35,7 +35,7 @@
 over the Internet in a way that is designed to prevent eavesdropping,
 tampering, and message forgery.</t>
 
-<t>This document updates RFCs 4492, 5705, and 6066, and obsoletes
+<t>This document updates RFCs 5705, and 6066, and obsoletes
 RFCs 5077, 5246, and 6961. This document also specifies new
 requirements for TLS 1.2 implementations.</t>
 
@@ -59,16 +59,16 @@ secure channel should provide the following properties:</t>
 authenticated; the client side is optionally
 authenticated. Authentication can happen via asymmetric cryptography
 (e.g., RSA <xref target="RSA"/>, the Elliptic Curve Digital Signature
-Algorithm (ECDSA) <xref target="ECDSA"/>, the Edwards-Curve Digital
+Algorithm (ECDSA) <xref target="ECDSA"/>, or the Edwards-Curve Digital
 Signature Algorithm (EdDSA) <xref target="RFC8032"/>)
-or a pre-shared key (PSK).</t>
+or a symmetric pre-shared key (PSK).</t>
   <t>Confidentiality: Data sent over the channel after establishment
 is only visible to the
 endpoints. TLS does not hide the length of the data it transmits,
 though endpoints are able to pad TLS records in order to obscure lengths
 and improve protection against traffic analysis techniques.</t>
   <t>Integrity: Data sent over the channel after establishment cannot be
-modified by attackers.</t>
+modified by attackers without detection.</t>
 </list></t>
 
 <t>These properties should be true even in the face of an attacker who has complete
@@ -107,9 +107,8 @@ negotiate a common version if one is supported by both peers.</t>
 <t>This document supersedes and obsoletes previous versions of TLS,
 including version 1.2 <xref target="RFC5246"/>.  It also obsoletes the TLS
 ticket mechanism defined in <xref target="RFC5077"/> and replaces it with the
-mechanism defined in <xref target="resumption-and-psk"/>. <xref
-target="negotiated-groups"/> updates <xref target="RFC4492"/> by modifying the
-protocol attributes used to negotiate elliptic curves.  Because TLS 1.3
+mechanism defined in <xref target="resumption-and-psk"/>.
+Because TLS 1.3
 changes the way keys are derived, it updates <xref target="RFC5705"/> as
 described in <xref target="exporters"/>. It also changes how Online
 Certificate Status Protocol (OCSP) messages are carried and therefore updates
@@ -154,8 +153,8 @@ TLS 1.2 and TLS 1.3. It is not intended to be exhaustive, and there
 are many minor differences.</t>
 
 <t><list style="symbols">
-  <t>The list of supported symmetric algorithms has been pruned of all algorithms that
-are considered legacy. Those that remain all use Authenticated Encryption
+  <t>The list of supported symmetric encryption algorithms has been pruned of all algorithms that
+are considered legacy. Those that remain are all Authenticated Encryption
 with Associated Data (AEAD) algorithms. The cipher suite concept has been
 changed to separate the authentication and key exchange mechanisms from
 the record protection algorithm (including secret key length) and a hash
@@ -1152,7 +1151,7 @@ extensions which are required to establish the cryptographic context and
 negotiate the protocol version. All TLS&nbsp;1.3 ServerHello messages MUST
 contain the "supported_versions" extension.  Current ServerHello messages
 additionally contain either the "pre_shared_key" extension or the "key_share"
-extension, or both, when using a PSK with (EC)DHE key establishment. Other
+extension, or both (when using a PSK with (EC)DHE key establishment). Other
 extensions  (see  <xref target="extensions"/>)
 are sent separately in the EncryptedExtensions message.</t>
 </list></t>
@@ -1227,9 +1226,10 @@ legacy_compression_method fields have the same meaning.
 However, for convenience we discuss "HelloRetryRequest" throughout this
 document as if it were a distinct message.</t>
 
-<t>The server's extensions MUST contain "supported_versions",
-otherwise, the server SHOULD send only the extensions necessary for the
-client to generate a correct ClientHello pair. As with the ServerHello, a
+<t>The server's extensions MUST contain "supported_versions".
+Additionally, it SHOULD contain the minimal set of extensions
+necessary for the client to generate a correct ClientHello pair. As
+with the ServerHello, a
 HelloRetryRequest MUST NOT contain any extensions that were not first
 offered by the client in its ClientHello, with the exception of
 optionally the "cookie" (see <xref target="cookie"/>) extension.</t>
@@ -1291,7 +1291,7 @@ handshake with an "illegal_parameter" alert if the value changes.</t>
        server_name(0),                             /* RFC 6066 */
        max_fragment_length(1),                     /* RFC 6066 */
        status_request(5),                          /* RFC 6066 */
-       supported_groups(10),                       /* RFC 4492, 7919 */
+       supported_groups(10),                       /* RFC 8422, 7919 */
        signature_algorithms(13),                   /* RFC 8446 */
        use_srtp(14),                               /* RFC 5764 */
        heartbeat(15),                              /* RFC 6520 */
@@ -1401,7 +1401,8 @@ appears, it MUST abort the handshake with an "illegal_parameter" alert.</t>
 <t>When multiple extensions of different types are present, the
 extensions MAY appear in any order, with the exception of
 "pre_shared_key" (<xref target="pre-shared-key-extension"/>) which MUST be
-the last extension in the ClientHello.
+the last extension in the ClientHello (but can appear anywhere
+in the ServerHello extensions block).
 There MUST NOT be more than one extension of the same type in a given
 extension block.</t>
 
@@ -1510,7 +1511,7 @@ transports (see <xref target="RFC6347"/> for an example of this).</t>
   <t>Allowing the server to offload state to the client, thus allowing it to send
 a HelloRetryRequest without storing any state. The server can do this by
 storing the hash of the ClientHello in the HelloRetryRequest cookie
-(protected with some suitable integrity algorithm).</t>
+(protected with some suitable integrity protection algorithm).</t>
 </list></t>
 
 <t>When sending a HelloRetryRequest, the server MAY provide a "cookie" extension to the
@@ -1808,7 +1809,7 @@ the named groups which the client supports for key exchange, ordered
 from most preferred to least preferred.</t>
 
 <t>Note: In versions of TLS prior to TLS 1.3, this extension was named
-"elliptic_curves" and only contained elliptic curve groups. See <xref target="RFC4492"/> and
+"elliptic_curves" and only contained elliptic curve groups. See <xref target="RFC8422"/> and
 <xref target="RFC7919"/>. This extension was also used to negotiate
 ECDSA curves. Signature algorithms are now negotiated independently (see
 <xref target="signature-algorithms"/>).</t>
@@ -1845,12 +1846,12 @@ either FIPS 186-4 <xref target="DSS"/> or <xref target="RFC7748"/>.
 Values 0xFE00 through 0xFEFF are reserved for Private&nbsp;Use
 <xref target="RFC8126"/>.</t>
   <t hangText='Finite Field Groups (DHE):'>
-  Indicates support of the corresponding finite field
+  Indicates support for the corresponding finite field
 group, defined in <xref target="RFC7919"/>.
 Values 0x01FC through 0x01FF are reserved for Private Use.</t>
 </list></t>
 
-<t>Items in named_group_list are ordered according to the client's
+<t>Items in named_group_list are ordered according to the sender's
 preferences (most preferred choice first).</t>
 
 <t>As of TLS 1.3, servers are permitted to send the "supported_groups"
@@ -1974,7 +1975,7 @@ KeyShareEntry in the ServerHello. This value MUST be in the same group
 as the KeyShareEntry value offered
 by the client that the server has selected for the negotiated key exchange.
 Servers MUST&nbsp;NOT send a KeyShareEntry for any group not
-indicated in the "supported_groups" extension and
+indicated in the client's "supported_groups" extension and
 MUST NOT send a KeyShareEntry when using the "psk_ke" PskKeyExchangeMode.
 If using (EC)DHE key establishment and a HelloRetryRequest containing a
 "key_share" extension was received by the client, the client MUST verify that the
@@ -2262,7 +2263,7 @@ extension (see <xref target="early-data-indication"/>), the first identity is th
 one used for 0-RTT data.</t>
   <t hangText='binders:'>
   A series of HMAC values, one for
-each PSK offered in the "pre_shared_keys" extension and in the same
+each value in the identities list and in the same
 order, computed as described below.</t>
   <t hangText='selected_identity:'>
   The server's chosen identity expressed as a (0-based) index into
@@ -2292,7 +2293,7 @@ the requirements of <xref target="NSTMessage"/>.</t>
 the most straightforward way to implement the
 PSK/cipher suite matching requirements is to negotiate the cipher
 suite first and then exclude any incompatible PSKs. Any unknown PSKs
-(e.g., they are not in the PSK database or are encrypted with an
+(e.g., ones not in the PSK database or encrypted with an
 unknown key) SHOULD simply be ignored. If no acceptable PSKs are
 found, the server SHOULD perform a non-PSK handshake if possible.
 If backward compatibility is important, client-provided, externally
@@ -2523,7 +2524,7 @@ included in the transcript hash.</t>
   <t hangText='Certificate:'>
   The certificate to be used for authentication, and any
 supporting certificates in the chain. Note that certificate-based
-client authentication is not available in PSK (including 0-RTT) flows.</t>
+client authentication is not available in PSK handshake flows (including 0-RTT).</t>
   <t hangText='CertificateVerify:'>
   A signature over the value Transcript&nbhy;Hash(Handshake Context,
 Certificate).</t>
@@ -2614,7 +2615,6 @@ be sent regardless of whether the Certificate message is empty.</t>
 <t>Structure of this message:</t>
 
 <figure><artwork><![CDATA[
-   /* Managed by IANA */
    enum {
        X509(0),
        RawPublicKey(2),
@@ -2655,7 +2655,7 @@ target="RFC6066"/> and SignedCertificateTimestamp extension <xref target="RFC696
 future extensions may be defined for this message as well. Extensions in the
 Certificate message from the server MUST correspond to ones from the
 ClientHello message. Extensions in the Certificate message from the client
-MUST correspond with extensions in the CertificateRequest message from the
+MUST correspond to extensions in the CertificateRequest message from the
 server. If an extension applies to the entire chain, it SHOULD be included
 in the first CertificateEntry.</t>
 </list></t>
@@ -2790,9 +2790,6 @@ extension, the end-entity certificate MUST match the extension OIDs
 that are recognized by the client, as described in <xref target="oid-filters"/>.</t>
 </list></t>
 
-<t>Note that, as with the server certificate, there are certificates that use
-algorithm combinations that cannot be currently used with&nbsp;TLS.</t>
-
 </section>
 <section anchor="receiving-a-certificate-message" title="Receiving a Certificate Message">
 
@@ -2817,7 +2814,7 @@ handshake with a "bad_certificate" alert.  SHA-1 is deprecated, and it
 is RECOMMENDED that any endpoint receiving any certificate which it
 would need to validate using any signature algorithm using a SHA-1
 hash abort the handshake with a "bad_certificate" alert. For clarity,
-this means that endpoints MAY accept these algorithms for
+this means that endpoints can accept these algorithms for
 certificates that are self-signed or are trust anchors.</t>
 
 <t>All endpoints are RECOMMENDED to transition to SHA-256 or better as soon
@@ -2995,7 +2992,7 @@ hash, i.e., just the handshake hash at this point.</t>
 <t>In previous versions of TLS, the verify_data was always 12 octets long. In
 TLS 1.3, it is the size of the HMAC output for the Hash used for the handshake.</t>
 
-<t>Note: Alerts and any other record types are not handshake messages
+<t>Note: Alerts and any other non-handshake record types are not handshake messages
 and are not included in the hash computations.</t>
 
 <t>Any records following a Finished message MUST be encrypted under the
@@ -3011,9 +3008,9 @@ server in response to client Certificate and CertificateVerify messages.</t>
    struct {} EndOfEarlyData;
 ]]></artwork></figure>
 
-<t>If the server sent an "early_data" extension, the client MUST send an
+<t>If the server sent an "early_data" extension in EncryptedExtensions, the client MUST send an
 EndOfEarlyData message after receiving the server Finished.  If the server does
-not send an "early_data" extension, then the client MUST&nbsp;NOT send an
+not send an "early_data" extension in EncryptedExtensions, then the client MUST&nbsp;NOT send an
 EndOfEarlyData message. This message indicates that all
 0-RTT application_data messages, if any, have been transmitted and
 that the following records are protected under handshake traffic keys.
@@ -3115,8 +3112,7 @@ The server MUST generate a fresh value for each ticket it sends.</t>
   <t hangText='ticket:'>
   The value of the ticket to be used as the PSK identity.
 The ticket itself is an opaque label. It MAY be either a database lookup key
-or a self-encrypted and self-authenticated value.
-Section&nbsp;4 of <xref target="RFC5077"/> describes a recommended ticket construction mechanism.</t>
+or a self-encrypted and self-authenticated value.</t>
   <t hangText='extensions:'>
   A set of extension values for the ticket. The "Extension"
 format is defined in <xref target="extensions"/>. Clients MUST ignore
@@ -3249,7 +3245,7 @@ then delivered to higher-level clients.</t>
 
 <t>TLS records are typed, which allows multiple higher-level protocols to
 be multiplexed over the same record layer. This document specifies
-four content types: handshake, Application Data, alert, and
+four content types: handshake, application_data, alert, and
 change_cipher_spec.
 The change_cipher_spec record is used only for compatibility purposes
 (see <xref target="middlebox"/>).</t>
@@ -3281,7 +3277,7 @@ are assigned by IANA in the TLS ContentType Registry as described in
 
 <t>The record layer fragments information blocks into TLSPlaintext
 records carrying data in chunks of 2^14 bytes or less. Message
-boundaries are handled differently, depending on the underlying
+boundaries are handled differently depending on the underlying
 ContentType. Any future content types MUST specify appropriate
 rules.
 Note that these rules are stricter than what was enforced in TLS 1.2.</t>
@@ -3623,7 +3619,7 @@ the PSKs associated with session tickets, which SHOULD be discarded if
 possible.</t>
 
 <t>All the alerts listed in <xref target="error-alerts"/> MUST be sent with
-AlertLevel=fatal and MUST be treated as error alerts
+AlertLevel=fatal and MUST be treated as error alerts when received
 regardless of the AlertLevel in the
 message. Unknown Alert types MUST be treated as error alerts.</t>
 
@@ -3825,7 +3821,7 @@ or other negotiated parameters.</t>
   Sent by endpoints receiving any handshake message containing
 an extension known to be prohibited for inclusion in the given handshake
 message, or including any extensions in a ServerHello or Certificate not first
-offered in the corresponding ClientHello.</t>
+offered in the corresponding ClientHello or CertificateRequest.</t>
   <t hangText='unrecognized_name:'>
   Sent by servers when no server exists identified by the name
 provided by the client via the "server_name" extension
@@ -3948,7 +3944,7 @@ generating the client_early_traffic_secret.</t>
        Derive-Secret(., "derived", "")
              |
              v
-(EC)DHE -> HKDF-Extract = Handshake Secret
+   (EC)DHE -> HKDF-Extract = Handshake Secret
              |
              +-----> Derive-Secret(., "c hs traffic",
              |                     ClientHello...ServerHello)
@@ -3961,7 +3957,7 @@ generating the client_early_traffic_secret.</t>
        Derive-Secret(., "derived", "")
              |
              v
-  0 -> HKDF-Extract = Master Secret
+   0 -> HKDF-Extract = Master Secret
              |
              +-----> Derive-Secret(., "c ap traffic",
              |                     ClientHello...server Finished)
@@ -4073,11 +4069,11 @@ Application Data keys or upon a key update).</t>
 
 <t>For finite field groups, a conventional Diffie-Hellman
 <xref target="DH76"/> computation is performed.
-The negotiated key (Z) is converted to a byte string by encoding in big-endian and
+The negotiated key (Z) is converted to a byte string by encoding in big-endian form and
 left-padded with zeros up to the size of the prime. This byte string is used as the
 shared secret in the key schedule as specified above.</t>
 
-<t>Note that this construction differs from previous versions of TLS which remove
+<t>Note that this construction differs from previous versions of TLS which removed
 leading zeros.</t>
 
 </section>
@@ -4302,7 +4298,7 @@ replays which were originally sent during that period.</t>
 then a ClientHello may be received that is outside the window in the
 future, in which case it might be accepted for 1-RTT, causing a client retry,
 and then acceptable later for 0-RTT. This is another variant of
-the second form of attack described above.</t>
+the second form of attack described in <xref target="anti-replay"></xref>.</t>
 
 </section>
 <section anchor="freshness-checks" title="Freshness Checks">
@@ -4313,7 +4309,7 @@ likely sent reasonably recently and only accept 0-RTT for such a
 ClientHello, otherwise falling back to a 1-RTT handshake.
 This is necessary for the ClientHello storage mechanism
 described in <xref target="client-hello-recording"/> because otherwise the
-server needs to store an unlimited number of ClientHellos and is a useful
+server needs to store an unlimited number of ClientHellos, and is a useful
 optimization for self-contained single-use tickets because it allows efficient
 rejection of ClientHellos which cannot be used for 0-RTT.</t>
 
@@ -4372,11 +4368,13 @@ streamed to the server over a longer time period.</t>
 
 <section anchor="mandatory-to-implement-cipher-suites" title="Mandatory-to-Implement Cipher Suites">
 
-<t>In the absence of an application profile standard specifying otherwise, a
+<t>In the absence of an application profile standard specifying otherwise:</t>
+
+<t>A
 TLS-compliant application MUST implement the TLS_AES_128_GCM_SHA256 <xref
 target="GCM"></xref> cipher suite and SHOULD implement the
 TLS_AES_256_GCM_SHA384 <xref target="GCM"></xref> and
-TLS_CHACHA20_POLY1305_SHA256 <xref target="RFC7539"></xref> cipher suites (see
+TLS_CHACHA20_POLY1305_SHA256 <xref target="RFC8439"></xref> cipher suites (see
 <xref target="cipher-suites"/>).</t>
 
 <t>A TLS-compliant application MUST support digital signatures with
@@ -4558,6 +4556,12 @@ target="extensions"/>, with any extension not listed there marked as "-" to
 indicate that it is not used by TLS 1.3.</t>
 </list></t>
 
+<t>This document updates an entry in the TLS Certificate Types registry
+originally created in <xref target="RFC6091"></xref> and updated in
+<xref target="RFC8447"/>. The entry for value 1
+is changed to have name "OpenPGP_RESERVED", Recommended value 'N', and comment
+"Used in TLS versions prior to 1.3."</t>
+
 <t>In addition, this document defines two new registries that are maintained
 by IANA:</t>
 <t><list style="symbols">
@@ -4574,18 +4578,17 @@ The registry has been initially populated with the values described in
 rsa_pss_rsae_sha256, rsa_pss_rsae_sha384, rsa_pss_rsae_sha512,
 rsa_pss_pss_sha256, rsa_pss_pss_sha384, rsa_pss_pss_sha512, and ed25519.
 The "Recommended" column is assigned a value of "N" unless explicitly
-requested, and only IETF Standards Track RFCs can request a value of "Y".
-</t>
+requested, and adding a value with a "Recommended" value of "Y" requires Standards Action <xref target="RFC8126"/>.</t>
 
   <t>TLS PskKeyExchangeMode registry: Values in the
 range 0-253 (decimal) are assigned via Specification Required
-<xref target="RFC8126"></xref>.  Values with the first byte 254 or 255
+<xref target="RFC8126"></xref>.  The values 254 and 255
 (decimal) are reserved for Private Use <xref target="RFC8126"></xref>.  This
 registry has a "Recommended" column.  The registry has been initially
 populated with psk_ke (0) and psk_dhe_ke (1).  Both are marked as
 "Recommended".
 The "Recommended" column is assigned a value of "N" unless explicitly
-requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
+requested, and adding a value with a "Recommended" value of "Y" requires Standards Action <xref target="RFC8126"/>.</t>
 </list></t>
 
 </section>
@@ -4677,15 +4680,15 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
 <seriesInfo name='DOI' value='10.17487/RFC6655'/>
 </reference>
 
-<reference  anchor='RFC7539' target='https://www.rfc-editor.org/info/rfc7539'>
+<reference  anchor='RFC8439' target='https://www.rfc-editor.org/info/rfc8439'>
 <front>
 <title>ChaCha20 and Poly1305 for IETF Protocols</title>
 <author initials='Y.' surname='Nir' fullname='Y. Nir'><organization /></author>
 <author initials='A.' surname='Langley' fullname='A. Langley'><organization /></author>
-<date year='2015' month='May' />
+<date year='2018' month='June' />
 </front>
-<seriesInfo name='RFC' value='7539'/>
-<seriesInfo name='DOI' value='10.17487/RFC7539'/>
+<seriesInfo name='RFC' value='8439'/>
+<seriesInfo name='DOI' value='10.17487/RFC8439'/>
 </reference>
 
 <reference  anchor='RFC7748' target='https://www.rfc-editor.org/info/rfc7748'>
@@ -4955,21 +4958,16 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
 <seriesInfo name='DOI' value='10.17487/RFC4366'/>
 </reference>
 
-<!-- If the 4492bis doc. is published before this one, should we note
-  somewhere in text that we're aware of it (possibly the last paragraph
-  of the Introduction)? -->
-<reference  anchor='RFC4492' target='https://www.rfc-editor.org/info/rfc4492'>
+<reference  anchor='RFC8422' target='https://www.rfc-editor.org/info/rfc8422'>
 <front>
-<title>Elliptic Curve Cryptography (ECC) Cipher Suites for Transport Layer Security (TLS)</title>
-<author initials='S.' surname='Blake-Wilson' fullname='S. Blake-Wilson'><organization /></author>
-<author initials='N.' surname='Bolyard' fullname='N. Bolyard'><organization /></author>
-<author initials='V.' surname='Gupta' fullname='V. Gupta'><organization /></author>
-<author initials='C.' surname='Hawk' fullname='C. Hawk'><organization /></author>
-<author initials='B.' surname='Moeller' fullname='B. Moeller'><organization /></author>
-<date year='2006' month='May' />
+<title>Elliptic Curve Cryptography (ECC) Cipher Suites for Transport Layer Security (TLS) Versions 1.2 and Earlier</title>
+<author initials='Y.' surname='Nir' fullname='Y. Nir'><organization /></author>
+<author initials='S.' surname='Josefsson' fullname='S. Josefsson'><organization /></author>
+<author initials='M.' surname='Pegourie-Gonnard' fullname='M. Pegourie-Gonnard'><organization /></author>
+<date year='2018' month='August' />
 </front>
-<seriesInfo name='RFC' value='4492'/>
-<seriesInfo name='DOI' value='10.17487/RFC4492'/>
+<seriesInfo name='RFC' value='8422'/>
+<seriesInfo name='DOI' value='10.17487/RFC8422'/>
 </reference>
 
 <reference  anchor='RFC5077' target='https://www.rfc-editor.org/info/rfc5077'>
@@ -5951,7 +5949,17 @@ requested, and only IETF Standards Track RFCs can request a value of "Y".</t>
   <seriesInfo name="DOI" value="10.1186/s13635-016-0030-7"/>
 </reference>
 
-    </references>
+<reference anchor="Blei98">
+  <front>
+  <title>Chosen Ciphertext Attacks against Protocols Based on RSA Encryption Standard PKCS #1</title>
+  <author initials="D." surname="Bleichenbacher" fullname="Daniel">
+  <organization/>
+  </author>
+  <date year="1998"/>
+  </front>
+  <seriesInfo name="Proceedings of" value="CRYPTO '98"/>
+</reference>
+</references>
 
 <section anchor="state-machine" title="State Machine">
 
@@ -6067,6 +6075,7 @@ from older TLS implementations.</t>
        alert(21),
        handshake(22),
        application_data(23),
+       heartbeat(24),  /* RFC 6520 */
        (255)
    } ContentType;
 
@@ -6222,7 +6231,7 @@ from older TLS implementations.</t>
        server_name(0),                             /* RFC 6066 */
        max_fragment_length(1),                     /* RFC 6066 */
        status_request(5),                          /* RFC 6066 */
-       supported_groups(10),                       /* RFC 4492, 7919 */
+       supported_groups(10),                       /* RFC 8422, 7919 */
        signature_algorithms(13),                   /* RFC 8446 */
        use_srtp(14),                               /* RFC 5764 */
        heartbeat(15),                              /* RFC 6520 */
@@ -6232,14 +6241,14 @@ from older TLS implementations.</t>
        server_certificate_type(20),                /* RFC 7250 */
        padding(21),                                /* RFC 7685 */
        RESERVED(40),                               /* Used but never
-                                                         assigned */
+                                                      assigned */
        pre_shared_key(41),                         /* RFC 8446 */
        early_data(42),                             /* RFC 8446 */
        supported_versions(43),                     /* RFC 8446 */
        cookie(44),                                 /* RFC 8446 */
        psk_key_exchange_modes(45),                 /* RFC 8446 */
        RESERVED(46),                               /* Used but never
-                                                         assigned */
+                                                      assigned */
        certificate_authorities(47),                /* RFC 8446 */
        oid_filters(48),                            /* RFC 8446 */
        post_handshake_auth(49),                    /* RFC 8446 */
@@ -6456,7 +6465,6 @@ currently deployed and properly configured TLS implementations.</t>
 <section anchor="authentication-messages-1" title="Authentication Messages">
 
 <figure><artwork><![CDATA[
-   /* Managed by IANA */
    enum {
        X509(0),
        OpenPGP_RESERVED(1),
@@ -6564,7 +6572,7 @@ Cipher suite names follow the naming convention:</t>
 <t>The corresponding AEAD algorithms AEAD_AES_128_GCM, AEAD_AES_256_GCM, and
 AEAD_AES_128_CCM are defined in
 <xref target="RFC5116"/>. AEAD_CHACHA20_POLY1305 is defined in
-<xref target="RFC7539"/>. AEAD_AES_128_CCM_8 is defined in
+<xref target="RFC8439"/>. AEAD_AES_128_CCM_8 is defined in
 <xref target="RFC6655"/>. The corresponding hash algorithms are defined in
 <xref target="SHS"/>.</t>
 
@@ -6588,7 +6596,7 @@ provides several recommendations to assist implementors.
 
 <t>TLS requires a cryptographically secure pseudorandom number generator (CSPRNG).
 In most cases, the operating system provides an appropriate facility such
-as /dev/urandom, which should be used absent other (performance) concerns.
+as /dev/urandom, which should be used absent other (e.g., performance) concerns.
 It is RECOMMENDED to use an existing CSPRNG implementation in
 preference to crafting a new one. Many adequate cryptographic libraries
 are already available under favorable license terms.  Should those prove
@@ -7393,32 +7401,29 @@ this form of attack by treating the cases where there is no
 valid PSK identity and where there is an identity but it has an
 invalid binder identically.</t>
 
-<!-- [rfced] [AD]  Appendix E.6:  The IESG announcement email contains the
-following RFC Editor Note:
-
-RFC Editor Note
-
-Please ensure a reference is added prior to final publication for the
-text added in section
-E.6. PSK Identity Exposure
-of draft-ietf-tls-tls13
-
-Please provide information regarding the reference in question:
-- RFC number, or details for the reference listing if not an RFC
-- where to cite it in Appendix E.6
-- whether it should be listed as a Normative or Informative Reference
-
-Note from Ekr (email of 22 July 2018 10:50 AM PDT):
-@kaduk: I actually thought this was a mailing list citation for the fact that
-you could determine whether a key was known. This issue was raised by
-Nikos. Anyway, this is an IESG matter and you are AD, so perhaps you can
-resolve it or talk to Kathleen. -->
-
 </section>
+
+<section anchor="sharing-psks" title="Sharing PSKs">
+<t>
+TLS 1.3 takes a conservative approach to PSKs by binding them to a
+specific KDF. By contrast, TLS 1.2 allows PSKs to be used with any
+hash function and the TLS 1.2 PRF. Thus, any PSK which is used with
+both TLS 1.2 and TLS 1.3 must be used with only one hash in TLS 1.3,
+which is less than optimal if users want to provision a single PSK.
+The constructions in TLS 1.2 and TLS 1.3 are different, although they
+are both based on HMAC. While there is no known way in which the same
+PSK might produce related output in both versions, only limited
+analysis has been done. Implementations can ensure safety from
+cross-protocol related output by not reusing PSKs between TLS 1.3 and
+TLS 1.2.
+</t>
+</section>
+
 <section anchor="attacks-on-static-rsa" title="Attacks on Static RSA">
 
 <t>Although TLS 1.3 does not use RSA key transport and so is not
-directly susceptible to Bleichenbacher-type attacks, if TLS 1.3
+directly susceptible to Bleichenbacher-type attacks
+<xref target="Blei98"/>, if TLS 1.3
 servers also support static RSA in the context of previous
 versions of TLS, then it may be possible to impersonate the server
 for TLS 1.3 connections <xref target="JSS15"/>. TLS
@@ -7588,7 +7593,7 @@ Facebook
 subodh@fb.com
 
 Benjamin Kaduk
-Akamai
+Akamai Technologies
 kaduk@mit.edu
 
 Hubert Kario
