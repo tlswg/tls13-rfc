@@ -21,7 +21,7 @@ Abstract
    over the Internet in a way that is designed to prevent eavesdropping,
    tampering, and message forgery.
 
-   This document updates RFCs 5705, and 6066, and obsoletes RFCs 5077,
+   This document updates RFCs 5705 and 6066, and obsoletes RFCs 5077,
    5246, and 6961.  This document also specifies new requirements for
    TLS 1.2 implementations.
 
@@ -4788,7 +4788,7 @@ RFC 8446                           TLS                       August 2018
    string of Hash.length bytes set to zeros is used.  Note that this
    does not mean skipping rounds, so if PSK is not in use, Early Secret
    will still be HKDF-Extract(0, 0).  For the computation of the
-   binder_secret, the label is "ext binder" for external PSKs (those
+   binder_key, the label is "ext binder" for external PSKs (those
    provisioned outside of TLS) and "res binder" for resumption PSKs
    (those provisioned as the resumption master secret of a previous
    handshake).  The different labels prevent the substitution of one
