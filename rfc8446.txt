@@ -162,7 +162,7 @@ RFC 8446                           TLS                       August 2018
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  97
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  99
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  99
-     12.2.  Informative References . . . . . . . . . . . . . . . . . 101
+     12.2.  Informative References . . . . . . . . . . . . . . . . . 102
    Appendix A.  State Machine  . . . . . . . . . . . . . . . . . . . 109
 
 
@@ -353,7 +353,7 @@ RFC 8446                           TLS                       August 2018
       separate the authentication and key exchange mechanisms from the
       record protection algorithm (including secret key length) and a
       hash to be used with both the key derivation function and
-      handshake message authentication code.
+      handshake message authentication code (MAC).
 
    -  A zero round-trip time (0-RTT) mode was added, saving a round trip
       at connection setup for some application data, at the cost of
@@ -5406,16 +5406,18 @@ RFC 8446                           TLS                       August 2018
       Standards Action [RFC8126].
 
    -  TLS Alerts registry: Future values are allocated via Standards
-      Action [RFC8126].  IANA has updated this registry to include
-      values for "missing_extension" and "certificate_required".  The
-      "DTLS-OK" column is marked as "Y" for each new alert.
+      Action [RFC8126].  IANA has populated this registry with the
+      values from Appendix B.2.  The "DTLS-OK" column is marked as "Y"
+      for all such values.  Values marked as "_RESERVED" have comments
+      describing their previous usage.
 
    -  TLS HandshakeType registry: Future values are allocated via
       Standards Action [RFC8126].  IANA has updated this registry to
       rename item 4 from "NewSessionTicket" to "new_session_ticket" and
-      to add the "hello_retry_request_RESERVED", "encrypted_extensions",
-      "end_of_early_data", "key_update", and "message_hash" values.  The
-      "DTLS-OK" column is marked as "Y" for each of these additions.
+      populated this registry with the values from Appendix B.3.  The
+      "DTLS-OK" column is marked as "Y" for all such values.  Values
+      marked "RESERVED" have comments describing their previous or
+      temporary usage.
 
    This document also uses the TLS ExtensionType Values registry
    originally created in [RFC4366].  IANA has updated it to reference
@@ -5426,8 +5428,6 @@ RFC 8446                           TLS                       August 2018
       Values with the first byte in the range 0-254 (decimal) are
       assigned via Specification Required [RFC8126].  Values with the
       first byte 255 (decimal) are reserved for Private Use [RFC8126].
-
-
 
 
 
@@ -5450,9 +5450,21 @@ RFC 8446                           TLS                       August 2018
       is not used by TLS 1.3.
 
    This document updates an entry in the TLS Certificate Types registry
-   originally created in [RFC6091] and updated in [RFC8447].  The entry
-   for value 1 is changed to have name "OpenPGP_RESERVED", Recommended
-   value "N", and comment "Used in TLS versions prior to 1.3."
+   originally created in [RFC6091] and updated in [RFC8447].  IANA has
+   updated the entry for value 1 to have the name "OpenPGP_RESERVED",
+   Recommended value "N", and comment "Used in TLS versions prior
+   to 1.3."
+
+   This document updates an entry in the TLS Certificate Status Types
+   registry originally created in [RFC6961].  IANA has updated the entry
+   for value 2 to have name "ocsp_multi_RESERVED" and comment "Used in
+   TLS versions prior to 1.3".
+
+   This document updates two entries in the TLS Supported Groups
+   registry (created under a different name by [RFC4492]; now maintained
+   by [RFC8422]) and updated by [RFC7919] and [RFC8447].  The entries
+   for values 29 and 30 (x25519 and x448) have been updated to also
+   refer to this document.
 
    In addition, this document defines two new registries that are
    maintained by IANA:
@@ -5473,6 +5485,13 @@ RFC 8446                           TLS                       August 2018
       unless explicitly requested, and adding a value with a
       "Recommended" value of "Y" requires Standards Action [RFC8126].
 
+
+
+Rescorla                     Standards Track                   [Page 98]
+
+RFC 8446                           TLS                       August 2018
+
+
    -  TLS PskKeyExchangeMode registry: Values in the range 0-253
       (decimal) are assigned via Specification Required [RFC8126].  The
       values 254 and 255 (decimal) are reserved for Private Use
@@ -5482,15 +5501,6 @@ RFC 8446                           TLS                       August 2018
       "Recommended" column is assigned a value of "N" unless explicitly
       requested, and adding a value with a "Recommended" value of "Y"
       requires Standards Action [RFC8126].
-
-
-
-
-
-Rescorla                     Standards Track                   [Page 98]
-
-RFC 8446                           TLS                       August 2018
-
 
 12.  References
 
@@ -5531,6 +5541,13 @@ RFC 8446                           TLS                       August 2018
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
 
+
+
+Rescorla                     Standards Track                   [Page 99]
+
+RFC 8446                           TLS                       August 2018
+
+
    [RFC5705]  Rescorla, E., "Keying Material Exporters for Transport
               Layer Security (TLS)", RFC 5705, DOI 10.17487/RFC5705,
               March 2010, <https://www.rfc-editor.org/info/rfc5705>.
@@ -5539,14 +5556,6 @@ RFC 8446                           TLS                       August 2018
               "Updates for RSAES-OAEP and RSASSA-PSS Algorithm
               Parameters", RFC 5756, DOI 10.17487/RFC5756, January 2010,
               <https://www.rfc-editor.org/info/rfc5756>.
-
-
-
-
-Rescorla                     Standards Track                   [Page 99]
-
-RFC 8446                           TLS                       August 2018
-
 
    [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
               Key Derivation Function (HKDF)", RFC 5869,
@@ -5588,6 +5597,13 @@ RFC 8446                           TLS                       August 2018
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
               July 2014, <https://www.rfc-editor.org/info/rfc7301>.
 
+
+
+Rescorla                     Standards Track                  [Page 100]
+
+RFC 8446                           TLS                       August 2018
+
+
    [RFC7507]  Moeller, B. and A. Langley, "TLS Fallback Signaling Cipher
               Suite Value (SCSV) for Preventing Protocol Downgrade
               Attacks", RFC 7507, DOI 10.17487/RFC7507, April 2015,
@@ -5596,13 +5612,6 @@ RFC 8446                           TLS                       August 2018
    [RFC7748]  Langley, A., Hamburg, M., and S. Turner, "Elliptic Curves
               for Security", RFC 7748, DOI 10.17487/RFC7748, January
               2016, <https://www.rfc-editor.org/info/rfc7748>.
-
-
-
-Rescorla                     Standards Track                  [Page 100]
-
-RFC 8446                           TLS                       August 2018
-
 
    [RFC7919]  Gillmor, D., "Negotiated Finite Field Diffie-Hellman
               Ephemeral Parameters for Transport Layer Security (TLS)",
@@ -5641,15 +5650,6 @@ RFC 8446                           TLS                       August 2018
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ISO/IEC 8825-1:2015, November 2015.
 
-12.2.  Informative References
-
-   [AEAD-LIMITS]
-              Luykx, A. and K. Paterson, "Limits on Authenticated
-              Encryption Use in TLS", August 2017,
-              <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
-
-
-
 
 
 
@@ -5659,6 +5659,13 @@ Rescorla                     Standards Track                  [Page 101]
 
 RFC 8446                           TLS                       August 2018
 
+
+12.2.  Informative References
+
+   [AEAD-LIMITS]
+              Luykx, A. and K. Paterson, "Limits on Authenticated
+              Encryption Use in TLS", August 2017,
+              <http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf>.
 
    [BBFGKZ16]
               Bhargavan, K., Brzuska, C., Fournet, C., Green, M.,
@@ -5700,6 +5707,15 @@ RFC 8446                           TLS                       August 2018
               TLS 1.3 Record Layer", ProvSec 2015, September 2015,
               <https://eprint.iacr.org/2015/394>.
 
+
+
+
+
+Rescorla                     Standards Track                  [Page 102]
+
+RFC 8446                           TLS                       August 2018
+
+
    [BT16]     Bellare, M. and B. Tackmann, "The Multi-User Security of
               Authenticated Encryption: AES-GCM in TLS 1.3", Proceedings
               of CRYPTO 2016, July 2016,
@@ -5708,13 +5724,6 @@ RFC 8446                           TLS                       August 2018
    [CCG16]    Cohn-Gordon, K., Cremers, C., and L. Garratt, "On Post-
               compromise Security", IEEE Computer Security
               Foundations Symposium, DOI 10.1109/CSF.2016.19, July 2015.
-
-
-
-Rescorla                     Standards Track                  [Page 102]
-
-RFC 8446                           TLS                       August 2018
-
 
    [CHECKOWAY]
               Checkoway, S., Maskiewicz, J., Garman, C., Fried, J.,
@@ -5753,15 +5762,6 @@ RFC 8446                           TLS                       August 2018
               Protocol Candidates", Proceedings of ACM CCS 2015, October
               2015, <https://eprint.iacr.org/2015/914>.
 
-   [DFGS16]   Dowling, B., Fischlin, M., Guenther, F., and D. Stebila,
-              "A Cryptographic Analysis of the TLS 1.3 Full and Pre-
-              shared Key Handshake Protocol", TRON 2016, February 2016,
-              <https://eprint.iacr.org/2016/081>.
-
-   [DOW92]    Diffie, W., van Oorschot, P., and M. Wiener,
-              "Authentication and authenticated key exchanges", Designs,
-              Codes and Cryptography, DOI 10.1007/BF00124891, June 1992.
-
 
 
 
@@ -5771,6 +5771,15 @@ Rescorla                     Standards Track                  [Page 103]
 
 RFC 8446                           TLS                       August 2018
 
+
+   [DFGS16]   Dowling, B., Fischlin, M., Guenther, F., and D. Stebila,
+              "A Cryptographic Analysis of the TLS 1.3 Full and Pre-
+              shared Key Handshake Protocol", TRON 2016, February 2016,
+              <https://eprint.iacr.org/2016/081>.
+
+   [DOW92]    Diffie, W., van Oorschot, P., and M. Wiener,
+              "Authentication and authenticated key exchanges", Designs,
+              Codes and Cryptography, DOI 10.1007/BF00124891, June 1992.
 
    [DSS]      National Institute of Standards and Technology, U.S.
               Department of Commerce, "Digital Signature Standard
@@ -5808,15 +5817,6 @@ RFC 8446                           TLS                       August 2018
               Cryptography", IEEE Std. 1363-2000,
               DOI 10.1109/IEEESTD.2000.92292.
 
-   [JSS15]    Jager, T., Schwenk, J., and J. Somorovsky, "On the
-              Security of TLS 1.3 and QUIC Against Weaknesses in PKCS#1
-              v1.5 Encryption", Proceedings of ACM CCS 2015,
-              DOI 10.1145/2810103.2813657, October 2015,
-              <https://www.nds.rub.de/media/nds/
-              veroeffentlichungen/2015/08/21/Tls13QuicAttacks.pdf>.
-
-
-
 
 
 
@@ -5827,6 +5827,13 @@ Rescorla                     Standards Track                  [Page 104]
 
 RFC 8446                           TLS                       August 2018
 
+
+   [JSS15]    Jager, T., Schwenk, J., and J. Somorovsky, "On the
+              Security of TLS 1.3 and QUIC Against Weaknesses in PKCS#1
+              v1.5 Encryption", Proceedings of ACM CCS 2015,
+              DOI 10.1145/2810103.2813657, October 2015,
+              <https://www.nds.rub.de/media/nds/
+              veroeffentlichungen/2015/08/21/Tls13QuicAttacks.pdf>.
 
    [KEYAGREEMENT]
               Barker, E., Chen, L., Roginsky, A., Vassilev, A., and R.
@@ -5868,13 +5875,6 @@ RFC 8446                           TLS                       August 2018
               October 2015, <https://www.ietf.org/mail-
               archive/web/tls/current/msg18215.html>.
 
-   [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
-              Key: A Comparative Analysis of the Security of Re-keying
-              Techniques", ASIACRYPT 2000, DOI 10.1007/3-540-44448-3_42,
-              October 2000.
-
-
-
 
 
 
@@ -5883,6 +5883,11 @@ Rescorla                     Standards Track                  [Page 105]
 
 RFC 8446                           TLS                       August 2018
 
+
+   [REKEY]    Abdalla, M. and M. Bellare, "Increasing the Lifetime of a
+              Key: A Comparative Analysis of the Security of Re-keying
+              Techniques", ASIACRYPT 2000, DOI 10.1007/3-540-44448-3_42,
+              October 2000.
 
    [Res17a]   Rescorla, E., "Preliminary data on Firefox TLS 1.3
               Middlebox experiment", message to the TLS mailing list, 5
@@ -5914,10 +5919,26 @@ RFC 8446                           TLS                       August 2018
               Extensions", RFC 4366, DOI 10.17487/RFC4366, April 2006,
               <https://www.rfc-editor.org/info/rfc4366>.
 
+   [RFC4492]  Blake-Wilson, S., Bolyard, N., Gupta, V., Hawk, C., and B.
+              Moeller, "Elliptic Curve Cryptography (ECC) Cipher Suites
+              for Transport Layer Security (TLS)", RFC 4492,
+              DOI 10.17487/RFC4492, May 2006,
+              <https://www.rfc-editor.org/info/rfc4492>.
+
    [RFC5077]  Salowey, J., Zhou, H., Eronen, P., and H. Tschofenig,
               "Transport Layer Security (TLS) Session Resumption without
               Server-Side State", RFC 5077, DOI 10.17487/RFC5077,
               January 2008, <https://www.rfc-editor.org/info/rfc5077>.
+
+
+
+
+
+
+Rescorla                     Standards Track                  [Page 106]
+
+RFC 8446                           TLS                       August 2018
+
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
@@ -5929,16 +5950,6 @@ RFC 8446                           TLS                       August 2018
               Real-time Transport Protocol (SRTP)", RFC 5764,
               DOI 10.17487/RFC5764, May 2010,
               <https://www.rfc-editor.org/info/rfc5764>.
-
-
-
-
-
-
-Rescorla                     Standards Track                  [Page 106]
-
-RFC 8446                           TLS                       August 2018
-
 
    [RFC5929]  Altman, J., Williams, N., and L. Zhu, "Channel Bindings
               for TLS", RFC 5929, DOI 10.17487/RFC5929, July 2010,
@@ -5973,6 +5984,18 @@ RFC 8446                           TLS                       August 2018
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <https://www.rfc-editor.org/info/rfc7230>.
 
+
+
+
+
+
+
+
+Rescorla                     Standards Track                  [Page 107]
+
+RFC 8446                           TLS                       August 2018
+
+
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
               Transport Layer Security (TLS) and Datagram Transport
@@ -5987,14 +6010,6 @@ RFC 8446                           TLS                       August 2018
               "Deprecating Secure Sockets Layer Version 3.0", RFC 7568,
               DOI 10.17487/RFC7568, June 2015,
               <https://www.rfc-editor.org/info/rfc7568>.
-
-
-
-
-Rescorla                     Standards Track                  [Page 107]
-
-RFC 8446                           TLS                       August 2018
-
 
    [RFC7627]  Bhargavan, K., Ed., Delignat-Lavaud, A., Pironti, A.,
               Langley, A., and M. Ray, "Transport Layer Security (TLS)
@@ -6026,6 +6041,17 @@ RFC 8446                           TLS                       August 2018
               and DTLS", RFC 8447, DOI 10.17487/RFC8447, August 2018,
               <https://www.rfc-editor.org/info/rfc8447>.
 
+
+
+
+
+
+
+Rescorla                     Standards Track                  [Page 108]
+
+RFC 8446                           TLS                       August 2018
+
+
    [RSA]      Rivest, R., Shamir, A., and L. Adleman, "A Method for
               Obtaining Digital Signatures and Public-Key
               Cryptosystems", Communications of the ACM, Vol. 21 No. 2,
@@ -6042,15 +6068,6 @@ RFC 8446                           TLS                       August 2018
               2016), DOI 10.14722/ndss.2016.23418, February 2016.
 
    [SSL2]     Hickman, K., "The SSL Protocol", February 1995.
-
-
-
-
-
-Rescorla                     Standards Track                  [Page 108]
-
-RFC 8446                           TLS                       August 2018
-
 
    [TIMING]   Boneh, D. and D. Brumley, "Remote Timing Attacks Are
               Practical", USENIX Security Symposium, August 2003.
@@ -6078,23 +6095,6 @@ Appendix A.  State Machine
    the send/recv key to the given key".
 
 A.1.  Client
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
