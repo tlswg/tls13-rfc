@@ -422,7 +422,7 @@ ul.toc li {
 </tr>
 <tr>
 <td class="left">Request for Comments: 8446</td>
-<td class="right">RTFM, Inc.</td>
+<td class="right">Mozilla</td>
 </tr>
 <tr>
 <td class="left">Obsoletes: 5077, 5246, 6961</td>
@@ -827,8 +827,8 @@ Exch | + key_share*
                                &lt;--------  [Application Data*]
      ^ {Certificate*}
 Auth | {CertificateVerify*}
-     v {Finished}                --------&gt;
-       [Application Data]        &lt;-------&gt;      [Application Data]
+     v {Finished}              --------&gt;
+       [Application Data]      &lt;-------&gt;  [Application Data]
 
               +  Indicates noteworthy extensions sent in the
                  previously noted message.
@@ -2068,7 +2068,7 @@ Subsequent Handshake:
 <dt>certificate_list:</dt>
 <dd style="margin-left: 8">A sequence (chain) of CertificateEntry structures, each containing a single certificate and set of extensions.</dd>
 <dt>extensions:</dt>
-<dd style="margin-left: 8">A set of extension values for the CertificateEntry. The "Extension" format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions for server certificates at present include the OCSP Status extension <a href="#RFC6066" class="xref">[RFC6066]</a> and SignedCertificateTimestamp extension <a href="#RFC6962" class="xref">[RFC6962]</a>; future extensions may be defined for this message as well. Extensions in the Certificate message from the server MUST correspond to ones from the ClientHello message. Extensions in the Certificate message from the client MUST correspond to extensions in the CertificateRequest message from the server. If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
+<dd style="margin-left: 8">A set of extension values for the CertificateEntry. The "Extension" format is defined in <a href="#extensions" class="xref">Section 4.2</a>. Valid extensions for server certificates at present include the OCSP Status extension <a href="#RFC6066" class="xref">[RFC6066]</a> and the SignedCertificateTimestamp extension <a href="#RFC6962" class="xref">[RFC6962]</a>; future extensions may be defined for this message as well. Extensions in the Certificate message from the server MUST correspond to ones from the ClientHello message. Extensions in the Certificate message from the client MUST correspond to extensions in the CertificateRequest message from the server. If an extension applies to the entire chain, it SHOULD be included in the first CertificateEntry.</dd>
 </dl>
 <p id="rfc.section.4.4.2.p.6">If the corresponding certificate type extension ("server_certificate_type" or "client_certificate_type") was not negotiated in EncryptedExtensions, or the X.509 certificate type was negotiated, then each CertificateEntry contains a DER-encoded X.509 certificate. The sender's certificate MUST come in the first CertificateEntry in the list.  Each following certificate SHOULD directly certify the one immediately preceding it.  Because certificate validation requires that trust anchors be distributed independently, a certificate that specifies a trust anchor MAY be omitted from the chain, provided that supported peers are known to possess any omitted certificates.</p>
 <p id="rfc.section.4.4.2.p.7">Note: Prior to TLS 1.3, "certificate_list" ordering required each certificate to certify the one immediately preceding it; however, some implementations allowed some flexibility. Servers sometimes send both a current and deprecated intermediate for transitional purposes, and others are simply configured incorrectly, but these cases can nonetheless be validated properly. For maximum compatibility, all implementations SHOULD be prepared to handle potentially extraneous certificates and arbitrary orderings from any TLS version, with the exception of the end-entity certificate which MUST be first.</p>
@@ -2861,7 +2861,7 @@ TLS-Exporter(label, context_value, key_length) =
 <li>TLS Cipher Suites registry: values with the first byte in the range 0-254 (decimal) are assigned via Specification Required <a href="#RFC8126" class="xref">[RFC8126]</a>. Values with the first byte 255 (decimal) are reserved for Private Use <a href="#RFC8126" class="xref">[RFC8126]</a>.  <br><br> IANA has added the cipher suites listed in <a href="#cipher-suites" class="xref">Appendix B.4</a> to the registry. The "Value" and "Description" columns are taken from the table.  The "DTLS-OK" and "Recommended" columns are both marked as "Y" for each new cipher suite.</li>
 <li>TLS ContentType registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>.</li>
 <li>TLS Alerts registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>. IANA has populated this registry with the values from <a href="#alert-messages" class="xref">Appendix B.2</a>.  The "DTLS-OK" column is marked as "Y" for all such values.  Values marked as "_RESERVED" have comments describing their previous usage.</li>
-<li>TLS HandshakeType registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>. IANA has updated this registry to rename item 4 from "NewSessionTicket" to "new_session_ticket" and populated this registry with the values from <a href="#handshake-protocol-1" class="xref">Appendix B.3</a>.  The "DTLS-OK" column is marked as "Y" for all such values.  Values marked "RESERVED" have comments describing their previous or temporary usage.</li>
+<li>TLS HandshakeType registry: Future values are allocated via Standards Action <a href="#RFC8126" class="xref">[RFC8126]</a>. IANA has updated this registry to rename item 4 from "NewSessionTicket" to "new_session_ticket" and populated this registry with the values from <a href="#handshake-protocol-1" class="xref">Appendix B.3</a>.  The "DTLS-OK" column is marked as "Y" for all such values.  Values marked "_RESERVED" have comments describing their previous or temporary usage.</li>
 </ul>
 <p id="rfc.section.11.p.3">This document also uses the TLS ExtensionType Values registry originally created in <a href="#RFC4366" class="xref">[RFC4366]</a>. IANA has updated it to reference this document.  Changes to the registry follow:</p>
 <p></p>
@@ -2871,8 +2871,8 @@ TLS-Exporter(label, context_value, key_length) =
 <li>IANA has updated this registry to include the "key_share", "pre_shared_key", "psk_key_exchange_modes", "early_data", "cookie", "supported_versions", "certificate_authorities", "oid_filters", "post_handshake_auth", and "signature_algorithms_cert" extensions with the values defined in this document and the "Recommended" value of "Y".</li>
 <li>IANA has updated this registry to include a "TLS&#160;1.3" column which lists the messages in which the extension may appear. This column has been initially populated from the table in <a href="#extensions" class="xref">Section 4.2</a>, with any extension not listed there marked as "-" to indicate that it is not used by TLS 1.3.</li>
 </ul>
-<p id="rfc.section.11.p.5">This document updates an entry in the TLS Certificate Types registry originally created in <a href="#RFC6091" class="xref">[RFC6091]</a> and updated in <a href="#RFC8447" class="xref">[RFC8447]</a>. IANA has updated the entry for value 1 to have the name "OpenPGP_RESERVED", Recommended value "N", and comment "Used in TLS versions prior to&#160;1.3."</p>
-<p id="rfc.section.11.p.6">This document updates an entry in the TLS Certificate Status Types registry originally created in <a href="#RFC6961" class="xref">[RFC6961]</a>.  IANA has updated the entry for value 2 to have name "ocsp_multi_RESERVED" and comment "Used in TLS versions prior to 1.3".</p>
+<p id="rfc.section.11.p.5">This document updates an entry in the TLS Certificate Types registry originally created in <a href="#RFC6091" class="xref">[RFC6091]</a> and updated in <a href="#RFC8447" class="xref">[RFC8447]</a>. IANA has updated the entry for value 1 to have the name "OpenPGP_RESERVED", "Recommended" value "N", and comment "Used in TLS versions prior to&#160;1.3."</p>
+<p id="rfc.section.11.p.6">This document updates an entry in the TLS Certificate Status Types registry originally created in <a href="#RFC6961" class="xref">[RFC6961]</a>.  IANA has updated the entry for value 2 to have the name "ocsp_multi_RESERVED" and comment "Used in TLS versions prior to 1.3".</p>
 <p id="rfc.section.11.p.7">This document updates two entries in the TLS Supported Groups registry (created under a different name by <a href="#RFC4492" class="xref">[RFC4492]</a>; now maintained by <a href="#RFC8422" class="xref">[RFC8422]</a>) and updated by <a href="#RFC7919" class="xref">[RFC7919]</a> and <a href="#RFC8447" class="xref">[RFC8447]</a>.  The entries for values 29 and 30 (x25519 and x448) have been updated to also refer to this document.</p>
 <p id="rfc.section.11.p.8">In addition, this document defines two new registries that are maintained by IANA:</p>
 <p></p>
@@ -4215,7 +4215,7 @@ here                  +--------+--------+
 <h1 id="rfc.appendix.E.8">
 <a href="#rfc.appendix.E.8">E.8.</a> <a href="#attacks-on-static-rsa" id="attacks-on-static-rsa">Attacks on Static RSA</a>
 </h1>
-<p id="rfc.section.E.8.p.1">Although TLS 1.3 does not use RSA key transport and so is not directly susceptible to Bleichenbacher-type attacks <a href="#Blei98" class="xref">[Blei98]</a>, if TLS 1.3 servers also support static RSA in the context of previous versions of TLS, then it may be possible to impersonate the server for TLS 1.3 connections <a href="#JSS15" class="xref">[JSS15]</a>. TLS 1.3 implementations can prevent this attack by disabling support for static RSA across all versions of TLS. In principle, implementations might also be able to separate certificates with different keyUsage bits for static RSA decryption and RSA signature, but this technique relies on clients refusing to accept signatures using keys in certificates that do not have the digitalSignature bit set, and many clients do not enforce this restriction.</p>
+<p id="rfc.section.E.8.p.1">Although TLS 1.3 does not use RSA key transport and so is not directly susceptible to Bleichenbacher-type attacks <a href="#Blei98" class="xref">[Blei98]</a>, if TLS 1.3 servers also support static RSA in the context of previous versions of TLS, then it may be possible to impersonate the server for TLS 1.3 connections <a href="#JSS15" class="xref">[JSS15]</a>. TLS 1.3 implementations can prevent this attack by disabling support for static RSA across all versions of TLS. In principle, implementations might also be able to separate certificates with different keyUsage bits for static RSA decryption and RSA signing, but this technique relies on clients refusing to accept signatures using keys in certificates that do not have the digitalSignature bit set, and many clients do not enforce this restriction.</p>
 <h1 id="rfc.contributors"><a href="#rfc.contributors">Contributors</a></h1>
 <pre>
 Martin Abadi
@@ -4591,7 +4591,7 @@ kazu@iij.ad.jp
 		<span class="family-name">Rescorla</span>
 	  </span>
 	</span>
-	<span class="org vcardline">RTFM, Inc.</span>
+	<span class="org vcardline">Mozilla</span>
 	<span class="adr">
 	  
 	  <span class="vcardline">
